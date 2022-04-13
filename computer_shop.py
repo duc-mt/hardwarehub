@@ -212,16 +212,20 @@ class CPU(ComputerPart):
             variables separated by commas.
             Format: "CPU,name,price,cores,frequency_ghz".
         """
-        return f'"CPU,{self.get_name()},{self.get_price()},'
-               f'{self.get_cores()},{self.get_frequency_ghz()}"'
+        return (
+            f'"CPU,{self.get_name()},{self.get_price()},'
+            f'{self.get_cores()},{self.get_frequency_ghz()}"'
+        )
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
-        return f'"{self.get_name()}: {self.get_cores()} cores, @ '
-               f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}"'
+        return (
+            f'"{self.get_name()}: {self.get_cores()} cores, @ '
+            f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}"'
+        )
 
     def parse(self, csv_string):
         """
@@ -331,16 +335,20 @@ class GraphicsCard(ComputerPart):
             variables separated by commas.
             Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
-        return f'"GraphicsCard,{self.get_name()},{self.get_price()},'
-               f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
+        return (
+            f'"GraphicsCard,{self.get_name()},{self.get_price()},'
+            f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
+        )
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
-        return f'"{self.get_name()}: {self.get_memory_gb()}GB @ '
-               f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}"'
+        return (
+            f'"{self.get_name()}: {self.get_memory_gb()}GB @ '
+            f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}"'
+        )
 
     def parse(self, csv_string):
         """
@@ -471,18 +479,22 @@ class Memory(ComputerPart):
             variables separated by commas.
             Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
-        return f'"Memory,{self.get_name()},{self.get_price()},'
-               f'{self.get_capacity_gb()},{self.get_frequency_mhz()}, '
-               f'{self.get_ddr()}"'
+        return (
+            f'"Memory,{self.get_name()},{self.get_price()},'
+            f'{self.get_capacity_gb()},{self.get_frequency_mhz()}, '
+            f'{self.get_ddr()}"'
+        )
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
-        return f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
-               f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ '
-               f'for ${self.get_price():.2f}"'
+        return (
+            f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
+            f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ '
+            f'for ${self.get_price():.2f}"'
+        )
 
     def parse(self, csv_string):
         """
@@ -594,16 +606,20 @@ class Storage(ComputerPart):
             variables separated by commas.
             Format: "Storage,name,price,capacity_gb,storage_type".
         """
-        return f'"Storage,{self.get_name()},{self.get_price()},'
-               f'{self.get_capacity_gb()}, {self.get_storage_type()}"'
+        return (
+            f'"Storage,{self.get_name()},{self.get_price()},'
+            f'{self.get_capacity_gb()}, {self.get_storage_type()}"'
+        )
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
-        return f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
-               f'{self.get_storage_type()} for ${self.get_price():.2f}"'
+        return (
+            f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
+            f'{self.get_storage_type()} for ${self.get_price():.2f}"'
+        )
 
     def parse(self, csv_string):
         """
