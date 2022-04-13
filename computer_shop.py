@@ -56,7 +56,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
                 f'Must be a string.'
             )
         elif name == '':
-            raise ValueError(f'Argument must not be an empty string')
+            raise ValueError('ValueError: Name must not be empty.')
         self.__name = name
 
     def set_price(self, price):
@@ -70,7 +70,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
                 f'Must be a float.'
             )
         elif price <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Price must not be negative.')
         self.__price = price
 
     def csv_string_to_list(self, csv_string):
@@ -171,7 +171,9 @@ class CPU(ComputerPart):
                 f'Must be an integer.'
             )
         elif cores <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError(
+                'ValueError: Number of Cores must not be negative.'
+            )
         self.__cores = cores
 
     def set_frequency_ghz(self, frequency_ghz):
@@ -185,7 +187,7 @@ class CPU(ComputerPart):
                 f'{type(frequency_ghz)}. Must be a float.'
             )
         elif frequency_ghz <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Frequency must not be negative.')
         self.__frequency_ghz = frequency_ghz
 
     def equals(self, other):
@@ -229,8 +231,8 @@ class CPU(ComputerPart):
 
     def parse(self, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the values
-            as a list.
+            Calls the superclass's csv_string_to_list() method to get the
+            values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new CPU.
         """
@@ -243,7 +245,6 @@ class CPU(ComputerPart):
         return CPU(
             csv_list[0], csv_list[1], csv_list[2], csv_list[3],csv_list[4],
         )
-
 
     def input(self):
         """
@@ -294,7 +295,7 @@ class GraphicsCard(ComputerPart):
                 f'{type(frequency_mhz)}. Must be an integer.'
             )
         elif frequency_mhz <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Frequency must not be negative.')
         self.__frequency_mhz = frequency_mhz
 
     def set_memory_gb(self, memory_gb):
@@ -308,7 +309,7 @@ class GraphicsCard(ComputerPart):
                 f'Must be an integer.'
             )
         elif memory_gb <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Memory must not be negative.')
         self.__memory_gb = memory_gb
 
     def equals(self, other):
@@ -352,8 +353,8 @@ class GraphicsCard(ComputerPart):
 
     def parse(self, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the values
-            as a list.
+            Calls the superclass's csv_string_to_list() method to get the
+            values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new GraphicsCard.
         """
@@ -366,7 +367,6 @@ class GraphicsCard(ComputerPart):
         return GraphicsCard(
             csv_list[0], csv_list[1], csv_list[2], csv_list[3],csv_list[4],
         )
-
 
     def input(self):
         """
@@ -424,7 +424,7 @@ class Memory(ComputerPart):
                 f'{type(capacity_gb)}. Must be an integer.'
             )
         elif capacity_gb <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Capacity must not be negative.')
         self.__capacity_gb = capacity_gb
 
     def set_frequency_mhz(self, frequency_mhz):
@@ -434,11 +434,11 @@ class Memory(ComputerPart):
         """
         if not isinstance(frequency_mhz, int):
             raise TypeError(
-                f'Argument was {repr(frequency_mhz)}, type {type(frequency_mhz)}. '
-                f'Must be an integer.'
+                f'Argument was {repr(frequency_mhz)}, '
+                f'type {type(frequency_mhz)}. Must be an integer.'
             )
         elif frequency_mhz <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Frequency must not be negative.')
         self.__frequency_mhz = frequency_mhz
 
     def set_ddr(self, ddr):
@@ -452,7 +452,7 @@ class Memory(ComputerPart):
                 f'Must be a string.'
             )
         elif ddr == '':
-            raise ValueError(f'Argument must not be an empty string.')
+            raise ValueError('ValueError: DDR must not be empty.')
         self.__ddr = ddr
 
     def equals(self, other):
@@ -498,8 +498,8 @@ class Memory(ComputerPart):
 
     def parse(self, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the values
-            as a list.
+            Calls the superclass's csv_string_to_list() method to get the
+            values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Memory.
         """
@@ -513,7 +513,6 @@ class Memory(ComputerPart):
             csv_list[0], csv_list[1], csv_list[2],
             csv_list[3],csv_list[4], csv_list[5],
         )
-
 
     def input(self):
         """
@@ -565,7 +564,7 @@ class Storage(ComputerPart):
                 f'{type(capacity_gb)}. Must be an integer.'
             )
         elif capacity_gb <= 0:
-            raise ValueError(f'Argument must not be negative.')
+            raise ValueError('ValueError: Capacity must not be negative.')
         self.__capacity_gb = capacity_gb
 
     def set_storage_type(self, storage_type):
@@ -575,11 +574,13 @@ class Storage(ComputerPart):
         """
         if not isinstance(storage_type, str):
             raise TypeError(
-                f'Argument was {repr(storage_type)}, type {type(storage_type)}. '
-                f'Must be a string.'
+                f'Argument was {repr(storage_type)}, '
+                f'type {type(storage_type)}. Must be a string.'
             )
         elif storage_type not in ('HDD', 'SSD', 'SSHD'):
-            raise ValueError(f'Argument must not be an empty string.')
+            raise ValueError(
+                'ValueError: Storage type must be one of HDD, SSD, or SSHD.'
+            )
         self.__storage_type = storage_type
 
     def equals(self, other):
@@ -636,7 +637,6 @@ class Storage(ComputerPart):
         return Storage(
             csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
         )
-
 
     def input(self):
         """
