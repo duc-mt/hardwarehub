@@ -98,7 +98,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         #     return True
         # return False
 
-    @abstractmethod
+    @abc.abstractmethod
     def to_csv_string(self):
         """
             An abstract method.
@@ -107,7 +107,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def __str__(self):
         """
             An abstract method.
@@ -115,7 +115,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def parse(self):
         """
             An abstract method.
@@ -125,7 +125,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abstractmethod
+    @abc.abstractmethod
     def input(self):
         """
             An abstract method.
