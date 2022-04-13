@@ -243,7 +243,7 @@ class CPU(ComputerPart):
         csv_list[4] = float(csv_list[4])
 
         return CPU(
-            csv_list[0], csv_list[1], csv_list[2], csv_list[3],csv_list[4],
+            csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
         )
 
     def input(self):
@@ -340,7 +340,7 @@ class GraphicsCard(ComputerPart):
             f'"GraphicsCard,{self.get_name()},{self.get_price()},'
             f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
         )
-
+ 
     def __str__(self):
         """
             Return the variables as a string.
@@ -365,7 +365,7 @@ class GraphicsCard(ComputerPart):
         csv_list[4] = int(csv_list[4])
 
         return GraphicsCard(
-            csv_list[0], csv_list[1], csv_list[2], csv_list[3],csv_list[4],
+            csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
         )
 
     def input(self):
@@ -511,7 +511,7 @@ class Memory(ComputerPart):
 
         return Memory(
             csv_list[0], csv_list[1], csv_list[2],
-            csv_list[3],csv_list[4], csv_list[5],
+            csv_list[3], csv_list[4], csv_list[5],
         )
 
     def input(self):
@@ -656,8 +656,8 @@ def main():
     # TODO Write your main program code here...
     print("~~ Welcome to the Computer Store ~~")
     print()
-    shop = ComputerPartShop() # Construct object
-    shop.command_prompt()     # Call method to start the program
+    shop = ComputerPartShop()  # Construct object
+    shop.command_prompt()      # Call method to start the program
 
 
 # --------------------------- Call the Main Function --------------------------
