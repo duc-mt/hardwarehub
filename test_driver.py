@@ -1,12 +1,27 @@
-# TODO Claim this as your own work by modifying the following...
-# File: test_driver.py 
-# Author: your name... 
-# Id: your id... 
-# Description: your program description here... 
-# This is my own work as defined by the 
-# Academic Integrity policy. 
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 
+# ----------------------------------------------------------------------------
+# |
+# |        File:  test_driver.py
+# |      Author:  Tan Duc Mai
+# |          Id:  517925
+# | Description:  A pytest for the PartList class.
+# | This is my own work as defined by the Academic Integrity policy.
+# |
+# ----------------------------------------------------------------------------
+
+
+# ------------------------------- Module Import -------------------------------
 import computer_shop
-# TODO Import unittest/pytest
+import pytest
 
-#TODO Write a unittest or pytest for PartList here...
+
+# ------------------------------- Main Function -------------------------------
+def main():
+    pass
+
+
+# --------------------------- Call the Main Function --------------------------
+if __name__ == '__main__':
+    main()
