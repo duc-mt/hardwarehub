@@ -1,0 +1,31 @@
+
+REQUIREMENTS:
+- Ensure you follow "Best Practice" as defined
+    in the assignment specifications and in Lecture 5. 
+- Test while writing each method.
+    Remove your tests after you know it is working.
+- Ensure you make git commits after every major change (minimum 10).
+- Write doc strings in each class and each method.
+    Doc strings are written within triple quotes on first line
+    inside class or method, for example:
+    class ComputerPart:
+        '''This is the abstract superclass of other Computer Parts'''
+        def to_csv_string(self):
+            '''Converts object to comma separated string of values.'''
+- Write comments to describe important sections of code.
+
+
+TASKS: 
+- Write academic integrity comment in computer_shop.py
+- Write academic integrity comment in test_driver.py
+- Initialize git repository
+    Make commits after every major change (minimum 10).
+- Write ComputerPart class. 
+- Extend ComputerPart to create child classes e.g., CPU, Memory, etc. 
+- Write data structures classes e.g., PartList, etc. 
+- Write a unittest or a pytest for PartList class. 
+    Test 5 methods: 1 'safe' and 1 'dangerous' test each.
+- Write user interface class(es). 
+- Test thoroughly.
+- Ensure output matches sample output in specifications.
+- Remove all "TODO" comments in code.
