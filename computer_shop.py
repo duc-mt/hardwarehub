@@ -340,7 +340,7 @@ class GraphicsCard(ComputerPart):
             f'"GraphicsCard,{self.get_name()},{self.get_price()},'
             f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
         )
- 
+
     def __str__(self):
         """
             Return the variables as a string.
@@ -649,6 +649,136 @@ class Storage(ComputerPart):
         storage_type = input('Enter the storage type (HDD/SSD/SSHD): ')
 
         return Storage(name, price, capacity_gb, frequency_mhz, storage_type)
+
+
+class PartList():
+    """
+        A subclass of the WishList class.
+        Stores the computer parts (instances of the ComputerPart class)
+        available in stock.
+    """
+    def __init__(self):
+        # A variable to store the items listed in the store.
+        self.__items_in_store = []
+        """
+            A dictionary
+            1. Key is the computer part.
+            2. Value is the number of that key available in stock.
+        """
+        self.__remaining_stock = {}
+
+    def get_items_in_strore(self):
+        """
+            Returns the items_in_store attribute.
+        """
+        return self.__items_in_store
+
+    def add_part_to_store(new_part):
+        """
+            Add a new item to the store.
+            If it is duplicate, the available stock must be incremented by 1.
+        """
+        pass
+
+    def get_part_using_name(part_name):
+
+        pass
+
+    def get_part_using_position(part_position):
+
+        pass
+
+    def remove_part_using_name(part_name):
+
+        pass
+
+    def remove_part_using_position(part_position):
+
+        pass
+
+    def save_to_csv(filename):
+        """
+            Save all parts to a csv file with an argument file name.
+        """
+        with open(filename + '.csv', mode='w') as outfile:
+            for item in self.get_items_in_strore():
+                outfile.write(item.__str__())
+                outfile.write('\n')
+
+    def __str__():
+        """
+            Return a string that represents the PartList in the format:
+            "---- Part List ----
+            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+            AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
+            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
+            Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
+            --------------------"
+        """
+        result = ''
+        result += '---- Part List ----\n'
+        for item in self.get_items_in_strore():
+            result += item.__str__()
+            result += '\n'
+        result += '--------------------\n'
+        return result
+
+    def __len__():
+        """
+            Get the length of the items_in_store attribute.
+        """
+        return len(self.get_items_in_strore())
+
+
+class WishList(PartList):
+    """
+        A subclass of the PartList class.
+    """
+    def __init__(self):
+        self.__username = input('Enter your name: ')
+
+    def get_username():
+        return self.__username
+
+    def get_total_cost():
+        """
+            Calculate and return the total cost of all parts.
+        """
+        price = 0
+        return price
+
+    def is_valid_computer():
+        """
+            Determine if the parts will make up a valid computer.
+            A valid computer requires at least:
+                - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
+        """
+        pass
+
+    def __str__():
+        """
+            Return a string that represents the WishList in the format:
+            "---- Gary's Wish List ----
+            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+            AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
+            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
+            Seagate FireCuda: 1000GB SSHD for $105.00 (x1)
+            Toshiba P300: 3000GB HDD for $115.00 (x1)
+            --------------------
+            $7117.99
+            Valid computer"
+
+            The last line is either "Valid computer" or "Not a valid computer".
+        """
+        result = ''
+        result += f'---- {self.get_username()}\'s Wish List ----'
+        # for item in
+
+        if is_valid_computer():
+            result += 'Valid computer'
+        else:
+            result += 'Not a valid computer'
+        return result
 
 
 # ------------------------------- Main Function -------------------------------
