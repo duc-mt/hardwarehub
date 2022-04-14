@@ -16,7 +16,7 @@
 import abc
 
 
-# ------------------------------ Class Definitions ----------------------------
+# -------------------------------- Computer Part ------------------------------
 class ComputerPart(metaclass=abc.ABCMeta):
     """
         An abstract class.
@@ -651,6 +651,8 @@ class Storage(ComputerPart):
         return Storage(name, price, capacity_gb, frequency_mhz, storage_type)
 
 
+# ------------------------------- Data Structure ------------------------------
+
 class PartList():
     """
         A subclass of the WishList class.
@@ -781,13 +783,359 @@ class WishList(PartList):
         return result
 
 
+# ------------------------------- User Interface ------------------------------
+class CommandPrompt:
+    """
+        The user interface of the system.
+    """
+
+    def __init__(self):
+        # self.__partList = self.read_from_csv()
+        self.__partList = ['CPU', 'Graphics Card', 'Memory', 'Storage']
+        self.__wishList = ['Storage', 'Memory', 'Graphics Card', 'CPU']
+        self.__questionList = []
+
+    # getter self.__partList
+    def get_part_list(self):
+        return self.__partList
+
+    # getter self.__wishList
+    def get_wish_list(self):
+        return self.__wishList
+
+    # getter self.__questionList
+    def get_question_list(self):
+        return self.__questionList
+
+    # setter self.__questionList
+    def set_question_list(self, question_list):
+        """
+            Append each question to the self.__questionList.
+            Convert the name of each question to proper format.
+        """
+        for question in question_list:
+            if isinstance(question, Question):
+                self.__questionList.append(self.convert_class_name(question))
+            else:
+                raise TypeError('QuestionError')
+
+    def convert_class_name(self, class_type):
+        """
+            Convert a class name to a human-readable name.
+            E.g. 'New Wish List' instead of 'NewWishList'.
+        """
+        obj_name = type(class_type).__name__
+        result = ''
+        result += obj_name[0]
+        for index, letter in enumerate(obj_name):
+            if letter.islower():
+                result += letter
+            else:
+                if index != 0:
+                    result += ' ' + letter
+        return result
+
+    # Provide user with a list of choices.
+    def display_menu(self, menu_type, start=None, stop=None):
+        """
+            Depend on the type of menu: Main Menu/Wish List.
+            Output the appropriate menu.
+        """
+        if menu_type != 'Part Types':
+            target_list = self.get_question_list()[start:stop]
+        else:
+            target_list = [
+                'CPU', 'Graphics Card',
+                'Memory', 'Storage', 'Back',
+            ]
+
+        print(f'---- {menu_type} ----')
+        for i, question in enumerate(target_list):
+            print(f'{i+1}. {question}')
+
+    def prompt_for_option(self, limit):
+        """
+            Prompt the user for a number as an option in the displayed menu.
+        """
+        option = None
+        while option is None or option not in range(1, limit + 1):
+            option = input(f'Enter an option (1-{limit}): ')
+            valid = False
+            if not valid:
+                try:
+                    option = int(option)
+                    valid = True
+                except ValueError:
+                    print('ValueError:', repr(option), 'is not a number.')
+            if valid and option not in range(1, limit + 1):
+                print(
+                    'ValueError:', option, 'is outside range 1 -', limit,
+                    end='.\n',
+                )
+        return option
+
+    def read_from_csv(self):
+        """
+            When the command prompt is constructed, it should automatically
+            construct a part list and fill it with items that it reads from a
+            CSV file called “database.csv”.
+        """
+        pass
+
+
+class Question:
+    """
+        A blueprint for all questions the Command Prompt can ask.
+    """
+
+    def __init__(self, cmd):
+        super().__init__()
+        self.__cmd = cmd
+
+    # getter for self.__cmd
+    def get_cmd(self):
+        return self.__cmd
+
+    def output_items(self, target_list, list_type):
+        # if isinstance(target_list, WishList):
+        # print(f'---- {prompt_for_username()}'s{list_type} ----')
+        print(f'---- {list_type} ----')
+        for index, item in enumerate(target_list, start=1):
+            print(item)
+
+    def prompt_for_part(self, command):
+        part = None
+        while part is None or part not in (
+            'CPU', 'Graphics Card', 'Memory', 'Storage'
+        ):
+            part = input(f'Enter the name of the part to {command}? ')
+            if part not in ('CPU', 'Graphics Card', 'Memory', 'Storage'):
+                print(f'Could not find {part}')
+        return part
+
+
+class ListDatabase(Question):
+    """
+        Display the PartList object.
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            super().output_items(self.get_cmd().get_part_list(), 'Part List')
+
+
+class AddPartToDatabase(Question):
+    """
+
+        Have not finished  XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        Display the Part Types menu.
+
+        Take input for the user's choice. When the user selects a part type,
+        call that type's input() method to create an object of that type. Add
+        the part returned to the database. If the part is already in the
+        database, increase its stock by 1 instead. Use exception handling to
+        display any ValueErrors raised while taking input without crashing the
+        program. The menu should repeat until the user enters 5.
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            self.get_cmd().get_part_list().append(self.prompt_for_part('add'))
+
+
+class NewWishList(Question):
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        # if execute:
+        #     self.get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
+
+    def prompt_for_username(self):
+        return input('Please input your name: ')
+
+    def look_up_part_list(self, target_part):
+        """
+            Search for a part with the name (parameter) to see if it
+            exists in the part list and there is at least 1 stock
+            remaining.
+        """
+        part_list = self.get_cmd().get_part_list()
+        for item in part_list:
+            if item == target_part and part_list.count(item):
+                return True
+        return False
+
+    def look_up_wish_list(self, target_part):
+        """
+            Search for a part with the name (parameter) to see if it
+            exists in the wish list.
+        """
+        wish_list = self.get_cmd().get_wish_list()
+        if target_part in wish_list:
+            return True
+        return False
+
+
+class Close(NewWishList):
+    """
+
+        Have not finished  XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+        Before closing the menu (and ending the program), the part list
+        should be saved to a csv file called "database.csv".
+
+                                    or
+
+        Remove all the items from the WishList and add their stock back into
+        the PartList.
+    """
+
+    def __init__(self, cmd, target_menu, execute=True):
+        super().__init__(cmd)
+        if execute:
+            if target_menu == 'WishList':
+                self.close_wish_list_menu()
+            else:
+                self.close_main_menu()
+
+    def close_wish_list_menu(self):
+        # Add stock back into PartList.
+        self.get_cmd().get_part_list().extend(self.get_cmd().get_wish_list())
+        # Remove all items from WishList.
+        del self.get_cmd().get_wish_list()[:]
+        # Return to Main Menu.
+        self.get_cmd().display_menu(menu_type='Main Menu', start=0, stop=4)
+
+    def close_main_menu(self):
+        # Save PartList to a csv file.
+        with open('database.csv', mode='w') as outfile:
+            pass
+
+
+class AddFromDatabase(NewWishList):
+    """
+        If the user selects to add a part, the application will display
+        all the database items in a list and they will be asked to input
+        the name of the part they want to add. The program will search
+        for a part with that name and add it to the wish list if it
+        exists and there is enough stock remaining.
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            ListDatabase(cmd)
+            target_part = self.prompt_for_part('add')
+            if self.look_up_part_list(target_part):
+                self.get_cmd().get_wish_list().append(target_part)
+                print(f'Added {target_part}')
+            else:
+                print('Not a valid part')
+
+
+class RemoveFromWishList(NewWishList):
+    """
+        If the user selects to remove a part from the wish list they
+        will be asked for the name of the part and that part will be
+        removed if it exists and stock will return to the part list.
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            target_part = self.prompt_for_part('remove')
+            if self.look_up_wish_list(target_part):
+                wish_list = self.get_cmd().get_wish_list()
+                count = 0
+                for item in wish_list:
+                    # Remove until all target_part is removed.
+                    if item == target_part:
+                        wish_list.remove(target_part)
+                        count += 1
+                print(f'Removed {target_part}')
+                # The number of stock is returned back to part list.
+                for _ in range(count):
+                    self.get_cmd().get_part_list().append(target_part)
+            else:
+                print('Not a valid part')
+
+
+class ShowWishList(NewWishList):
+    """
+        Display the WishList object.
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            super().output_items(self.get_cmd().get_wish_list(), 'Wish List')
+
+
+class PurchaseAndClose(NewWishList):
+    """
+        Save the WishList to a CSV file with the user's name as the filename,
+        for example, if the user name is "Gary", save it to a file called
+        "Gary.csv".
+    """
+
+    def __init__(self, cmd, execute=True):
+        super().__init__(cmd)
+        if execute:
+            with open(self.prompt_for_username() + '.csv', mode='w') as outfile:
+                pass
+
 # ------------------------------- Main Function -------------------------------
 def main():
     # TODO Write your main program code here...
     print("~~ Welcome to the Computer Store ~~")
     print()
-    shop = ComputerPartShop()  # Construct object
-    shop.command_prompt()      # Call method to start the program
+    # shop = ComputerPartShop()  # Construct object
+    # shop.command_prompt()      # Call method to start the program
+
+    cmd = CommandPrompt()
+
+    cmd.set_question_list((
+        NewWishList(cmd, False),
+        ListDatabase(cmd, False),
+        AddPartToDatabase(cmd, False),
+        Close(cmd, False),
+        AddFromDatabase(cmd, False),
+        RemoveFromWishList(cmd, False),
+        ShowWishList(cmd, False),
+        PurchaseAndClose(cmd, False),
+        Close(cmd, False),
+    ))
+
+    # Test display_menu() method
+    cmd.display_menu(menu_type='Main Menu', start=0, stop=4)
+    cmd.display_menu(menu_type='Wish List', start=4, stop=9)
+    cmd.display_menu(menu_type='Part Types')
+    # print('-' * 40)
+
+    # Test ShowWishList() class
+    # ShowWishList(cmd)
+
+    # Test ListDatabase() class
+    # ListDatabase(cmd)
+
+    # Test AddPartToDatabase() class
+    # AddPartToDatabase(cmd)
+    # ListDatabase(cmd)
+
+    # Test AddFromDatabase() class
+    # ShowWishList(cmd)
+    # AddFromDatabase(cmd)
+    # ShowWishList(cmd)
+
+    # Test RemoveFromWishList() class
+    # ListDatabase(cmd)
+    # ShowWishList(cmd)
+    # RemoveFromWishList(cmd)
+    # ShowWishList(cmd)
+    # ListDatabase(cmd)
 
 
 # --------------------------- Call the Main Function --------------------------
