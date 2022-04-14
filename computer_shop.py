@@ -217,8 +217,8 @@ class CPU(ComputerPart):
             Format: "CPU,name,price,cores,frequency_ghz".
         """
         return (
-            f'"CPU,{super().get_name()},{super().get_price()},'
-            f'{self.get_cores()},{self.get_frequency_ghz()}"'
+            f'CPU,{super().get_name()},{super().get_price()},'
+            f'{self.get_cores()},{self.get_frequency_ghz()}'
         )
 
     def __str__(self):
@@ -340,8 +340,8 @@ class GraphicsCard(ComputerPart):
             Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
         return (
-            f'"GraphicsCard,{super().get_name()},{super().get_price()},'
-            f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
+            f'GraphicsCard,{super().get_name()},{super().get_price()},'
+            f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
         )
 
     def __str__(self):
@@ -484,9 +484,9 @@ class Memory(ComputerPart):
             Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
         return (
-            f'"Memory,{super().get_name()},{super().get_price()},'
-            f'{self.get_capacity_gb()},{self.get_frequency_mhz()}, '
-            f'{self.get_ddr()}"'
+            f'Memory,{super().get_name()},{super().get_price()},'
+            f'{self.get_capacity_gb()},{self.get_frequency_mhz()},'
+            f'{self.get_ddr()}'
         )
 
     def __str__(self):
@@ -614,8 +614,8 @@ class Storage(ComputerPart):
             Format: "Storage,name,price,capacity_gb,storage_type".
         """
         return (
-            f'"Storage,{super().get_name()},{super().get_price()},'
-            f'{self.get_capacity_gb()}, {self.get_storage_type()}"'
+            f'Storage,{super().get_name()},{super().get_price()},'
+            f'{self.get_capacity_gb()},{self.get_storage_type()}'
         )
 
     def __str__(self):
@@ -673,44 +673,90 @@ class PartList():
             1. Key is the computer part.
             2. Value is the number of that key available in stock.
         """
-        self.__remaining_stock = {}
+        self.__stock_available = {}
 
-    def get_items_in_strore(self):
+    def get_length(self):
+        """
+            Get the length of the items_in_store attribute.
+        """
+        return len(self.get_items_in_store())
+
+    def get_items_in_store(self):
         """
             Returns the items_in_store attribute.
         """
         return self.__items_in_store
 
-    def add_part_to_store(new_part):
+    def get_stock_available(self):
+        """
+            Returns the stock_available attribute.
+        """
+        return self.__stock_available
+
+    def add_part_to_store(self, new_part):
         """
             Add a new item to the store.
             If it is duplicate, the available stock must be incremented by 1.
         """
-        pass
+        name_of_new_part = new_part.get_name()
+        if name_of_new_part not in self.get_items_in_store():
+            self.get_items_in_store().append(new_part)
+            self.get_stock_available().update({name_of_new_part: 1})
+        else:
+            # Duplicate item, so increment available stock by 1.
+            self.get_stock_available()[name_of_new_part] += 1
 
-    def get_part_using_name(part_name):
+    def get_part_using_name(self, part_name):
+        """
+            Find and access a part using its name.
+            Check to see if that part name is in store.
+        """
+        for item in self.get_items_in_store():
+            if item.get_name() == part_name:
+                return item
 
-        pass
+    def get_part_using_position(self, part_position):
+        """
+            Find and access a part using its position.
+            Check to see if the argument is less than the length of the list.
+        """
+        if part_position < self.get_length():
+            return self.get_items_in_store()[part_position]
 
-    def get_part_using_position(part_position):
+    def remove_part_using_name(self, part_name):
+        """
+            Find and remove a part using its name.
+            Check to see if that part name is in store.
+            Clear all stock of that part in store.
+        """
+        for item in self.get_items_in_store():
+            if item.get_name() == part_name:
+                self.get_items_in_store().remove(part_name)
+                self.get_stock_available()[part_name] = 0
 
-        pass
+    def remove_part_using_position(self, part_position):
+        """
+            Find and access a part using its position.
+            Check to see if the argument is less than the length of the list.
+            Clear all stock of that part in store.
+        """
+        if part_position < self.get_length():
+            part_name = self.get_items_in_store().pop(part_position)
+            self.get_stock_available()[part_name] = 0
 
-    def remove_part_using_name(part_name):
-
-        pass
-
-    def remove_part_using_position(part_position):
-
-        pass
-
-    def save_to_csv(filename):
+    def save_to_csv(self, filename):
         """
             Save all parts to a csv file with an argument file name.
         """
         with open(filename + '.csv', mode='w') as outfile:
-            for item in self.get_items_in_strore():
-                outfile.write(item.__str__())
+            for item in self.get_items_in_store():
+                outfile.write(item.to_csv_string())
+                # Write how many stock left.
+                stock_available = self.get_stock_available()[item.get_name()]
+                if stock_available:
+                    outfile.write(',x' + str(stock_available))
+                else:
+                    outfile.write(',OUT OF STOCK')
                 outfile.write('\n')
 
     def __str__(self):
@@ -725,17 +771,11 @@ class PartList():
         """
         result = ''
         result += '---- Part List ----\n'
-        for item in self.get_items_in_strore():
+        for item in self.get_items_in_store():
             result += item.__str__()
             result += '\n'
         result += '--------------------\n'
         return result
-
-    def __len__(self):
-        """
-            Get the length of the items_in_store attribute.
-        """
-        return len(self.get_items_in_strore())
 
 
 class WishList(PartList):
@@ -796,9 +836,10 @@ class CommandPrompt:
     """
 
     def __init__(self):
+        self.__part_list = PartList()
         self.read_from_csv()
-        self.__wishList = []
-        self.__questionList = []
+        self.__wish_list = []
+        self.__question_list = []
 
     def read_from_csv(self):
         """
@@ -809,7 +850,6 @@ class CommandPrompt:
             it reads from the CSV file named "database.csv".
         """
         with open('database.csv') as infile:
-            self.__partList = []
             list_of_csv_strings = []
             line = None
             while line is None or line != '':
@@ -819,38 +859,49 @@ class CommandPrompt:
             for csv_string in list_of_csv_strings:
                 if 'CPU' in csv_string:
                     # Construct a CPU object.
-                    self.__partList.append(CPU.parse(csv_string))
+                    self.get_part_list().add_part_to_store(
+                        CPU.parse(csv_string)
+                    )
                 elif 'GraphicsCard' in csv_string:
                     # Construct a GraphicsCard object.
-                    self.__partList.append(GraphicsCard.parse(csv_string))
+                    self.get_part_list().add_part_to_store(
+                        GraphicsCard.parse(csv_string)
+                    )
                 elif 'Memory' in csv_string:
                     # Construct a Memory object.
-                    self.__partList.append(Memory.parse(csv_string))
+                    self.get_part_list().add_part_to_store(
+                        Memory.parse(csv_string)
+                    )
                 elif 'Storage' in csv_string:
                     # Construct a Storage object.
-                    self.__partList.append(Storage.parse(csv_string))
+                    self.get_part_list().add_part_to_store(
+                        Storage.parse(csv_string)
+                    )
 
-    # getter self.__partList
+    # getter self.__part_list
     def get_part_list(self):
-        return self.__partList
+        return self.__part_list
 
-    # getter self.__wishList
+    def get_items_in_store(self):
+        return self.__part_list.get_items_in_store()
+
+    # getter self.__wish_list
     def get_wish_list(self):
-        return self.__wishList
+        return self.__wish_list
 
-    # getter self.__questionList
+    # getter self.__question_list
     def get_question_list(self):
-        return self.__questionList
+        return self.__question_list
 
-    # setter self.__questionList
+    # setter self.__question_list
     def set_question_list(self, question_list):
         """
-            Append each question to the self.__questionList.
+            Append each question to the self.__question_list.
             Convert the name of each question to proper format.
         """
         for question in question_list:
             if isinstance(question, Question):
-                self.__questionList.append(self.convert_class_name(question))
+                self.__question_list.append(self.convert_class_name(question))
             else:
                 raise TypeError('QuestionError')
 
@@ -949,7 +1000,7 @@ class ListDatabase(Question):
     def __init__(self, cmd, execute=True):
         super().__init__(cmd)
         if execute:
-            super().output_items(self.get_cmd().get_part_list(), 'Part List')
+            super().output_items(self.get_cmd().get_items_in_store(), 'Part List')
 
 
 class AddPartToDatabase(Question):
@@ -970,7 +1021,7 @@ class AddPartToDatabase(Question):
     def __init__(self, cmd, execute=True):
         super().__init__(cmd)
         if execute:
-            self.get_cmd().get_part_list().append(self.prompt_for_part('add'))
+            self.get_cmd().get_items_in_store().append(self.prompt_for_part('add'))
 
 
 class NewWishList(Question):
@@ -989,7 +1040,7 @@ class NewWishList(Question):
             exists in the part list and there is at least 1 stock
             remaining.
         """
-        part_list = self.get_cmd().get_part_list()
+        part_list = self.get_cmd().get_items_in_store()
         for item in part_list:
             if item == target_part and part_list.count(item):
                 return True
@@ -1030,7 +1081,7 @@ class Close(NewWishList):
 
     def close_wish_list_menu(self):
         # Add stock back into PartList.
-        self.get_cmd().get_part_list().extend(self.get_cmd().get_wish_list())
+        self.get_cmd().get_items_in_store().extend(self.get_cmd().get_wish_list())
         # Remove all items from WishList.
         del self.get_cmd().get_wish_list()[:]
         # Return to Main Menu.
@@ -1085,7 +1136,7 @@ class RemoveFromWishList(NewWishList):
                 print(f'Removed {target_part}')
                 # The number of stock is returned back to part list.
                 for _ in range(count):
-                    self.get_cmd().get_part_list().append(target_part)
+                    self.get_cmd().get_items_in_store().append(target_part)
             else:
                 print('Not a valid part')
 
@@ -1146,7 +1197,7 @@ def main():
     # ShowWishList(cmd)
 
     # Test ListDatabase() class
-    ListDatabase(cmd)
+    # ListDatabase(cmd)
 
     # Test AddPartToDatabase() class
     # AddPartToDatabase(cmd)
@@ -1163,6 +1214,8 @@ def main():
     # RemoveFromWishList(cmd)
     # ShowWishList(cmd)
     # ListDatabase(cmd)
+
+    cmd.get_part_list().save_to_csv('henry')
 
 
 # --------------------------- Call the Main Function --------------------------
