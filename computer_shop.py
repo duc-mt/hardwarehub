@@ -6,7 +6,8 @@
 # |        File:  computer_shop.py
 # |      Author:  Tan Duc Mai
 # |          Id:  517925
-# | Description:  Practical 1, exercise 1 -
+# | Description:  Creates a Computer shop which allows customers
+# |               to select and purchase computer parts.
 # | This is my own work as defined by the Academic Integrity policy.
 # |
 # ----------------------------------------------------------------------------
@@ -73,19 +74,19 @@ class ComputerPart(metaclass=abc.ABCMeta):
             raise ValueError('ValueError: Price must not be negative.')
         self.__price = price
 
-    def csv_string_to_list(self, csv_string):
-        """
-            Splits the csv_string into separate values stored as a list.
-            Called by subclasses using super().csv_string_to_list(csv_string)
-        """
-        result = []
-        for letter in csv_string:
-            item = ''
-            if letter != ',':
-                item += letter
-            else:
-                result.append(item)
-        return result
+    # def csv_string_to_list(cls, csv_string):
+    #     """
+    #         Splits the csv_string into separate values stored as a list.
+    #         Called by subclasses using super().csv_string_to_list(csv_string)
+    #     """
+    #     result = []
+    #     for letter in csv_string:
+    #         item = ''
+    #         if letter != ',':
+    #             item += letter
+    #         else:
+    #             result.append(item)
+    #     return result
 
     def equals(self, other):
         """
@@ -115,20 +116,20 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractmethod
-    def parse(self):
+    @abc.abstractclassmethod
+    def parse(cls):
         """
-            An abstract method.
+            An abstract class method.
             Splits the csv_string into separate values and parses them to the
             correct datatypes.
             Uses these values to construct and return a new ComputerPart.
         """
         pass
 
-    @abc.abstractmethod
-    def input(self):
+    @abc.abstractclassmethod
+    def input(cls):
         """
-            An abstract method.
+            An abstract class method.
             Takes input for each of the necessary variables.
             Uses these input values to construct and return a new ComputerPart.
         """
@@ -140,11 +141,12 @@ class CPU(ComputerPart):
         A subclass of the ComputerPart class.
     """
 
-    def __init__(self, cores, frequency_ghz):
+    def __init__(self, name, price, cores, frequency_ghz):
         """
             Initialises cores and frequency_ghz by calling theirs
             mutator methods.
         """
+        super().__init__(name, price)
         self.set_cores(cores)
         self.set_frequency_ghz(frequency_ghz)
 
@@ -215,7 +217,7 @@ class CPU(ComputerPart):
             Format: "CPU,name,price,cores,frequency_ghz".
         """
         return (
-            f'"CPU,{self.get_name()},{self.get_price()},'
+            f'"CPU,{super().get_name()},{super().get_price()},'
             f'{self.get_cores()},{self.get_frequency_ghz()}"'
         )
 
@@ -225,28 +227,28 @@ class CPU(ComputerPart):
             For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
         return (
-            f'"{self.get_name()}: {self.get_cores()} cores, @ '
-            f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}"'
+            f'{super().get_name()}: {self.get_cores()} cores, @ '
+            f'{self.get_frequency_ghz()}GHz for ${super().get_price():.2f}'
         )
 
-    def parse(self, csv_string):
+    @classmethod
+    def parse(cls, csv_string):
         """
             Calls the superclass's csv_string_to_list() method to get the
             values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new CPU.
         """
-        csv_list = super().csv_string_to_list(csv_string)
+        csv_list = csv_string.split(',')[1:-1]
 
-        csv_list[2] = float(csv_list[2])
-        csv_list[3] = int(csv_list[3])
-        csv_list[4] = float(csv_list[4])
+        csv_list[1] = float(csv_list[1])
+        csv_list[2] = int(csv_list[2])
+        csv_list[3] = float(csv_list[3])
 
-        return CPU(
-            csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
-        )
+        return CPU(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
 
-    def input(self):
+    @classmethod
+    def input(cls):
         """
             Takes input for the name, price, frequency, and number of cores.
             Uses these input values to construct and return a new CPU.
@@ -256,7 +258,7 @@ class CPU(ComputerPart):
         cores = int(input('Enter the number of cores: '))
         frequency_ghz = float(input('Enter the frequency in GHz: '))
 
-        return CPU(name, price, cores, frequency_ghz)
+        return (CPU(name, price, cores, frequency_ghz))
 
 
 class GraphicsCard(ComputerPart):
@@ -264,11 +266,12 @@ class GraphicsCard(ComputerPart):
         A subclass of the ComputerPart class.
     """
 
-    def __init__(self, frequency_mhz, memory_gb):
+    def __init__(self, name, price, frequency_mhz, memory_gb):
         """
             Initialises frequency_mhz and memory_gb by calling theirs
             mutator methods.
         """
+        super().__init__(name, price)
         self.set_frequency_mhz(frequency_mhz)
         self.set_memory_gb(memory_gb)
 
@@ -337,7 +340,7 @@ class GraphicsCard(ComputerPart):
             Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
         return (
-            f'"GraphicsCard,{self.get_name()},{self.get_price()},'
+            f'"GraphicsCard,{super().get_name()},{super().get_price()},'
             f'{self.get_frequency_mhz()},{self.get_memory_gb()}"'
         )
 
@@ -347,28 +350,28 @@ class GraphicsCard(ComputerPart):
             For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
         return (
-            f'"{self.get_name()}: {self.get_memory_gb()}GB @ '
-            f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}"'
+            f'{super().get_name()}: {self.get_memory_gb()}GB @ '
+            f'{self.get_frequency_mhz()}MHz for ${super().get_price():.2f}'
         )
 
-    def parse(self, csv_string):
+    @classmethod
+    def parse(cls, csv_string):
         """
             Calls the superclass's csv_string_to_list() method to get the
             values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new GraphicsCard.
         """
-        csv_list = super().csv_string_to_list(csv_string)
+        csv_list = csv_string.split(',')[1:-1]
 
-        csv_list[2] = float(csv_list[2])
+        csv_list[1] = float(csv_list[1])
+        csv_list[2] = int(csv_list[2])
         csv_list[3] = int(csv_list[3])
-        csv_list[4] = int(csv_list[4])
 
-        return GraphicsCard(
-            csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
-        )
+        return GraphicsCard(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
 
-    def input(self):
+    @classmethod
+    def input(cls):
         """
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new GraphicsCard.
@@ -386,11 +389,12 @@ class Memory(ComputerPart):
         A subclass of the ComputerPart class.
     """
 
-    def __init__(self, capacity_gb, frequency_mhz):
+    def __init__(self, name, price, capacity_gb, frequency_mhz, ddr):
         """
             Initialises capacity_gb and frequency_mhz by calling theirs
             mutator methods.
         """
+        super().__init__(name, price)
         self.set_capacity_gb(capacity_gb)
         self.set_frequency_mhz(frequency_mhz)
         self.set_ddr(ddr)
@@ -480,7 +484,7 @@ class Memory(ComputerPart):
             Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
         return (
-            f'"Memory,{self.get_name()},{self.get_price()},'
+            f'"Memory,{super().get_name()},{super().get_price()},'
             f'{self.get_capacity_gb()},{self.get_frequency_mhz()}, '
             f'{self.get_ddr()}"'
         )
@@ -491,30 +495,31 @@ class Memory(ComputerPart):
             For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
         return (
-            f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
+            f'{super().get_name()}: {self.get_capacity_gb()}GB, '
             f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ '
-            f'for ${self.get_price():.2f}"'
+            f'for ${super().get_price():.2f}'
         )
 
-    def parse(self, csv_string):
+    @classmethod
+    def parse(cls, csv_string):
         """
             Calls the superclass's csv_string_to_list() method to get the
             values as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Memory.
         """
-        csv_list = super().csv_string_to_list(csv_string)
+        csv_list = csv_string.split(',')[1:-1]
 
-        csv_list[2] = float(csv_list[2])
+        csv_list[1] = float(csv_list[1])
+        csv_list[2] = int(csv_list[2])
         csv_list[3] = int(csv_list[3])
-        csv_list[4] = int(csv_list[4])
 
         return Memory(
-            csv_list[0], csv_list[1], csv_list[2],
-            csv_list[3], csv_list[4], csv_list[5],
+            csv_list[0], csv_list[1], csv_list[2],csv_list[3], csv_list[4],
         )
 
-    def input(self):
+    @classmethod
+    def input(cls):
         """
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Memory.
@@ -533,11 +538,12 @@ class Storage(ComputerPart):
         A subclass of the ComputerPart class.
     """
 
-    def __init__(self, capacity_gb, frequency_mhz):
+    def __init__(self, name, price, capacity_gb, storage_type):
         """
             Initialises capacity_gb and frequency_mhz by calling theirs
             mutator methods.
         """
+        super().__init__(name, price)
         self.set_capacity_gb(capacity_gb)
         self.set_storage_type(storage_type)
 
@@ -608,7 +614,7 @@ class Storage(ComputerPart):
             Format: "Storage,name,price,capacity_gb,storage_type".
         """
         return (
-            f'"Storage,{self.get_name()},{self.get_price()},'
+            f'"Storage,{super().get_name()},{super().get_price()},'
             f'{self.get_capacity_gb()}, {self.get_storage_type()}"'
         )
 
@@ -618,27 +624,27 @@ class Storage(ComputerPart):
             For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
         return (
-            f'"{self.get_name()}: {self.get_capacity_gb()}GB, '
-            f'{self.get_storage_type()} for ${self.get_price():.2f}"'
+            f'{super().get_name()}: {self.get_capacity_gb()}GB, '
+            f'{self.get_storage_type()} for ${super().get_price():.2f}'
         )
 
-    def parse(self, csv_string):
+    @classmethod
+    def parse(cls, csv_string):
         """
             Calls the superclass's csv_string_to_list() method to get the values
             as a list.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Storage.
         """
-        csv_list = super().csv_string_to_list(csv_string)
+        csv_list = csv_string.split(',')[1:-1]
 
-        csv_list[2] = float(csv_list[2])
-        csv_list[3] = int(csv_list[3])
+        csv_list[1] = float(csv_list[1])
+        csv_list[2] = int(csv_list[2])
 
-        return Storage(
-            csv_list[0], csv_list[1], csv_list[2], csv_list[3], csv_list[4],
-        )
+        return Storage(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
 
-    def input(self):
+    @classmethod
+    def input(cls):
         """
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Storage.
@@ -707,7 +713,7 @@ class PartList():
                 outfile.write(item.__str__())
                 outfile.write('\n')
 
-    def __str__():
+    def __str__(self):
         """
             Return a string that represents the PartList in the format:
             "---- Part List ----
@@ -725,7 +731,7 @@ class PartList():
         result += '--------------------\n'
         return result
 
-    def __len__():
+    def __len__(self):
         """
             Get the length of the items_in_store attribute.
         """
@@ -739,17 +745,17 @@ class WishList(PartList):
     def __init__(self):
         self.__username = input('Enter your name: ')
 
-    def get_username():
+    def get_username(self):
         return self.__username
 
-    def get_total_cost():
+    def get_total_cost(self):
         """
             Calculate and return the total cost of all parts.
         """
         price = 0
         return price
 
-    def is_valid_computer():
+    def is_valid_computer(self):
         """
             Determine if the parts will make up a valid computer.
             A valid computer requires at least:
@@ -757,7 +763,7 @@ class WishList(PartList):
         """
         pass
 
-    def __str__():
+    def __str__(self):
         """
             Return a string that represents the WishList in the format:
             "---- Gary's Wish List ----
@@ -790,10 +796,39 @@ class CommandPrompt:
     """
 
     def __init__(self):
-        # self.__partList = self.read_from_csv()
-        self.__partList = ['CPU', 'Graphics Card', 'Memory', 'Storage']
-        self.__wishList = ['Storage', 'Memory', 'Graphics Card', 'CPU']
+        self.read_from_csv()
+        self.__wishList = []
         self.__questionList = []
+
+    def read_from_csv(self):
+        """
+            This method is automatically invoked when an object of type
+            CommandPrompt is constructed.
+            By invoking this method, the CommandPrompt class should
+            automatically construct a part list and fill it with items that
+            it reads from the CSV file named "database.csv".
+        """
+        with open('database.csv') as infile:
+            self.__partList = []
+            list_of_csv_strings = []
+            line = None
+            while line is None or line != '':
+                line = infile.readline().rstrip('\n')
+                list_of_csv_strings.append(line)
+
+            for csv_string in list_of_csv_strings:
+                if 'CPU' in csv_string:
+                    # Construct a CPU object.
+                    self.__partList.append(CPU.parse(csv_string))
+                elif 'GraphicsCard' in csv_string:
+                    # Construct a GraphicsCard object.
+                    self.__partList.append(GraphicsCard.parse(csv_string))
+                elif 'Memory' in csv_string:
+                    # Construct a Memory object.
+                    self.__partList.append(Memory.parse(csv_string))
+                elif 'Storage' in csv_string:
+                    # Construct a Storage object.
+                    self.__partList.append(Storage.parse(csv_string))
 
     # getter self.__partList
     def get_part_list(self):
@@ -873,14 +908,6 @@ class CommandPrompt:
                     end='.\n',
                 )
         return option
-
-    def read_from_csv(self):
-        """
-            When the command prompt is constructed, it should automatically
-            construct a part list and fill it with items that it reads from a
-            CSV file called “database.csv”.
-        """
-        pass
 
 
 class Question:
@@ -1011,8 +1038,8 @@ class Close(NewWishList):
 
     def close_main_menu(self):
         # Save PartList to a csv file.
-        with open('database.csv', mode='w') as outfile:
-            pass
+        # with open('database.csv', mode='w') as outfile:
+        pass
 
 
 class AddFromDatabase(NewWishList):
@@ -1110,16 +1137,16 @@ def main():
     ))
 
     # Test display_menu() method
-    cmd.display_menu(menu_type='Main Menu', start=0, stop=4)
-    cmd.display_menu(menu_type='Wish List', start=4, stop=9)
-    cmd.display_menu(menu_type='Part Types')
+    # cmd.display_menu(menu_type='Main Menu', start=0, stop=4)
+    # cmd.display_menu(menu_type='Wish List', start=4, stop=9)
+    # cmd.display_menu(menu_type='Part Types')
     # print('-' * 40)
 
     # Test ShowWishList() class
     # ShowWishList(cmd)
 
     # Test ListDatabase() class
-    # ListDatabase(cmd)
+    ListDatabase(cmd)
 
     # Test AddPartToDatabase() class
     # AddPartToDatabase(cmd)
