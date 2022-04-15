@@ -823,7 +823,32 @@ class WishList(PartList):
             A valid computer requires at least:
                 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
         """
-        pass
+        # A dictionary to check if one of these parts is in the Wish List.
+        is_in_wish_list = {
+            'CPU': False,
+            'GraphicsCard': False,
+            'Memory': False,
+            'Storage': False,
+        }
+        for item in self.get_items_in_wish_list():
+            if isinstance(item, CPU):
+                is_in_wish_list['CPU'] = True
+            elif isinstance(item, GraphicsCard):
+                is_in_wish_list['GraphicsCard'] = True
+            elif isinstance(item, Memory):
+                is_in_wish_list['Memory'] = True
+            elif isinstance(item, Storage):
+                is_in_wish_list['Storage'] = True
+
+        if (is_in_wish_list['CPU'] == True and
+            is_in_wish_list['GraphicsCard'] == True and
+            is_in_wish_list['Memory'] == True and
+            is_in_wish_list['Storage'] == True):
+            # Wish List currently has all of the parts - a valid computer.
+            return True
+        else:
+            return False
+
 
     def __str__(self):
         """
@@ -1034,16 +1059,29 @@ class AddPartToDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            super().get_cmd.display_menu(menu_type='Part Types')
-            option = super().prompt_for_option(5)
-            if option == 1:
-                super().look_up_part_list(CPU.input())
-            elif option == 2:
-                super().look_up_part_list(GraphicsCard.input())
-            elif option == 3:
-                super().look_up_part_list(Memory.input())
-            elif option == 4:
-                super().look_up_part_list(Storage.input())
+            # The Part Types menu is kept repeating until the user enters 5.
+            option = None
+            while option is None or option not in range(1, 6) or option != 5:
+                super().get_cmd().display_menu(menu_type='Part Types')
+                option = super().get_cmd().prompt_for_option(limit=6)
+                if option in range(1, 5):
+                    """
+                        Now we have a valid option between 1 and 5.
+                        Depending on the number, constructs the appropriate part.
+                        Also look that newly created part in the Part List to see
+                        if it is already in there.
+                    """
+                    if option == 1:
+                        self.look_up_part_list(CPU.input())
+                    elif option == 2:
+                        self.look_up_part_list(GraphicsCard.input())
+                    elif option == 3:
+                        self.look_up_part_list(Memory.input())
+                    elif option == 4:
+                        self.look_up_part_list(Storage.input())
+                    else:
+                        pass
+            print()
 
 
     def look_up_part_list(self, new_part):
@@ -1053,13 +1091,14 @@ class AddPartToDatabase(Question):
             If it is, increment that part in stock by 1.
             Otherwise, add that new part to the Part List.
         """
-        for item in super().get_cmd().get_items_in_store():
-            if item.get_name() == new_part.get_name():
-                super().get_cmd().get_stock_available()[
-                    item.get_name()
-                ] += 1
-            else:
-                super().get_cmd().get_items_in_store().append(new_part)
+        name_of_new_part = new_part.get_name()
+        stock_available_dictionary = super().get_cmd().get_part_list().get_stock_available()
+        try:
+            value = stock_available_dictionary[name_of_new_part]
+        except KeyError:
+            super().get_cmd().get_items_in_store().append(new_part)
+        else:
+            stock_available_dictionary[name_of_new_part] += 1
 
 
 class Close(Question):
@@ -1096,7 +1135,7 @@ class NewWishList(Question):
         if execute:
             super().__init__(cmd)
             super().get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
-            super().get_wish_list = WishList()
+            super().get_cmd().get_wish_list = WishList()
 
     def look_up_part_list(self, target_part):
         """
@@ -1105,10 +1144,15 @@ class NewWishList(Question):
             remaining.
         """
         try:
-            if super().get_cmd().get_part_list().get_stock_available()[target_part] > 0:
-                return True
+            value = super().get_cmd().get_part_list().get_stock_available()[target_part]
         except KeyError as e:
+            print(f'{type(e).__name__}: {repr(option)} is not in Part List.\n')
             return False
+        else:
+            if value > 0:
+                return True
+            else:
+                return False
 
     def look_up_wish_list(self, target_part):
         """
@@ -1116,10 +1160,15 @@ class NewWishList(Question):
             exists in the wish list.
         """
         try:
-            if super().get_wish_list().get_stock_in_wish_list()[target_part] > 0:
-                return True
+            value = super().get_cmd().get_wish_list().get_stock_in_wish_list()[target_part]
         except KeyError as e:
+            print(f'{type(e).__name__}: {repr(option)} is not in Wish List.\n')
             return False
+        else:
+            if value > 0:
+                return True
+            else:
+                return False
 
 
 class AddFromDatabase(NewWishList):
@@ -1257,7 +1306,6 @@ def main():
 
 
     # cmd.display_menu(menu_type='Wish List', start=4, stop=9)
-    # cmd.display_menu(menu_type='Part Types')
     # print('-' * 40)
 
     # Test ShowWishList() class
