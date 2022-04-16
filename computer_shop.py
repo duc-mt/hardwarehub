@@ -26,11 +26,11 @@ class ComputerPart(metaclass=abc.ABCMeta):
 
     def __init__(self, name, price):
         """
-            Initialises name and price by calling theirs mutator methods.
+            Initialises name and price.
             Called by subclasses using super().__init__()
         """
-        self.set_name(name)
-        self.set_price(price)
+        self.__name = name
+        self.__price = price
 
     def get_name(self):
         """
@@ -45,34 +45,6 @@ class ComputerPart(metaclass=abc.ABCMeta):
             Called by subclasses using super().get_price()
         """
         return self.__price
-
-    def set_name(self, name):
-        """
-            Sets the name attribute to the argument
-            Only if the argument is a non-empty string.
-        """
-        if not isinstance(name, str):
-            raise TypeError(
-                f'Argument was {repr(name)}, type {type(name)}. '
-                f'Must be a string.'
-            )
-        elif name == '':
-            raise ValueError('ValueError: Name must not be empty.')
-        self.__name = name
-
-    def set_price(self, price):
-        """
-            Sets the price attribute to the argument
-            Only if the argument is a positive float.
-        """
-        if not isinstance(price, float):
-            raise TypeError(
-                f'Argument was {repr(price)}, type {type(price)}. '
-                f'Must be a float.'
-            )
-        elif price <= 0:
-            raise ValueError('ValueError: Price must not be negative.')
-        self.__price = price
 
     def equals(self, other):
         """
@@ -121,6 +93,58 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
+    @classmethod
+    def input_name(cls):
+        """
+            Sets the name attribute to the argument
+            Only if the argument is a non-empty string.
+        """
+        name = None
+        valid = False
+        while name is None or not valid:
+            name = input('Enter the name: ')
+            if not isinstance(name, str):
+                raise TypeError(
+                    f'Argument was {repr(name)}, type {type(name)}. '
+                    f'Must be a string.'
+                )
+            elif name == '':
+                print('ValueError: Name must not be empty.')
+            else:
+                valid = True
+        return name
+
+    @classmethod
+    def input_price(cls):
+        """
+            Sets the price attribute to the argument
+            Only if the argument is a positive float.
+        """
+        price = None
+        valid = False
+        while price is None or not valid:
+            price = float(input('Enter the price: '))
+            if not isinstance(price, float):
+                raise TypeError(
+                    f'Argument was {repr(price)}, type {type(price)}. '
+                    f'Must be a float.'
+                )
+            elif price <= 0:
+                print('ValueError: Price must not be negative.')
+            else:
+                valid = True
+        return price
+
+    @classmethod
+    def display_menu(cls):
+        menu_options = [
+            'CPU', 'Graphics Card',
+            'Memory', 'Storage', 'Back',
+        ]
+        print(f'---- Part Types ----')
+        for i, question in enumerate(menu_options):
+            print(f'{i+1}. {question}')
+
 
 class CPU(ComputerPart):
     """
@@ -129,16 +153,15 @@ class CPU(ComputerPart):
 
     def __init__(self, name, price, cores, frequency_ghz):
         """
-            Initialises cores and frequency_ghz by calling theirs
-            mutator methods.
+            Initialises cores and frequency_ghz.
         """
         super().__init__(name, price)
-        self.set_cores(cores)
-        self.set_frequency_ghz(frequency_ghz)
+        self.__cores = cores
+        self.__frequency_ghz = frequency_ghz
 
     def get_cores(self):
         """
-            Returns the cores attribute.
+             Returns the cores attribute.
         """
         return self.__cores
 
@@ -147,36 +170,6 @@ class CPU(ComputerPart):
             Returns the frequency_ghz attribute.
         """
         return self.__frequency_ghz
-
-    def set_cores(self, cores):
-        """
-            Sets the cores attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(cores, int):
-            raise TypeError(
-                f'Argument was {repr(cores)}, type {type(cores)}. '
-                f'Must be an integer.'
-            )
-        elif cores <= 0:
-            raise ValueError(
-                'ValueError: Number of Cores must not be negative.'
-            )
-        self.__cores = cores
-
-    def set_frequency_ghz(self, frequency_ghz):
-        """
-            Sets the frequency_ghz attribute to the argument
-            Only if the argument is a positive float.
-        """
-        if not isinstance(frequency_ghz, float):
-            raise TypeError(
-                f'Argument was {repr(frequency_ghz)}, type '
-                f'{type(frequency_ghz)}. Must be a float.'
-            )
-        elif frequency_ghz <= 0:
-            raise ValueError('ValueError: Frequency must not be negative.')
-        self.__frequency_ghz = frequency_ghz
 
     def equals(self, other):
         """
@@ -202,20 +195,16 @@ class CPU(ComputerPart):
             variables separated by commas.
             Format: "CPU,name,price,cores,frequency_ghz".
         """
-        return (
-            f'CPU,{super().get_name()},{super().get_price()},'
-            f'{self.get_cores()},{self.get_frequency_ghz()}'
-        )
+        return f'CPU,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_cores()},{self.get_frequency_ghz()}'
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
-        return (
-            f'{super().get_name()}: {self.get_cores()} cores, @ '
-            f'{self.get_frequency_ghz()}GHz for ${super().get_price():.2f}'
-        )
+        return f'{super().get_name()}: {self.get_cores()} cores, @ ' + \
+               f'{self.get_frequency_ghz()}GHz for ${super().get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -231,7 +220,12 @@ class CPU(ComputerPart):
         csv_list[2] = int(csv_list[2])
         csv_list[3] = float(csv_list[3])
 
-        return CPU(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
+        return CPU(
+            csv_list[0],
+            csv_list[1],
+            csv_list[2],
+            csv_list[3],
+        )
 
     @classmethod
     def input(cls):
@@ -239,12 +233,54 @@ class CPU(ComputerPart):
             Takes input for the name, price, frequency, and number of cores.
             Uses these input values to construct and return a new CPU.
         """
-        name = input('Enter the name: ')
-        price = float(input('Enter the price: '))
-        cores = int(input('Enter the number of cores: '))
-        frequency_ghz = float(input('Enter the frequency in GHz: '))
+        return CPU(
+            cls.input_name(),
+            cls.input_price(),
+            cls.input_cores(),
+            cls.input_frequency_ghz(),
+        )
 
-        return (CPU(name, price, cores, frequency_ghz))
+    @classmethod
+    def input_cores(cls):
+        """
+            Sets the cores attribute to the argument
+            Only if the argument is a positive integer.
+        """
+        cores = None
+        valid = False
+        while cores is None or not valid:
+            cores = int(input('Enter the number of cores: '))
+            if not isinstance(cores, int):
+                raise TypeError(
+                    f'Argument was {repr(cores)}, type {type(cores)}. '
+                    f'Must be an integer.'
+                )
+            elif cores <= 0:
+                print('ValueError: Number of Cores must not be negative.')
+            else:
+                valid = True
+        return cores
+
+    @classmethod
+    def input_frequency_ghz(cls):
+        """
+            Sets the frequency_ghz attribute to the argument
+            Only if the argument is a positive float.
+        """
+        frequency_ghz = None
+        valid = False
+        while frequency_ghz is None or not valid:
+            frequency_ghz = float(input('Enter the frequency in GHz: '))
+            if not isinstance(frequency_ghz, float):
+                raise TypeError(
+                    f'Argument was {repr(frequency_ghz)}, type '
+                    f'{type(frequency_ghz)}. Must be a float.'
+                )
+            elif frequency_ghz <= 0:
+                print('ValueError: Frequency must not be negative.')
+            else:
+                valid = True
+        return frequency_ghz
 
 
 class GraphicsCard(ComputerPart):
@@ -258,8 +294,8 @@ class GraphicsCard(ComputerPart):
             mutator methods.
         """
         super().__init__(name, price)
-        self.set_frequency_mhz(frequency_mhz)
-        self.set_memory_gb(memory_gb)
+        self.__frequency_mhz = frequency_mhz
+        self.__memory_gb = memory_gb
 
     def get_frequency_mhz(self):
         """
@@ -272,34 +308,6 @@ class GraphicsCard(ComputerPart):
             Returns the memory_gb attribute.
         """
         return self.__memory_gb
-
-    def set_frequency_mhz(self, frequency_mhz):
-        """
-            Sets the frequency_mhz attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(frequency_mhz, int):
-            raise TypeError(
-                f'Argument was {repr(frequency_mhz)}, type '
-                f'{type(frequency_mhz)}. Must be an integer.'
-            )
-        elif frequency_mhz <= 0:
-            raise ValueError('ValueError: Frequency must not be negative.')
-        self.__frequency_mhz = frequency_mhz
-
-    def set_memory_gb(self, memory_gb):
-        """
-            Sets the memory_gb attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(memory_gb, int):
-            raise TypeError(
-                f'Argument was {repr(memory_gb)}, type {type(memory_gb)}. '
-                f'Must be an integer.'
-            )
-        elif memory_gb <= 0:
-            raise ValueError('ValueError: Memory must not be negative.')
-        self.__memory_gb = memory_gb
 
     def equals(self, other):
         """
@@ -325,20 +333,16 @@ class GraphicsCard(ComputerPart):
             variables separated by commas.
             Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
-        return (
-            f'GraphicsCard,{super().get_name()},{super().get_price()},'
-            f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
-        )
+        return f'GraphicsCard,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
-        return (
-            f'{super().get_name()}: {self.get_memory_gb()}GB @ '
-            f'{self.get_frequency_mhz()}MHz for ${super().get_price():.2f}'
-        )
+        return f'{super().get_name()}: {self.get_memory_gb()}GB @ ' + \
+               f'{self.get_frequency_mhz()}MHz for ${super().get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -349,12 +353,15 @@ class GraphicsCard(ComputerPart):
             Uses these values to construct and return a new GraphicsCard.
         """
         csv_list = csv_string.split(',')[1:-1]
-
         csv_list[1] = float(csv_list[1])
         csv_list[2] = int(csv_list[2])
         csv_list[3] = int(csv_list[3])
-
-        return GraphicsCard(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
+        return GraphicsCard(
+            csv_list[0],
+            csv_list[1],
+            csv_list[2],
+            csv_list[3],
+        )
 
     @classmethod
     def input(cls):
@@ -362,12 +369,54 @@ class GraphicsCard(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new GraphicsCard.
         """
-        name = input('Enter the name: ')
-        price = float(input('Enter the price: '))
-        frequency_mhz = int(input('Enter the frequency in MHz: '))
-        memory_gb = int(input('Enter the memory in GB: '))
+        return GraphicsCard(
+            cls.input_name(),
+            cls.input_price(),
+            cls.input_frequency_mhz(),
+            cls.input_memory_gb(),
+        )
 
-        return GraphicsCard(name, price, frequency_mhz, memory_gb)
+    @classmethod
+    def input_frequency_mhz(cls):
+        """
+            Sets the frequency_mhz attribute to the argument.
+            Only if the argument is a positive integer.
+        """
+        frequency_mhz = None
+        valid = False
+        while frequency_mhz is None or not valid:
+            frequency_mhz = int(input('Enter the frequency in MHz: '))
+            if not isinstance(frequency_mhz, int):
+                raise TypeError(
+                    f'Argument was {repr(frequency_mhz)}, type '
+                    f'{type(frequency_mhz)}. Must be an integer.'
+                )
+            elif frequency_mhz <= 0:
+                print('ValueError: Frequency must not be negative.')
+            else:
+                valid = True
+        return frequency_mhz
+
+    @classmethod
+    def input_memory_gb(cls):
+        """
+            Sets the memory_gb attribute to the argument.
+            Only if the argument is a positive integer.
+        """
+        memory_gb = None
+        valid = False
+        while memory_gb is None or not valid:
+            memory_gb = int(input('Enter the memory in GB: '))
+            if not isinstance(memory_gb, int):
+                raise TypeError(
+                    f'Argument was {repr(memory_gb)}, type {type(memory_gb)}. '
+                    f'Must be an integer.'
+                )
+            elif memory_gb <= 0:
+                print('ValueError: Memory must not be negative.')
+            else:
+                valid = True
+        return memory_gb
 
 
 class Memory(ComputerPart):
@@ -381,9 +430,9 @@ class Memory(ComputerPart):
             mutator methods.
         """
         super().__init__(name, price)
-        self.set_capacity_gb(capacity_gb)
-        self.set_frequency_mhz(frequency_mhz)
-        self.set_ddr(ddr)
+        self.__capacity_gb = capacity_gb
+        self.__frequency_mhz = frequency_mhz
+        self.__ddr = ddr
 
     def get_capacity_gb(self):
         """
@@ -402,48 +451,6 @@ class Memory(ComputerPart):
             Returns the ddr attribute.
         """
         return self.__ddr
-
-    def set_capacity_gb(self, capacity_gb):
-        """
-            Sets the capacity_gb attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(capacity_gb, int):
-            raise TypeError(
-                f'Argument was {repr(capacity_gb)}, type '
-                f'{type(capacity_gb)}. Must be an integer.'
-            )
-        elif capacity_gb <= 0:
-            raise ValueError('ValueError: Capacity must not be negative.')
-        self.__capacity_gb = capacity_gb
-
-    def set_frequency_mhz(self, frequency_mhz):
-        """
-            Sets the frequency_mhz attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(frequency_mhz, int):
-            raise TypeError(
-                f'Argument was {repr(frequency_mhz)}, '
-                f'type {type(frequency_mhz)}. Must be an integer.'
-            )
-        elif frequency_mhz <= 0:
-            raise ValueError('ValueError: Frequency must not be negative.')
-        self.__frequency_mhz = frequency_mhz
-
-    def set_ddr(self, ddr):
-        """
-            Sets the ddr attribute to the argument
-            Only if the argument is a non-empty string.
-        """
-        if not isinstance(ddr, str):
-            raise TypeError(
-                f'Argument was {repr(ddr)}, type {type(ddr)}. '
-                f'Must be a string.'
-            )
-        elif ddr == '':
-            raise ValueError('ValueError: DDR must not be empty.')
-        self.__ddr = ddr
 
     def equals(self, other):
         """
@@ -469,22 +476,18 @@ class Memory(ComputerPart):
             variables separated by commas.
             Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
-        return (
-            f'Memory,{super().get_name()},{super().get_price()},'
-            f'{self.get_capacity_gb()},{self.get_frequency_mhz()},'
-            f'{self.get_ddr()}'
-        )
+        return f'Memory,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_capacity_gb()},{self.get_frequency_mhz()},' + \
+               f'{self.get_ddr()}'
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
-        return (
-            f'{super().get_name()}: {self.get_capacity_gb()}GB, '
-            f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ '
-            f'for ${super().get_price():.2f}'
-        )
+        return f'{super().get_name()}: {self.get_capacity_gb()}GB, ' + \
+               f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ ' + \
+               f'for ${super().get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -495,13 +498,15 @@ class Memory(ComputerPart):
             Uses these values to construct and return a new Memory.
         """
         csv_list = csv_string.split(',')[1:-1]
-
         csv_list[1] = float(csv_list[1])
         csv_list[2] = int(csv_list[2])
         csv_list[3] = int(csv_list[3])
-
         return Memory(
-            csv_list[0], csv_list[1], csv_list[2],csv_list[3], csv_list[4],
+            csv_list[0],
+            csv_list[1],
+            csv_list[2],
+            csv_list[3],
+            csv_list[4],
         )
 
     @classmethod
@@ -510,13 +515,76 @@ class Memory(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Memory.
         """
-        name = input('Enter the name: ')
-        price = float(input('Enter the price: '))
-        capacity_gb = int(input('Enter the capacity in GB: '))
-        frequency_mhz = int(input('Enter the frequency in MHz: '))
-        ddr = input('Enter the DDR: ')
+        return Memory(
+            cls.input_name(),
+            cls.input_price(),
+            cls.input_capacity_gb(),
+            cls.input_frequency_mhz(),
+            cls.input_ddr(),
+        )
 
-        return Memory(name, price, capacity_gb, frequency_mhz, ddr)
+    @classmethod
+    def input_capacity_gb(cls):
+        """
+            Sets the capacity_gb attribute to the argument.
+            Only if the argument is a positive integer.
+        """
+        capacity_gb = None
+        valid = False
+        while capacity_gb is None or not valid:
+            capacity_gb = int(input('Enter the capacity in GB: '))
+            if not isinstance(capacity_gb, int):
+                raise TypeError(
+                    f'Argument was {repr(capacity_gb)}, type '
+                    f'{type(capacity_gb)}. Must be an integer.'
+                )
+            elif capacity_gb <= 0:
+                print('ValueError: Capacity must not be negative.')
+            else:
+                valid = True
+        return capacity_gb
+
+    @classmethod
+    def input_frequency_mhz(cls):
+        """
+            Sets the frequency_mhz attribute to the argument.
+            Only if the argument is a positive integer.
+        """
+        frequency_mhz = None
+        valid = False
+        while frequency_mhz is None or not valid:
+            frequency_mhz = int(input('Enter the frequency in MHz: '))
+            if not isinstance(frequency_mhz, int):
+                raise TypeError(
+                    f'Argument was {repr(frequency_mhz)}, '
+                    f'type {type(frequency_mhz)}. Must be an integer.'
+                )
+            elif frequency_mhz <= 0:
+                print('ValueError: Frequency must not be negative.')
+            else:
+                valid = True
+        return frequency_mhz
+
+    @classmethod
+    def input_ddr(cls):
+        """
+            Sets the ddr attribute to the argument
+            Only if the argument is a non-empty string.
+        """
+        ddr = None
+        valid = False
+        while ddr is None or not valid:
+            ddr = input('Enter the DDR: ')
+            if not isinstance(ddr, str):
+                raise TypeError(
+                    f'Argument was {repr(ddr)}, type {type(ddr)}. '
+                    f'Must be a string.'
+                )
+            elif ddr == '':
+                print('ValueError: DDR must not be empty.')
+            else:
+                valid = True
+        return ddr
 
 
 class Storage(ComputerPart):
@@ -530,8 +598,8 @@ class Storage(ComputerPart):
             mutator methods.
         """
         super().__init__(name, price)
-        self.set_capacity_gb(capacity_gb)
-        self.set_storage_type(storage_type)
+        self.__capacity_gb = capacity_gb
+        self.__storage_type = storage_type
 
     def get_capacity_gb(self):
         """
@@ -544,36 +612,6 @@ class Storage(ComputerPart):
             Returns the storage_type attribute.
         """
         return self.__storage_type
-
-    def set_capacity_gb(self, capacity_gb):
-        """
-            Sets the capacity_gb attribute to the argument
-            Only if the argument is a positive integer.
-        """
-        if not isinstance(capacity_gb, int):
-            raise TypeError(
-                f'Argument was {repr(capacity_gb)}, type '
-                f'{type(capacity_gb)}. Must be an integer.'
-            )
-        elif capacity_gb <= 0:
-            raise ValueError('ValueError: Capacity must not be negative.')
-        self.__capacity_gb = capacity_gb
-
-    def set_storage_type(self, storage_type):
-        """
-            Sets the storage_type attribute to the argument
-            Only if the argument is a not one of HDD/SSD/SSHD.
-        """
-        if not isinstance(storage_type, str):
-            raise TypeError(
-                f'Argument was {repr(storage_type)}, '
-                f'type {type(storage_type)}. Must be a string.'
-            )
-        elif storage_type not in ('HDD', 'SSD', 'SSHD'):
-            raise ValueError(
-                'ValueError: Storage type must be one of HDD, SSD, or SSHD.'
-            )
-        self.__storage_type = storage_type
 
     def equals(self, other):
         """
@@ -599,20 +637,16 @@ class Storage(ComputerPart):
             variables separated by commas.
             Format: "Storage,name,price,capacity_gb,storage_type".
         """
-        return (
-            f'Storage,{super().get_name()},{super().get_price()},'
-            f'{self.get_capacity_gb()},{self.get_storage_type()}'
-        )
+        return f'Storage,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_capacity_gb()},{self.get_storage_type()}'
 
     def __str__(self):
         """
             Return the variables as a string.
             For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
-        return (
-            f'{super().get_name()}: {self.get_capacity_gb()}GB, '
-            f'{self.get_storage_type()} for ${super().get_price():.2f}'
-        )
+        return f'{super().get_name()}: {self.get_capacity_gb()}GB, ' + \
+               f'{self.get_storage_type()} for ${super().get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -623,11 +657,14 @@ class Storage(ComputerPart):
             Uses these values to construct and return a new Storage.
         """
         csv_list = csv_string.split(',')[1:-1]
-
         csv_list[1] = float(csv_list[1])
         csv_list[2] = int(csv_list[2])
-
-        return Storage(csv_list[0], csv_list[1], csv_list[2], csv_list[3])
+        return Storage(
+            csv_list[0],
+            csv_list[1],
+            csv_list[2],
+            csv_list[3],
+        )
 
     @classmethod
     def input(cls):
@@ -635,13 +672,56 @@ class Storage(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Storage.
         """
-        name = input('Enter the name: ')
-        price = float(input('Enter the price: '))
-        capacity_gb = int(input('Enter the capacity in GB: '))
-        storage_type = input('Enter the storage type (HDD/SSD/SSHD): ')
+        return Storage(
+            cls.input_name(),
+            cls.input_price(),
+            cls.input_capacity_gb(),
+            cls.input_storage_type(),
+        )
 
-        return Storage(name, price, capacity_gb, frequency_mhz, storage_type)
+    @classmethod
+    def input_capacity_gb(cls):
+        """
+            Sets the capacity_gb attribute to the argument.
+            Only if the argument is a positive integer.
+        """
+        capacity_gb = None
+        valid = False
+        while capacity_gb is None or not valid:
+            capacity_gb = int(input('Enter the capacity in GB: '))
+            if not isinstance(capacity_gb, int):
+                raise TypeError(
+                    f'Argument was {repr(capacity_gb)}, '
+                    f'type {type(capacity_gb)}. Must be an integer.'
+                )
+            elif capacity_gb <= 0:
+                print('ValueError: Capacity must not be negative.')
+            else:
+                valid = True
+        return capacity_gb
 
+    @classmethod
+    def input_storage_type(cls):
+        """
+            Sets the storage_type attribute to the argument.
+            Only if the argument is a not one of HDD/SSD/SSHD.
+        """
+        storage_type = None
+        valid = False
+        while storage_type is None or not valid:
+            storage_type = input('Enter the storage type (HDD/SSD/SSHD): ')
+            if not isinstance(storage_type, str):
+                raise TypeError(
+                    f'Argument was {repr(storage_type)}, '
+                    f'type {type(storage_type)}. Must be a string.'
+                )
+            elif storage_type not in ('HDD', 'SSD', 'SSHD'):
+                print(
+                    'ValueError: Storage type must be one of HDD, SSD, or SSHD.'
+                )
+            else:
+                valid = True
+        return storage_type
 
 # ------------------------------- Data Structure ------------------------------
 
@@ -687,7 +767,7 @@ class PartList():
         name_of_new_part = new_part.get_name()
         if name_of_new_part not in self.get_items_in_store():
             self.get_items_in_store().append(new_part)
-            self.get_stock_available().update({name_of_new_part: 1})
+            self.get_stock_available()[name_of_new_part] = 1
         else:
             # Duplicate item, so increment available stock by 1.
             self.get_stock_available()[name_of_new_part] += 1
@@ -718,7 +798,7 @@ class PartList():
         for item in self.get_items_in_store():
             if item.get_name() == part_name:
                 self.get_items_in_store().remove(part_name)
-                self.get_stock_available()[part_name] = 0
+                self.get_stock_available()[name_of_new_part] = 0
 
     def remove_part_using_position(self, part_position):
         """
@@ -728,7 +808,7 @@ class PartList():
         """
         if part_position < self.get_length():
             part_name = self.get_items_in_store().pop(part_position)
-            self.get_stock_available()[part_name] = 0
+            self.get_stock_available()[name_of_new_part] = 0
 
     def save_to_csv(self, filename):
         """
@@ -812,18 +892,22 @@ class WishList(PartList):
 
     def get_total_cost(self):
         """
-            Calculate and return the total cost of all parts.
+            Calculates and returns the total cost of all parts.
         """
         price = 0
+
+        for item in self.get_items_in_wish_list():
+            price += item.get_price()
+
         return price
 
     def is_valid_computer(self):
         """
-            Determine if the parts will make up a valid computer.
+            Determines if the parts will make up a valid computer.
             A valid computer requires at least:
-                1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
+               - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
         """
-        # A dictionary to check if one of these parts is in the Wish List.
+        # A dictionary to check if one of these parts is in the WishList.
         is_in_wish_list = {
             'CPU': False,
             'GraphicsCard': False,
@@ -844,7 +928,7 @@ class WishList(PartList):
             is_in_wish_list['GraphicsCard'] == True and
             is_in_wish_list['Memory'] == True and
             is_in_wish_list['Storage'] == True):
-            # Wish List currently has all of the parts - a valid computer.
+            # Wish List currently has all of the parts -> a valid computer.
             return True
         else:
             return False
@@ -852,7 +936,7 @@ class WishList(PartList):
 
     def __str__(self):
         """
-            Return a string that represents the WishList in the format:
+            Returns a string that represents the WishList in the format:
             "---- Gary's Wish List ----
             NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
             AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
@@ -869,14 +953,21 @@ class WishList(PartList):
         result += f'---- {self.get_username()}\'s Wish List ----\n'
         for item in self.get_items_in_wish_list():
             result += item.__str__()
+            # Check how many stock left.
+            stock_available = self.get_stock_in_wish_list()[item.get_name()]
+            if stock_available:
+                result += ' (x' + str(stock_available) + ')'
+            else:
+                result += ' (OUT OF STOCK)'
             result += '\n'
         result += '--------------------\n'
-        result += f'${self.get_total_cost():.2f}\n'
+        result += f'${self.get_total_cost():.2f}'
 
-        if is_valid_computer():
+        if self.is_valid_computer():
             result += 'Valid computer'
         else:
             result += 'Not a valid computer'
+
         return result
 
 
@@ -890,7 +981,7 @@ class CommandPrompt:
         self.__part_list = PartList()
         self.read_from_csv()
         self.__wish_list = None
-        self.__question_list = []
+        self.__menu_options = []
 
     def read_from_csv(self):
         """
@@ -929,40 +1020,90 @@ class CommandPrompt:
                         Storage.parse(csv_string)
                     )
 
-    # getter self.__part_list
     def get_part_list(self):
+        """
+            Returns the PartList object.
+        """
         return self.__part_list
 
     def get_items_in_store(self):
-        return self.__part_list.get_items_in_store()
+        """
+            Returns the items_in_store attribute of the PartList
+            object by invoking the same method name from PartList.
 
-    # getter self.__wish_list
+            The main purpose of this method is to help shorten the
+            code written when invoking this PartList's method.
+        """
+        return self.get_part_list().get_items_in_store()
+
+    def get_stock_available(self):
+        """
+            Returns the stock_available attribute of the PartList
+            object by invoking the same method name from PartList.
+
+            The main purpose of this method is to help shorten the
+            code written when invoking this PartList's method.
+        """
+        return self.get_part_list().get_stock_available()
+
     def get_wish_list(self):
+        """
+            Returns the WishList object.
+        """
         return self.__wish_list
 
+    def set_wish_list(self, wish_list_object):
+        """
+            Sets the wish_list attribute to the argument (a WishList object).
+        """
+        self.__wish_list = wish_list_object
+
     def get_items_in_wish_list(self):
-        return self.__wish_list.get_items_in_wish_list()
-
-    # getter self.__question_list
-    def get_question_list(self):
-        return self.__question_list
-
-    # setter self.__question_list
-    def set_question_list(self, question_list):
         """
-            Append each question to the self.__question_list.
-            Convert the name of each question to proper format.
+            Returns the items_in_wish_list attribute of the WishList
+            object by invoking the same method name from WishList.
+
+            The main purpose of this method is to help shorten the
+            code written when invoking this WishList's method.
         """
-        for question in question_list:
+        return self.get_wish_list().get_items_in_wish_list()
+
+    def get_stock_in_wish_list(self):
+        """
+            Returns the stock_in_wish_list attribute of the WishList
+            object by invoking the same method name from WishList.
+
+            The main purpose of this method is to help shorten the
+            code written when invoking this WishList's method.
+        """
+        return self.get_wish_list().get_stock_in_wish_list()
+
+    def get_menu_options(self):
+        """
+            Returns the menu_options attribute.
+        """
+        return self.__menu_options
+
+    def set_menu_options(self, menu_options):
+        """
+            Appends each question from the list menu_options (parameter)
+            to the menu_options attribute.
+            Meanwhile, invokes the convert_class_name method to convert
+            the name of each question to the proper format.
+        """
+        for question in menu_options:
             if isinstance(question, Question):
-                self.__question_list.append(self.convert_class_name(question))
+                self.get_menu_options().append(self.convert_class_name(question))
             else:
-                raise TypeError('QuestionError')
+                raise TypeError(
+                    f'Argument was {repr(question)}, type {type(storage_type)}. '
+                    f'Must be an object of type Question.'
+                )
 
     def convert_class_name(self, class_type):
         """
             Convert a class name to a human-readable name.
-            E.g. 'New Wish List' instead of 'NewWishList'.
+            E.g. 'New Wish List' is transformed into 'NewWishList'.
         """
         obj_name = type(class_type).__name__
         result = ''
@@ -976,21 +1117,13 @@ class CommandPrompt:
         return result
 
     # Provide user with a list of choices.
-    def display_menu(self, menu_type, start=None, stop=None):
+    def display_menu(self, menu_type, start=0, stop=-1):
         """
             Depending on the type of menu: Main Menu/Wish List,
             outputs the appropriate menu.
         """
-        if menu_type != 'Part Types':
-            menu_options = self.get_question_list()[start:stop]
-        else:
-            menu_options = [
-                'CPU', 'Graphics Card',
-                'Memory', 'Storage', 'Back',
-            ]
-
         print(f'---- {menu_type} ----')
-        for i, question in enumerate(menu_options):
+        for i, question in enumerate(self.get_menu_options()[start:stop]):
             print(f'{i+1}. {question}')
 
     def prompt_for_option(self, limit):
@@ -1040,6 +1173,7 @@ class ListDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
+            print()
             # The PartList __str__() method is invoked.
             print((super().get_cmd().get_part_list()))
 
@@ -1059,10 +1193,11 @@ class AddPartToDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
+            print()
             # The Part Types menu is kept repeating until the user enters 5.
             option = None
             while option is None or option not in range(1, 6) or option != 5:
-                super().get_cmd().display_menu(menu_type='Part Types')
+                CPU.display_menu()
                 option = super().get_cmd().prompt_for_option(limit=6)
                 if option in range(1, 5):
                     """
@@ -1072,33 +1207,39 @@ class AddPartToDatabase(Question):
                         if it is already in there.
                     """
                     if option == 1:
-                        self.look_up_part_list(CPU.input())
+                        new_part = CPU.input()
                     elif option == 2:
-                        self.look_up_part_list(GraphicsCard.input())
+                        new_part = GraphicsCard.input()
                     elif option == 3:
-                        self.look_up_part_list(Memory.input())
+                        new_part = Memory.input()
                     elif option == 4:
-                        self.look_up_part_list(Storage.input())
-                    else:
-                        pass
-            print()
+                        new_part = Storage.input()
+                    self.look_up_part_list(new_part)
+                    print('Added', new_part.__str__(), end='')
+
+                    # Check how many stock left.
+                    print(
+                        ' (x'
+                        + str(super().get_cmd().get_stock_available()[new_part.get_name()])
+                        + ')'
+                    )
+                print()
 
 
     def look_up_part_list(self, new_part):
         """
-            Search for a part (parameter) which is a newly created part
+            Searchs for a part (parameter) which is a newly created part
             to see if it exists in the Part List.
-            If it is, increment that part in stock by 1.
-            Otherwise, add that new part to the Part List.
+            If it is, increments that part in stock by 1.
+            Otherwise:
+                1. Adds that new part to the Part List
+                2. Sets its stock to 1.
         """
-        name_of_new_part = new_part.get_name()
-        stock_available_dictionary = super().get_cmd().get_part_list().get_stock_available()
         try:
-            value = stock_available_dictionary[name_of_new_part]
+            super().get_cmd().get_stock_available()[new_part.get_name()] += 1
         except KeyError:
             super().get_cmd().get_items_in_store().append(new_part)
-        else:
-            stock_available_dictionary[name_of_new_part] += 1
+            super().get_cmd().get_stock_available()[new_part.get_name()] = 1
 
 
 class Close(Question):
@@ -1113,6 +1254,7 @@ class Close(Question):
     def __init__(self, cmd, current_menu='Main Menu', execute=True):
         if execute:
             super().__init__(cmd)
+            print()
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
                 super().get_cmd().get_part_list().save_to_csv('test')
@@ -1122,7 +1264,8 @@ class Close(Question):
                 for item in super().get_cmd().get_items_in_wish_list():
                     super().get_cmd().get_stock_available()[item.get_name()] += 1
                 # Remove all items from WishList.
-                super().get_cmd().get_wish_list().clear()
+                super().get_cmd().get_items_in_wish_list().clear()
+                super().get_cmd().get_stock_in_wish_list().clear()
                 # Return to Main Menu.
                 super().get_cmd().display_menu(
                     menu_type='Main Menu', start=0, stop=4
@@ -1130,12 +1273,34 @@ class Close(Question):
 
 
 class NewWishList(Question):
-
+    """
+        Takes input for the user's name, then constructs a new WishList and
+        displays the Wish List Menu in the format:
+    """
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            super().get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
-            super().get_cmd().get_wish_list = WishList()
+            if super().get_cmd().get_wish_list() is None:
+                super().get_cmd().set_wish_list(WishList())
+                print()
+                # The menu is kept repeating until the user enters 5.
+                option = None
+                while option is None or option not in range(1, 6) or option != 5:
+                    super().get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
+                    option = cmd.prompt_for_option(limit=6)
+                    if option in range(1, 6):
+                        # Now we have a valid option between 1 and 5.
+                        if option == 1:
+                            AddFromDatabase(cmd)
+                        elif option == 2:
+                            RemoveFromWishList(cmd)
+                        elif option == 3:
+                            ShowWishList(cmd)
+                        elif option == 4:
+                            PurchaseAndClose(cmd)
+                        else:
+                            Close(cmd, current_menu='Wish List')
+
 
     def look_up_part_list(self, target_part):
         """
@@ -1144,14 +1309,15 @@ class NewWishList(Question):
             remaining.
         """
         try:
-            value = super().get_cmd().get_part_list().get_stock_available()[target_part]
+            value = super().get_cmd().get_stock_available()[target_part]
         except KeyError as e:
-            print(f'{type(e).__name__}: {repr(option)} is not in Part List.\n')
+            print(f'Could not find {target_part}!')
             return False
         else:
             if value > 0:
                 return True
             else:
+                print(f'Not enough of {target_part} in stock!')
                 return False
 
     def look_up_wish_list(self, target_part):
@@ -1160,14 +1326,15 @@ class NewWishList(Question):
             exists in the wish list.
         """
         try:
-            value = super().get_cmd().get_wish_list().get_stock_in_wish_list()[target_part]
+            value = super().get_cmd().get_items_in_wish_list()[target_part]
         except KeyError as e:
-            print(f'{type(e).__name__}: {repr(option)} is not in Wish List.\n')
+            print(f'Could not find {target_part}!')
             return False
         else:
             if value > 0:
                 return True
             else:
+                print(f'Not enough of {target_part} in stock!')
                 return False
 
 
@@ -1186,29 +1353,24 @@ class AddFromDatabase(NewWishList):
             ListDatabase(cmd)
             part_name = input(f'Enter the name of the part to add: ')
             if super().look_up_part_list(part_name):
-                super().get_cmd().get_wish_list().append(part_name)
-                for part_list_item in super().get_items_in_store():
-                    part_list_item_name = part_list_item.get_name()
-                    if part_list_item_name == part_name:
-                        print('Added', item.__str__())
+                # The part_name is available in stock.
+                for part_list_item in super().get_cmd().get_items_in_store():
+                    if part_list_item.get_name() == part_name:
+                        print('Added', part_list_item.__str__(), end='\n\n')
                         # Decrement that item in Part List.
-                        super().get_cmd().get_part_list().get_stock_available()[
-                            part_list_item_name
-                        ] -= 1
+                        super().get_cmd().get_stock_available()[part_name] -= 1
                         for wish_list_item in super().get_cmd().get_items_in_wish_list():
-                            wish_list_item_name = wish_list_item.get_name()
-                            # Increment that item in Wish List if it is there.
-                            if wish_list_item_name == part_name:
-                                super().get_cmd().get_wish_list().get_stock_in_wish_list()[
-                                    wish_list_item_name
-                                ] += 1
-                                # Otherwise, add that new item to Wish List.
+                            if wish_list_item.get_name() == part_name:
+                                # Increment that item in Wish List if it is there.
+                                super().get_cmd().get_items_in_wish_list()[part_name] += 1
                             else:
+                                # Otherwise:
+                                    # 1. Adds that new item to Wish List.
+                                    # 2. Sets its number in Wish List to 1.
                                 super().get_cmd().get_items_in_wish_list().append(
                                     part_list_item
                                 )
-            else:
-                print(f'Could not find {part_name}!')
+                                super().get_cmd().get_items_in_wish_list()[part_name] = 1
 
 
 class RemoveFromWishList(NewWishList):
@@ -1221,21 +1383,19 @@ class RemoveFromWishList(NewWishList):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
+            print()
             part_name = input(f'Enter the name of the part to remove: ')
             if super().look_up_wish_list(part_name):
-                wish_list = super().get_cmd().get_wish_list()
-                count = 0
-                for item in wish_list:
-                    # Remove until all part_name is removed.
-                    if item == part_name:
-                        wish_list.remove(part_name)
-                        count += 1
-                print(f'Removed {part_name}')
-                # The number of stock is returned back to part list.
-                for _ in range(count):
-                    super().get_cmd().get_items_in_store().append(part_name)
-            else:
-                print(f'Could not find {part_name}!')
+                # The part_name is available in Wish List.
+                for index, wish_list_item in super().get_cmd().get_items_in_wish_list():
+                    if wish_list_item.get_name() == part_name:
+                        print('Removed', wish_list_item.__str__())
+                        # Deletes that item from Wish List.
+                        del super().get_cmd().get_items_in_wish_list()[index]
+                        # Sets its number in Wish List to 0.
+                        super().get_cmd().get_items_in_wish_list()[part_name] = 0
+                        # Returns the number of stock back to Part List.
+                        super().get_cmd().get_stock_available()[part_name] += 1
 
 
 class ShowWishList(NewWishList):
@@ -1260,6 +1420,7 @@ class PurchaseAndClose(NewWishList):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
+            print()
             super().get_cmd().get_wish_list().save_to_csv(
                 super().get_cmd().get_wish_list().get_username()
             )
@@ -1274,7 +1435,7 @@ def main():
 
     cmd = CommandPrompt()
 
-    cmd.set_question_list((
+    cmd.set_menu_options((
         NewWishList(cmd, execute=False),
         ListDatabase(cmd, execute=False),
         AddPartToDatabase(cmd, execute=False),
@@ -1294,7 +1455,6 @@ def main():
         option = cmd.prompt_for_option(limit=5)
         if option in range(1, 5):
             # Now we have a valid option between 1 and 4.
-            print()
             if option == 1:
                 NewWishList(cmd)
             elif option == 2:
