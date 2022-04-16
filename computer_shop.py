@@ -811,14 +811,19 @@ class PartList():
         """
         if part_position < len(self):
             part_name = self.get_items_in_store().pop(part_position)
-            del self.get_stock_available()[name_of_new_part]
+            self.get_stock_available().pop(part_name)
 
-    def save_to_csv(self, filename):
+    def save_to_csv(self, filename='database'):
         """
             Save all parts to a csv file with an argument file name.
+            Default to the file name database.csv
         """
         with open(filename + '.csv', mode='w') as outfile:
-            for item in self.get_items_in_store():
+            if isinstance(self, WishList):
+                target_list = self.get_items_in_wish_list()
+            elif isinstance(self, PartList):
+                target_list = self.get_items_in_store()
+            for item in target_list:
                 outfile.write(item.to_csv_string())
                 # Write how many stock left.
                 stock_available = self.get_stock_available()[item.get_name()]
@@ -1282,10 +1287,6 @@ class Close(Question):
                 # Remove all items from WishList.
                 super().get_cmd().get_items_in_wish_list().clear()
                 super().get_cmd().get_stock_in_wish_list().clear()
-                # Return to Main Menu.
-                super().get_cmd().display_menu(
-                    menu_type='Main Menu', start=0, stop=4
-                )
 
 
 class NewWishList(Question):
@@ -1410,6 +1411,7 @@ class AddFromDatabase(NewWishList):
                         )
                 print()
 
+
 class RemoveFromWishList(NewWishList):
     """
         If the user selects to remove a part from the wish list they
@@ -1510,33 +1512,6 @@ def main():
                 AddPartToDatabase(cmd)
             else:
                 Close(cmd, current_menu='Main Menu')
-
-
-    # cmd.display_menu(menu_type='Wish List', start=4, stop=9)
-    # print('-' * 40)
-
-    # Test ShowWishList() class
-    # ShowWishList(cmd)
-
-    # Test ListDatabase() class
-    # ListDatabase(cmd)
-
-    # Test AddPartToDatabase() class
-    # AddPartToDatabase(cmd)
-    # ListDatabase(cmd)
-
-    # Test AddFromDatabase() class
-    # ShowWishList(cmd)
-    # AddFromDatabase(cmd)
-    # ShowWishList(cmd)
-
-    # Test RemoveFromWishList() class
-    # ListDatabase(cmd)
-    # ShowWishList(cmd)
-    # RemoveFromWishList(cmd)
-    # ShowWishList(cmd)
-    # ListDatabase(cmd)
-
 
 
 # --------------------------- Call the Main Function --------------------------
