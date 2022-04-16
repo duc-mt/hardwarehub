@@ -203,7 +203,7 @@ class CPU(ComputerPart):
             Return the variables as a string.
             For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
-        return f'{super().get_name()}: {self.get_cores()} cores, @ ' + \
+        return f'{super().get_name()}: {self.get_cores()} cores @ ' + \
                f'{self.get_frequency_ghz()}GHz for ${super().get_price():.2f}'
 
     @classmethod
@@ -1320,9 +1320,8 @@ class NewWishList(Question):
 
     def look_up_part_list(self, target_part):
         """
-            Search for a part with the name (parameter) to see if it
-            exists in the part list and there is at least 1 stock
-            remaining.
+            Search for a part with the name (parameter) to see if it exists in
+            the part list and there is at least 1 stock remaining.
         """
         try:
             value = super().get_cmd().get_stock_available()[target_part]
@@ -1335,11 +1334,12 @@ class NewWishList(Question):
             else:
                 print(f'Not enough of {target_part} in stock!')
                 return False
+        print()
 
     def look_up_wish_list(self, target_part):
         """
-            Search for a part with the name (parameter) to see if it
-            exists in the wish list.
+            Search for a part with the name (parameter) to see if it exists
+            in the wish list.
         """
         try:
             value = super().get_cmd().get_items_in_wish_list()[target_part]
@@ -1352,6 +1352,7 @@ class NewWishList(Question):
             else:
                 print(f'Not enough of {target_part} in stock!')
                 return False
+        print()
 
 
 class AddFromDatabase(NewWishList):
@@ -1372,22 +1373,44 @@ class AddFromDatabase(NewWishList):
                 # The part_name is available in stock.
                 for part_list_item in super().get_cmd().get_items_in_store():
                     if part_list_item.get_name() == part_name:
-                        print('Added', part_list_item.__str__(), end='\n\n')
                         # Decrement that item in Part List.
                         super().get_cmd().get_stock_available()[part_name] -= 1
-                        for wish_list_item in super().get_cmd().get_items_in_wish_list():
-                            if wish_list_item.get_name() == part_name:
-                                # Increment that item in Wish List if it is there.
-                                super().get_cmd().get_items_in_wish_list()[part_name] += 1
-                            else:
-                                # Otherwise:
-                                    # 1. Adds that new item to Wish List.
-                                    # 2. Sets its number in Wish List to 1.
-                                super().get_cmd().get_items_in_wish_list().append(
-                                    part_list_item
-                                )
-                                super().get_cmd().get_items_in_wish_list()[part_name] = 1
-
+                        if len(super().get_cmd().get_wish_list()) == 0:
+                            # This is the first time the Wish List oject is
+                            # called, so it have not contained any item yet.
+                            # Thus, add those item right away to the Wish List.
+                            super().get_cmd().get_items_in_wish_list().append(
+                                part_list_item
+                            )
+                            super().get_cmd().get_stock_in_wish_list()[part_name] = 1
+                        else:
+                            # The list contains some items, so its items can
+                            # be iterated.
+                            found = False
+                            for wish_list_item in super().get_cmd().get_items_in_wish_list():
+                                if not found:
+                                    if wish_list_item.get_name() == part_name:
+                                        # Increment that item in Wish List if it is there.
+                                        super().get_cmd().get_stock_in_wish_list()[part_name] += 1
+                                        found = True
+                                    else:
+                                        # Otherwise:
+                                            # 1. Adds that new item to Wish List.
+                                            # 2. Sets its number in Wish List to 1.
+                                        super().get_cmd().get_items_in_wish_list().append(
+                                            part_list_item
+                                        )
+                                        super().get_cmd().get_stock_in_wish_list()[part_name] = 1
+                                        found = True
+                        # Display result.
+                        print('Added', part_list_item.__str__(), end='')
+                        # Check how many stock left.
+                        print(
+                            ' (x'
+                            + str(super().get_cmd().get_stock_in_wish_list()[part_name])
+                            + ')'
+                        )
+                print()
 
 class RemoveFromWishList(NewWishList):
     """
