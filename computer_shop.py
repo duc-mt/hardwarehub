@@ -741,9 +741,12 @@ class PartList():
         """
         self.__stock_available = {}
 
-    def get_length(self):
+    def __len__(self):
         """
             Get the length of the items_in_store attribute.
+            Called within PartList class using len(self)
+            Called outside PartList class using len(object)
+                - Where object is an instance of the PartList class.
         """
         return len(self.get_items_in_store())
 
@@ -786,7 +789,7 @@ class PartList():
             Find and access a part using its position.
             Check to see if the argument is less than the length of the list.
         """
-        if part_position < self.get_length():
+        if part_position < len(self):
             return self.get_items_in_store()[part_position]
 
     def remove_part_using_name(self, part_name):
@@ -806,7 +809,7 @@ class PartList():
             Check to see if the argument is less than the length of the list.
             Clear all stock of that part in store.
         """
-        if part_position < self.get_length():
+        if part_position < len(self):
             part_name = self.get_items_in_store().pop(part_position)
             self.get_stock_available()[name_of_new_part] = 0
 
@@ -864,6 +867,15 @@ class WishList(PartList):
             2. Value is the number of stock that key has in Wish List.
         """
         self.__stock_in_wish_list = {}
+
+    def __len__(self):
+        """
+            Get the length of the items_in_wish_list attribute.
+            Called within WishList class using len(self)
+            Called outside WishList class using len(object)
+                - Where object is an instance of the WishList class.
+        """
+        return len(self.get_items_in_wish_list())
 
     def set_username(self):
         username = None
@@ -950,23 +962,27 @@ class WishList(PartList):
             The last line is either "Valid computer" or "Not a valid computer".
         """
         result = ''
-        result += f'---- {self.get_username()}\'s Wish List ----\n'
-        for item in self.get_items_in_wish_list():
-            result += item.__str__()
-            # Check how many stock left.
-            stock_available = self.get_stock_in_wish_list()[item.get_name()]
-            if stock_available:
-                result += ' (x' + str(stock_available) + ')'
-            else:
-                result += ' (OUT OF STOCK)'
-            result += '\n'
-        result += '--------------------\n'
-        result += f'${self.get_total_cost():.2f}'
+        result += f'\n---- {self.get_username()}\'s Wish List ----'
+
+        if len(self):
+            for item in self.get_items_in_wish_list():
+                result += '\n'
+                result += item.__str__()
+                # Check how many stock left.
+                stock_available = self.get_stock_in_wish_list()[item.get_name()]
+                if stock_available:
+                    result += ' (x' + str(stock_available) + ')'
+                else:
+                    result += ' (OUT OF STOCK)'
+
+        result += '\n--------------------\n'
+        result += f'${self.get_total_cost():.2f}\n'
 
         if self.is_valid_computer():
             result += 'Valid computer'
         else:
             result += 'Not a valid computer'
+        result += '\n'
 
         return result
 
