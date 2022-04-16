@@ -801,7 +801,7 @@ class PartList():
         for item in self.get_items_in_store():
             if item.get_name() == part_name:
                 self.get_items_in_store().remove(part_name)
-                self.get_stock_available()[name_of_new_part] = 0
+                del self.get_stock_available()[name_of_new_part]
 
     def remove_part_using_position(self, part_position):
         """
@@ -811,7 +811,7 @@ class PartList():
         """
         if part_position < len(self):
             part_name = self.get_items_in_store().pop(part_position)
-            self.get_stock_available()[name_of_new_part] = 0
+            del self.get_stock_available()[name_of_new_part]
 
     def save_to_csv(self, filename):
         """
@@ -1326,15 +1326,14 @@ class NewWishList(Question):
         try:
             value = super().get_cmd().get_stock_available()[target_part]
         except KeyError as e:
-            print(f'Could not find {target_part}!')
+            print(f'Could not find {target_part}!\n')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!')
+                print(f'Not enough of {target_part} in stock!\n')
                 return False
-        print()
 
     def look_up_wish_list(self, target_part):
         """
@@ -1342,17 +1341,16 @@ class NewWishList(Question):
             in the wish list.
         """
         try:
-            value = super().get_cmd().get_items_in_wish_list()[target_part]
+            value = super().get_cmd().get_stock_in_wish_list()[target_part]
         except KeyError as e:
-            print(f'Could not find {target_part}!')
+            print(f'Could not find {target_part}!\n')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!')
+                print(f'Not enough of {target_part} in stock!\n')
                 return False
-        print()
 
 
 class AddFromDatabase(NewWishList):
@@ -1426,15 +1424,25 @@ class RemoveFromWishList(NewWishList):
             part_name = input(f'Enter the name of the part to remove: ')
             if super().look_up_wish_list(part_name):
                 # The part_name is available in Wish List.
-                for index, wish_list_item in super().get_cmd().get_items_in_wish_list():
+                for index, wish_list_item in enumerate(
+                    super().get_cmd().get_items_in_wish_list()
+                ):
                     if wish_list_item.get_name() == part_name:
-                        print('Removed', wish_list_item.__str__())
                         # Deletes that item from Wish List.
                         del super().get_cmd().get_items_in_wish_list()[index]
-                        # Sets its number in Wish List to 0.
-                        super().get_cmd().get_items_in_wish_list()[part_name] = 0
                         # Returns the number of stock back to Part List.
                         super().get_cmd().get_stock_available()[part_name] += 1
+                        # Display result.
+                        print('Removed', wish_list_item.__str__(), end='')
+                        # Check how many stock is in Wish List.
+                        print(
+                            ' (x'
+                            + str(super().get_cmd().get_stock_in_wish_list()[part_name])
+                            + ')'
+                        )
+                        # Delete the entry for the removed part.
+                        del super().get_cmd().get_stock_in_wish_list()[part_name]
+                print()
 
 
 class ShowWishList(NewWishList):
