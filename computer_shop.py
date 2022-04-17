@@ -823,10 +823,16 @@ class PartList():
                 target_list = self.get_items_in_wish_list()
             elif isinstance(self, PartList):
                 target_list = self.get_items_in_store()
+                stock_available = self.get_stock_available()[item.get_name()]
             for item in target_list:
                 outfile.write(item.to_csv_string())
-                # Write how many stock left.
-                stock_available = self.get_stock_available()[item.get_name()]
+                # Check how many stock left.
+                if isinstance(self, WishList):
+                    stock_available = self.get_stock_in_wish_list()[item.get_name()]
+                elif isinstance(self, PartList):
+                    stock_available = self.get_stock_available()[item.get_name()]
+                # Write that number to file if it is greater than 0.
+                # Otherwise, write out of stock.
                 if stock_available:
                     outfile.write(',x' + str(stock_available))
                 else:
@@ -849,6 +855,8 @@ class PartList():
             result += item.__str__()
             # Check how many stock left.
             stock_available = self.get_stock_available()[item.get_name()]
+                # Print that number if it is greater than 0.
+                # Otherwise, write out of stock.
             if stock_available:
                 result += ' (x' + str(stock_available) + ')'
             else:
@@ -975,6 +983,8 @@ class WishList(PartList):
                 result += item.__str__()
                 # Check how many stock left.
                 stock_available = self.get_stock_in_wish_list()[item.get_name()]
+                # Print that number if it is greater than 0.
+                # Otherwise, write out of stock.
                 if stock_available:
                     result += ' (x' + str(stock_available) + ')'
                 else:
@@ -1172,7 +1182,7 @@ class CommandPrompt:
         return option
 
 
-class Question(metaclass=abc.ABCMeta):
+class Question:
     """
         An abstract class.
         The superclass for other Question types.
@@ -1302,7 +1312,7 @@ class NewWishList(Question):
                 print()
                 # The menu is kept repeating until the user enters 5.
                 option = None
-                while option is None or option not in range(1, 6) or option != 5:
+                while option is None or option not in range(1, 6) or option not in (4, 5):
                     super().get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
                     option = cmd.prompt_for_option(limit=6)
                     if option in range(1, 6):
@@ -1317,7 +1327,8 @@ class NewWishList(Question):
                             PurchaseAndClose(cmd)
                         else:
                             Close(cmd, current_menu='Wish List')
-
+            else:
+                print()
 
     def look_up_part_list(self, target_part):
         """
@@ -1374,33 +1385,19 @@ class AddFromDatabase(NewWishList):
                     if part_list_item.get_name() == part_name:
                         # Decrement that item in Part List.
                         super().get_cmd().get_stock_available()[part_name] -= 1
-                        if len(super().get_cmd().get_wish_list()) == 0:
-                            # This is the first time the Wish List oject is
-                            # called, so it have not contained any item yet.
-                            # Thus, add those item right away to the Wish List.
+                        try:
+                            value = super().get_cmd().get_stock_in_wish_list()[part_name]
+                        except KeyError:
+                            # If the item is not in Wish List:
+                                # 1. Adds that new item to Wish List.
+                                # 2. Sets its number in Wish List to 1.
                             super().get_cmd().get_items_in_wish_list().append(
                                 part_list_item
                             )
                             super().get_cmd().get_stock_in_wish_list()[part_name] = 1
                         else:
-                            # The list contains some items, so its items can
-                            # be iterated.
-                            found = False
-                            for wish_list_item in super().get_cmd().get_items_in_wish_list():
-                                if not found:
-                                    if wish_list_item.get_name() == part_name:
-                                        # Increment that item in Wish List if it is there.
-                                        super().get_cmd().get_stock_in_wish_list()[part_name] += 1
-                                        found = True
-                                    else:
-                                        # Otherwise:
-                                            # 1. Adds that new item to Wish List.
-                                            # 2. Sets its number in Wish List to 1.
-                                        super().get_cmd().get_items_in_wish_list().append(
-                                            part_list_item
-                                        )
-                                        super().get_cmd().get_stock_in_wish_list()[part_name] = 1
-                                        found = True
+                            # Increment that item in Wish List if it is there.
+                            super().get_cmd().get_stock_in_wish_list()[part_name] += 1
                         # Display result.
                         print('Added', part_list_item.__str__(), end='')
                         # Check how many stock left.
@@ -1469,10 +1466,14 @@ class PurchaseAndClose(NewWishList):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            print()
-            super().get_cmd().get_wish_list().save_to_csv(
-                super().get_cmd().get_wish_list().get_username()
+            username = super().get_cmd().get_wish_list().get_username()
+            super().get_cmd().get_wish_list().save_to_csv(username)
+            print(
+                f'Successful purchase!',
+                f'Receipt in {username}.csv',
+                sep='\n',
             )
+            print()
 
 
 # ------------------------------- Main Function -------------------------------
