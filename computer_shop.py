@@ -17,7 +17,7 @@
 import abc
 
 
-# -------------------------------- Computer Part ------------------------------
+# ------------------------------- Computer Part -------------------------------
 class ComputerPart(metaclass=abc.ABCMeta):
     """
         An abstract class.
@@ -1054,7 +1054,7 @@ class CommandPrompt:
             Returns the PartList object.
         """
         return self.__part_list
- 
+
     def get_items_in_store(self):
         """
             Returns the items_in_store attribute of the PartList
@@ -1251,7 +1251,6 @@ class AddPartToDatabase(Question):
                         + ')'
                     )
                     print()
-
 
     def look_up_part_list(self, new_part):
         """
@@ -1464,13 +1463,28 @@ class PurchaseAndClose(NewWishList):
             )
 
 
+# ------------------------------- Computer Shop -------------------------------
+class ComputerPartShop:
+    """
+        An composition of the CommandPrompt class.
+        Creates and controls its own CommandPrompt class.
+    """
+    def __init__(self):
+        pass
+
+    def command_prompt(self):
+        self.__cmd = CommandPrompt()
+
+    def get_command_prompt(self):
+        return self.__cmd
+
+
 # ------------------------------- Main Function -------------------------------
 def main():
     print("~~ Welcome to the Computer Store ~~")
-    # shop = ComputerPartShop()  # Construct object
-    # shop.command_prompt()      # Call method to start the program
-
-    cmd = CommandPrompt()
+    shop = ComputerPartShop()  # Construct object
+    shop.command_prompt()      # Call method to start the program
+    cmd = shop.get_command_prompt()
 
     cmd.set_menu_options((
         NewWishList(cmd, execute=False),
