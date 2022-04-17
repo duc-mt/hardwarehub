@@ -823,7 +823,6 @@ class PartList():
                 target_list = self.get_items_in_wish_list()
             elif isinstance(self, PartList):
                 target_list = self.get_items_in_store()
-                stock_available = self.get_stock_available()[item.get_name()]
             for item in target_list:
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
@@ -862,7 +861,7 @@ class PartList():
             else:
                 result += ' (OUT OF STOCK)'
             result += '\n'
-        result += '--------------------\n'
+        result += '--------------------'
         return result
 
 
@@ -997,7 +996,6 @@ class WishList(PartList):
             result += 'Valid computer'
         else:
             result += 'Not a valid computer'
-        result += '\n'
 
         return result
 
@@ -1056,7 +1054,7 @@ class CommandPrompt:
             Returns the PartList object.
         """
         return self.__part_list
-
+ 
     def get_items_in_store(self):
         """
             Returns the items_in_store attribute of the PartList
@@ -1153,7 +1151,7 @@ class CommandPrompt:
             Depending on the type of menu: Main Menu/Wish List,
             outputs the appropriate menu.
         """
-        print(f'---- {menu_type} ----')
+        print(f'\n---- {menu_type} ----')
         for i, question in enumerate(self.get_menu_options()[start:stop]):
             print(f'{i+1}. {question}')
 
@@ -1204,7 +1202,6 @@ class ListDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            print()
             # The PartList __str__() method is invoked.
             print((super().get_cmd().get_part_list()))
 
@@ -1224,11 +1221,10 @@ class AddPartToDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            print()
             # The Part Types menu is kept repeating until the user enters 5.
             option = None
             while option is None or option not in range(1, 6) or option != 5:
-                CPU.display_menu()
+                ComputerPart.display_menu()
                 option = super().get_cmd().prompt_for_option(limit=6)
                 if option in range(1, 5):
                     """
@@ -1254,7 +1250,7 @@ class AddPartToDatabase(Question):
                         + str(super().get_cmd().get_stock_available()[new_part.get_name()])
                         + ')'
                     )
-                print()
+                    print()
 
 
     def look_up_part_list(self, new_part):
@@ -1285,7 +1281,6 @@ class Close(Question):
     def __init__(self, cmd, current_menu='Main Menu', execute=True):
         if execute:
             super().__init__(cmd)
-            print()
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
                 super().get_cmd().get_part_list().save_to_csv('test')
@@ -1309,7 +1304,6 @@ class NewWishList(Question):
             super().__init__(cmd)
             if super().get_cmd().get_wish_list() is None:
                 super().get_cmd().set_wish_list(WishList())
-                print()
                 # The menu is kept repeating until the user enters 5.
                 option = None
                 while option is None or option not in range(1, 6) or option not in (4, 5):
@@ -1327,8 +1321,6 @@ class NewWishList(Question):
                             PurchaseAndClose(cmd)
                         else:
                             Close(cmd, current_menu='Wish List')
-            else:
-                print()
 
     def look_up_part_list(self, target_part):
         """
@@ -1338,13 +1330,13 @@ class NewWishList(Question):
         try:
             value = super().get_cmd().get_stock_available()[target_part]
         except KeyError as e:
-            print(f'Could not find {target_part}!\n')
+            print(f'Could not find {target_part}!')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!\n')
+                print(f'Not enough of {target_part} in stock!')
                 return False
 
     def look_up_wish_list(self, target_part):
@@ -1355,13 +1347,13 @@ class NewWishList(Question):
         try:
             value = super().get_cmd().get_stock_in_wish_list()[target_part]
         except KeyError as e:
-            print(f'Could not find {target_part}!\n')
+            print(f'Could not find {target_part}!')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!\n')
+                print(f'Not enough of {target_part} in stock!')
                 return False
 
 
@@ -1406,7 +1398,6 @@ class AddFromDatabase(NewWishList):
                             + str(super().get_cmd().get_stock_in_wish_list()[part_name])
                             + ')'
                         )
-                print()
 
 
 class RemoveFromWishList(NewWishList):
@@ -1419,7 +1410,6 @@ class RemoveFromWishList(NewWishList):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            print()
             part_name = input(f'Enter the name of the part to remove: ')
             if super().look_up_wish_list(part_name):
                 # The part_name is available in Wish List.
@@ -1441,7 +1431,6 @@ class RemoveFromWishList(NewWishList):
                         )
                         # Delete the entry for the removed part.
                         del super().get_cmd().get_stock_in_wish_list()[part_name]
-                print()
 
 
 class ShowWishList(NewWishList):
@@ -1473,13 +1462,11 @@ class PurchaseAndClose(NewWishList):
                 f'Receipt in {username}.csv',
                 sep='\n',
             )
-            print()
 
 
 # ------------------------------- Main Function -------------------------------
 def main():
     print("~~ Welcome to the Computer Store ~~")
-    print()
     # shop = ComputerPartShop()  # Construct object
     # shop.command_prompt()      # Call method to start the program
 
@@ -1508,8 +1495,10 @@ def main():
             if option == 1:
                 NewWishList(cmd)
             elif option == 2:
+                print()
                 ListDatabase(cmd)
             elif option == 3:
+                print()
                 AddPartToDatabase(cmd)
             else:
                 Close(cmd, current_menu='Main Menu')
