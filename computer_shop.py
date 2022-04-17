@@ -1010,7 +1010,7 @@ class CommandPrompt:
         self.__part_list = PartList()
         self.read_from_csv()
         self.__wish_list = None
-        self.__menu_options = []
+        self.__menu_options = [[], []]
 
     def read_from_csv(self):
         """
@@ -1113,7 +1113,7 @@ class CommandPrompt:
         """
         return self.__menu_options
 
-    def set_menu_options(self, menu_options):
+    def add_menu_options(self, menu_options, menu_type):
         """
             Appends each question from the list menu_options (parameter)
             to the menu_options attribute.
@@ -1122,10 +1122,17 @@ class CommandPrompt:
         """
         for question in menu_options:
             if isinstance(question, Question):
-                self.get_menu_options().append(self.convert_class_name(question))
+                if menu_type == 'Main Menu':
+                    self.get_menu_options()[0].append(
+                        self.convert_class_name(question)
+                    )
+                elif menu_type == 'Wish List':
+                    self.get_menu_options()[1].append(
+                        self.convert_class_name(question)
+                    )
             else:
                 raise TypeError(
-                    f'Argument was {repr(question)}, type {type(storage_type)}. '
+                    f'Argument was {repr(question)}, type {type(question)}. '
                     f'Must be an object of type Question.'
                 )
 
@@ -1146,13 +1153,17 @@ class CommandPrompt:
         return result
 
     # Provide user with a list of choices.
-    def display_menu(self, menu_type, start=0, stop=-1):
+    def display_menu(self, menu_type):
         """
             Depending on the type of menu: Main Menu/Wish List,
             outputs the appropriate menu.
         """
         print(f'\n---- {menu_type} ----')
-        for i, question in enumerate(self.get_menu_options()[start:stop]):
+        if menu_type == 'Main Menu':
+            menu_options = self.get_menu_options()[0]
+        elif menu_type == 'Wish List':
+            menu_options = self.get_menu_options()[1]
+        for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
     def prompt_for_option(self, limit):
@@ -1306,7 +1317,7 @@ class NewWishList(Question):
                 # The menu is kept repeating until the user enters 5.
                 option = None
                 while option is None or option not in range(1, 6) or option not in (4, 5):
-                    super().get_cmd().display_menu(menu_type='Wish List', start=4, stop=9)
+                    super().get_cmd().display_menu('Wish List')
                     option = cmd.prompt_for_option(limit=6)
                     if option in range(1, 6):
                         # Now we have a valid option between 1 and 5.
@@ -1319,7 +1330,7 @@ class NewWishList(Question):
                         elif option == 4:
                             PurchaseAndClose(cmd)
                         else:
-                            Close(cmd, current_menu='Wish List')
+                            Close(cmd, 'Wish List')
 
     def look_up_part_list(self, target_part):
         """
@@ -1466,14 +1477,16 @@ class PurchaseAndClose(NewWishList):
 # ------------------------------- Computer Shop -------------------------------
 class ComputerPartShop:
     """
-        An composition of the CommandPrompt class.
-        Creates and controls its own CommandPrompt class.
+        Manages the CommandPrompt object of the program.
     """
     def __init__(self):
-        pass
+        self.__cmd = None
 
-    def command_prompt(self):
-        self.__cmd = CommandPrompt()
+    def set_command_prompt(self, cmd):
+        if isinstance(cmd, CommandPrompt):
+            self.__cmd = cmd
+        else:
+            raise TypeError('CommandPromptError')
 
     def get_command_prompt(self):
         return self.__cmd
@@ -1483,26 +1496,34 @@ class ComputerPartShop:
 def main():
     print("~~ Welcome to the Computer Store ~~")
     shop = ComputerPartShop()  # Construct object
-    shop.command_prompt()      # Call method to start the program
+    shop.set_command_prompt(CommandPrompt())
     cmd = shop.get_command_prompt()
 
-    cmd.set_menu_options((
-        NewWishList(cmd, execute=False),
-        ListDatabase(cmd, execute=False),
-        AddPartToDatabase(cmd, execute=False),
-        Close(cmd, execute=False),
-        AddFromDatabase(cmd, execute=False),
-        RemoveFromWishList(cmd, execute=False),
-        ShowWishList(cmd, execute=False),
-        PurchaseAndClose(cmd, execute=False),
-        Close(cmd, execute=False),
-    ))
+    # Add four options for Main Menu.
+    cmd.add_menu_options(
+        menu_type='Main Menu',
+        menu_options=(NewWishList(cmd, execute=False),
+                      ListDatabase(cmd, execute=False),
+                      AddPartToDatabase(cmd, execute=False),
+                      Close(cmd, execute=False),
+        )
+    )
 
-    # Get started - display Main Menu.
-    # The menu is kept repeating until the user enters 4.
+    # Add five options for Wish List Menu.
+    cmd.add_menu_options(
+        menu_type='Wish List',
+        menu_options=(AddFromDatabase(cmd, execute=False),
+                      RemoveFromWishList(cmd, execute=False),
+                      ShowWishList(cmd, execute=False),
+                      PurchaseAndClose(cmd, execute=False),
+                      Close(cmd, execute=False),
+        )
+    )
+
+    # Keep displaying Main Menu until the user enters 4.
     option = None
     while option is None or option not in range(1, 5) or option != 4:
-        cmd.display_menu(menu_type='Main Menu', start=0, stop=4)
+        cmd.display_menu('Main Menu')
         option = cmd.prompt_for_option(limit=5)
         if option in range(1, 5):
             # Now we have a valid option between 1 and 4.
@@ -1515,7 +1536,7 @@ def main():
                 print()
                 AddPartToDatabase(cmd)
             else:
-                Close(cmd, current_menu='Main Menu')
+                Close(cmd, 'Main Menu')
 
 
 # --------------------------- Call the Main Function --------------------------
