@@ -52,10 +52,11 @@ class ComputerPart(metaclass=abc.ABCMeta):
             Returns False otherwise.
             This method will be overridden in each subclass.
         """
-        pass
-        # if isinstance(self, other) and
-        #     return True
-        # return False
+        if isinstance(other, type(self)):
+            if (self.get_name() == other.get_name() and
+                self.get_price() == other.get_price()):
+                return True
+        return False
 
     @abc.abstractmethod
     def to_csv_string(self):
@@ -177,16 +178,10 @@ class CPU(ComputerPart):
             CPUs and the values of their variables are the same.
             Returns False otherwise.
         """
-        def compare_each_variable(self, other):
-            if len(self) == len(other):
-                for self_variable, self_other in self, other:
-                    if not isinstance(self_variable, self_other):
-                        return False
+        if super().equals(other):
+            if (self.get_cores() == other.get_cores() and
+                self.get_frequency_ghz() == other.get_frequency_ghz()):
                 return True
-            return False
-
-        if isinstance(self, other) and isinstance(other, CPU) and compare_each_variable(self, other):
-            return True
         return False
 
     def to_csv_string(self):
@@ -315,16 +310,10 @@ class GraphicsCard(ComputerPart):
             GraphicsCards and the values of their variables are the same.
             Returns False otherwise.
         """
-        def compare_each_variable(self, other):
-            if len(self) == len(other):
-                for self_variable, self_other in self, other:
-                    if not isinstance(self_variable, self_other):
-                        return False
+        if super().equals(other):
+            if (self.get_memory_gb() == other.get_memory_gb() and
+                self.get_frequency_mhz() == other.get_frequency_mhz()):
                 return True
-            return False
-
-        if isinstance(self, other) and isinstance(other, GraphicsCard) and compare_each_variable(self, other):
-            return True
         return False
 
     def to_csv_string(self):
@@ -458,16 +447,11 @@ class Memory(ComputerPart):
             Memory and the values of their variables are the same.
             Returns False otherwise.
         """
-        def compare_each_variable(self, other):
-            if len(self) == len(other):
-                for self_variable, self_other in self, other:
-                    if not isinstance(self_variable, self_other):
-                        return False
+        if super().equals(other):
+            if (self.get_frequency_mhz() == other.get_frequency_mhz() and
+                self.get_capacity_gb() == other.get_capacity_gb() and
+                self.get_ddr() == other.get_ddr()):
                 return True
-            return False
-
-        if isinstance(self, other) and isinstance(other, Memory) and compare_each_variable(self, other):
-            return True
         return False
 
     def to_csv_string(self):
@@ -619,16 +603,10 @@ class Storage(ComputerPart):
             Storage and the values of their variables are the same.
             Returns False otherwise.
         """
-        def compare_each_variable(self, other):
-            if len(self) == len(other):
-                for self_variable, self_other in self, other:
-                    if not isinstance(self_variable, self_other):
-                        return False
+        if super().equals(other):
+            if (self.get_capacity_gb() == other.get_capacity_gb() and
+                self.get_storage_type() == other.get_storage_type()):
                 return True
-            return False
-
-        if isinstance(self, other) and isinstance(other, Storage) and compare_each_variable(self, other):
-            return True
         return False
 
     def to_csv_string(self):
