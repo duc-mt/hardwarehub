@@ -701,8 +701,9 @@ class Storage(ComputerPart):
                 valid = True
         return storage_type
 
-# ------------------------------- Data Structure ------------------------------
 
+# ------------------------------- Data Structure ------------------------------
+ 
 class PartList():
     """
         A subclass of the WishList class.
@@ -986,9 +987,9 @@ class CommandPrompt:
 
     def __init__(self):
         self.__part_list = PartList()
-        self.read_from_csv()
         self.__wish_list = None
-        self.__menu_options = [list(), list()]
+        self.read_from_csv()
+        self.construct_menu()
 
     def read_from_csv(self):
         """
@@ -1091,38 +1092,43 @@ class CommandPrompt:
         """
         return self.__menu_options
 
-    def add_menu_options(self, menu_options, menu_type):
+    def construct_menu(self):
         """
             Appends each question from the list menu_options (parameter)
             to the menu_options attribute.
             Meanwhile, invokes the convert_class_name method to convert
             the name of each question to the proper format.
         """
-        for question in menu_options:
-            if isinstance(question, Question):
-                if menu_type == 'Main Menu':
-                    self.get_menu_options()[0].append(
-                        self.convert_class_name(question)
-                    )
-                elif menu_type == 'Wish List':
-                    self.get_menu_options()[1].append(
-                        self.convert_class_name(question)
-                    )
-            else:
-                raise TypeError(
-                    f'Argument was {repr(question)}, type {type(question)}. '
-                    f'Must be an object of type Question.'
-                )
+        menu_options = []
 
-    def convert_class_name(self, class_type):
+        # Add four options for Main Menu.
+        menu_options.append([
+            self.convert_class_name(NewWishList(self, execute=False)),
+            self.convert_class_name(ListDatabase(self, execute=False)),
+            self.convert_class_name(AddPartToDatabase(self, execute=False)),
+            self.convert_class_name(Close(self, execute=False)),
+        ])
+
+        # Add five options for Wish List Menu.
+        menu_options.append([
+            self.convert_class_name(AddFromDatabase(self, execute=False)),
+            self.convert_class_name(RemoveFromWishList(self, execute=False)),
+            self.convert_class_name(ShowWishList(self, execute=False)),
+            self.convert_class_name(PurchaseAndClose(self, execute=False)),
+            self.convert_class_name(Close(self, execute=False)),
+        ])
+
+        self.__menu_options = menu_options
+
+    def convert_class_name(self, an_object):
         """
             Convert a class name to a human-readable name.
             E.g. 'New Wish List' is transformed into 'NewWishList'.
         """
-        obj_name = type(class_type).__name__
+        object_name = type(an_object).__name__
         result = ''
-        result += obj_name[0]
-        for index, letter in enumerate(obj_name):
+        result += object_name[0]
+        for index, letter in enumerate(object_name):
             if letter.islower():
                 result += letter
             else:
@@ -1130,7 +1136,6 @@ class CommandPrompt:
                     result += ' ' + letter
         return result
 
-    # Provide user with a list of choices.
     def display_menu(self, menu_type):
         """
             Depending on the type of menu: Main Menu/Wish List,
@@ -1317,7 +1322,7 @@ class NewWishList(Question):
         """
         try:
             value = super().get_cmd().get_stock_in_part_list()[target_part]
-        except KeyError as e:
+        except KeyError:
             print(f'Could not find {target_part}!')
             return False
         else:
@@ -1334,7 +1339,7 @@ class NewWishList(Question):
         """
         try:
             value = super().get_cmd().get_stock_in_wish_list()[target_part]
-        except KeyError as e:
+        except KeyError:
             print(f'Could not find {target_part}!')
             return False
         else:
@@ -1457,46 +1462,24 @@ class ComputerPartShop:
     """
         Manages the CommandPrompt object of the program.
     """
-    def __init__(self):
-        self.__cmd = None
+    def __init__(self, cmd):
+        self.set_cmd(cmd)
 
-    def set_command_prompt(self, cmd):
+    def get_cmd(self):
+        return self.__cmd
+
+    def set_cmd(self, cmd):
         if isinstance(cmd, CommandPrompt):
             self.__cmd = cmd
         else:
             raise TypeError('CommandPromptError')
 
-    def get_command_prompt(self):
-        return self.__cmd
-
 
 # ------------------------------- Main Function -------------------------------
 def main():
     print("~~ Welcome to the Computer Store ~~")
-    shop = ComputerPartShop()  # Construct object
-    shop.set_command_prompt(CommandPrompt())
-    cmd = shop.get_command_prompt()
-
-    # Add four options for Main Menu.
-    cmd.add_menu_options(
-        menu_type='Main Menu',
-        menu_options=(NewWishList(cmd, execute=False),
-                      ListDatabase(cmd, execute=False),
-                      AddPartToDatabase(cmd, execute=False),
-                      Close(cmd, execute=False),
-        )
-    )
-
-    # Add five options for Wish List Menu.
-    cmd.add_menu_options(
-        menu_type='Wish List',
-        menu_options=(AddFromDatabase(cmd, execute=False),
-                      RemoveFromWishList(cmd, execute=False),
-                      ShowWishList(cmd, execute=False),
-                      PurchaseAndClose(cmd, execute=False),
-                      Close(cmd, execute=False),
-        )
-    )
+    shop = ComputerPartShop(CommandPrompt())  # Construct object
+    cmd = shop.get_cmd()
 
     # Keep displaying Main Menu until the user enters 4.
     option = None
