@@ -710,34 +710,34 @@ class PartList():
     """
     def __init__(self):
         # A variable to store the items listed in the store.
-        self.__items_in_part_list = list()
+        self.__items = list()
         """
             A dictionary
             1. Key is the computer part.
             2. Value is the number of stock that key has in stock.
         """
-        self.__stock_in_part_list = dict()
+        self.__stock = dict()
 
     def __len__(self):
         """
-            Get the length of the items_in_part_list attribute.
+            Get the length of the items attribute.
             Called within PartList class using len(self)
             Called outside PartList class using len(object)
                 - Where object is an instance of the PartList class.
         """
-        return len(self.get_items_in_part_list())
+        return len(self.get_items())
 
-    def get_items_in_part_list(self):
+    def get_items(self):
         """
-            Returns the items_in_part_list attribute.
+            Returns the items attribute.
         """
-        return self.__items_in_part_list
+        return self.__items
 
-    def get_stock_in_part_list(self):
+    def get_stock(self):
         """
-            Returns the stock_in_part_list attribute.
+            Returns the stock attribute.
         """
-        return self.__stock_in_part_list
+        return self.__stock
 
     def add_to_part_list(self, new_part):
         """
@@ -745,19 +745,19 @@ class PartList():
             If it is duplicate, the available stock must be incremented by 1.
         """
         name_of_new_part = new_part.get_name()
-        if name_of_new_part not in self.get_items_in_part_list():
-            self.get_items_in_part_list().append(new_part)
-            self.get_stock_in_part_list()[name_of_new_part] = 1
+        if name_of_new_part not in self.get_items():
+            self.get_items().append(new_part)
+            self.get_stock()[name_of_new_part] = 1
         else:
             # Duplicate item, so increment available stock by 1.
-            self.get_stock_in_part_list()[name_of_new_part] += 1
+            self.get_stock()[name_of_new_part] += 1
 
     def get_part_using_name(self, part_name):
         """
             Find and access a part using its name.
             Check to see if that part name is in store.
         """
-        for item in self.get_items_in_part_list():
+        for item in self.get_items():
             if item.get_name() == part_name:
                 return item
 
@@ -767,7 +767,7 @@ class PartList():
             Check to see if the argument is less than the length of the list.
         """
         if part_position < len(self):
-            return self.get_items_in_part_list()[part_position]
+            return self.get_items()[part_position]
 
     def remove_part_using_name(self, part_name):
         """
@@ -775,10 +775,10 @@ class PartList():
             Check to see if that part name is in store.
             Clear all stock of that part in store.
         """
-        for item in self.get_items_in_part_list():
+        for item in self.get_items():
             if item.get_name() == part_name:
-                self.get_items_in_part_list().remove(part_name)
-                del self.get_stock_in_part_list()[name_of_new_part]
+                self.get_items().remove(part_name)
+                del self.get_stock()[name_of_new_part]
 
     def remove_part_using_position(self, part_position):
         """
@@ -787,8 +787,8 @@ class PartList():
             Clear all stock of that part in store.
         """
         if part_position < len(self):
-            part_name = self.get_items_in_part_list().pop(part_position)
-            self.get_stock_in_part_list().pop(part_name)
+            part_name = self.get_items().pop(part_position)
+            self.get_stock().pop(part_name)
 
     def save_to_csv(self, filename='database'):
         """
@@ -796,21 +796,17 @@ class PartList():
             Default to the file name database.csv
         """
         with open(filename + '.csv', mode='w') as outfile:
-            if isinstance(self, WishList):
-                target_list = self.get_items_in_wish_list()
-            elif isinstance(self, PartList):
-                target_list = self.get_items_in_part_list()
-            for item in target_list:
+            for item in self.get_items():
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
                 if isinstance(self, WishList):
-                    stock_in_part_list = self.get_stock_in_wish_list()[item.get_name()]
+                    stock = self.get_stock_in_wish_list()[item.get_name()]
                 elif isinstance(self, PartList):
-                    stock_in_part_list = self.get_stock_in_part_list()[item.get_name()]
+                    stock = self.get_stock()[item.get_name()]
                 # Write that number to file if it is greater than 0.
                 # Otherwise, write out of stock.
-                if stock_in_part_list:
-                    outfile.write(',x' + str(stock_in_part_list))
+                if stock:
+                    outfile.write(',x' + str(stock))
                 else:
                     outfile.write(',OUT OF STOCK')
                 outfile.write('\n')
@@ -827,14 +823,14 @@ class PartList():
         """
         result = ''
         result += '---- Part List ----\n'
-        for item in self.get_items_in_part_list():
+        for item in self.get_items():
             result += item.__str__()
             # Check how many stock left.
-            stock_in_part_list = self.get_stock_in_part_list()[item.get_name()]
+            stock = self.get_stock()[item.get_name()]
                 # Print that number if it is greater than 0.
                 # Otherwise, write out of stock.
-            if stock_in_part_list:
-                result += ' (x' + str(stock_in_part_list) + ')'
+            if stock:
+                result += ' (x' + str(stock) + ')'
             else:
                 result += ' (OUT OF STOCK)'
             result += '\n'
@@ -849,22 +845,22 @@ class WishList(PartList):
     def __init__(self):
         self.set_username()
         # A variable to store the items listed in the store.
-        self.__items_in_wish_list = list()
+        self.__items = list()
         """
             A dictionary
             1. Key is the computer part.
             2. Value is the number of stock that key has in Wish List.
         """
-        self.__stock_in_wish_list = dict()
+        self.__stock = dict()
 
     def __len__(self):
         """
-            Get the length of the items_in_wish_list attribute.
+            Get the length of the items attribute.
             Called within WishList class using len(self)
             Called outside WishList class using len(object)
                 - Where object is an instance of the WishList class.
         """
-        return len(self.get_items_in_wish_list())
+        return len(self.get_items())
 
     def set_username(self):
         username = None
@@ -879,17 +875,17 @@ class WishList(PartList):
     def get_username(self):
         return self.__username
 
-    def get_items_in_wish_list(self):
+    def get_items(self):
         """
-            Returns the items_in_wish_list attribute.
+            Returns the items attribute.
         """
-        return self.__items_in_wish_list
+        return self.__items
 
-    def get_stock_in_wish_list(self):
+    def get_stock(self):
         """
-            Returns the stock_in_wish_list attribute.
+            Returns the stock attribute.
         """
-        return self.__stock_in_wish_list
+        return self.__stock
 
     def get_total_cost(self):
         """
@@ -897,7 +893,7 @@ class WishList(PartList):
         """
         price = 0
 
-        for item in self.get_items_in_wish_list():
+        for item in self.get_items():
             price += item.get_price()
 
         return price
@@ -915,7 +911,7 @@ class WishList(PartList):
             'Memory': False,
             'Storage': False,
         }
-        for item in self.get_items_in_wish_list():
+        for item in self.get_items():
             if isinstance(item, CPU):
                 is_in_wish_list['CPU'] = True
             elif isinstance(item, GraphicsCard):
@@ -954,11 +950,11 @@ class WishList(PartList):
         result += f'\n---- {self.get_username()}\'s Wish List ----'
 
         if len(self):
-            for item in self.get_items_in_wish_list():
+            for item in self.get_items():
                 result += '\n'
                 result += item.__str__()
                 # Check how many stock left.
-                stock_in_part_list = self.get_stock_in_wish_list()[item.get_name()]
+                stock_in_part_list = self.get_stock()[item.get_name()]
                 # Print that number if it is greater than 0.
                 # Otherwise, write out of stock.
                 if stock_in_part_list:
@@ -1032,26 +1028,6 @@ class CommandPrompt:
         """
         return self.__part_list
 
-    def get_items_in_part_list(self):
-        """
-            Returns the items_in_part_list attribute of the PartList
-            object by invoking the same method name from PartList.
-
-            The main purpose of this method is to help shorten the
-            code written when invoking this PartList's method.
-        """
-        return self.get_part_list().get_items_in_part_list()
-
-    def get_stock_in_part_list(self):
-        """
-            Returns the stock_in_part_list attribute of the PartList
-            object by invoking the same method name from PartList.
-
-            The main purpose of this method is to help shorten the
-            code written when invoking this PartList's method.
-        """
-        return self.get_part_list().get_stock_in_part_list()
-
     def get_wish_list(self):
         """
             Returns the WishList object.
@@ -1063,26 +1039,6 @@ class CommandPrompt:
             Sets the wish_list attribute to the argument (a WishList object).
         """
         self.__wish_list = wish_list_object
-
-    def get_items_in_wish_list(self):
-        """
-            Returns the items_in_wish_list attribute of the WishList
-            object by invoking the same method name from WishList.
-
-            The main purpose of this method is to help shorten the
-            code written when invoking this WishList's method.
-        """
-        return self.get_wish_list().get_items_in_wish_list()
-
-    def get_stock_in_wish_list(self):
-        """
-            Returns the stock_in_wish_list attribute of the WishList
-            object by invoking the same method name from WishList.
-
-            The main purpose of this method is to help shorten the
-            code written when invoking this WishList's method.
-        """
-        return self.get_wish_list().get_stock_in_wish_list()
 
     def get_menu_options(self):
         """
@@ -1239,7 +1195,7 @@ class AddPartToDatabase(Question):
                     # Check how many stock left.
                     print(
                         ' (x'
-                        + str(super().get_cmd().get_stock_in_part_list()[new_part.get_name()])
+                        + str(super().get_cmd().get_part_list().get_stock()[new_part.get_name()])
                         + ')'
                     )
                     print()
@@ -1254,10 +1210,10 @@ class AddPartToDatabase(Question):
                 2. Sets its stock to 1.
         """
         try:
-            super().get_cmd().get_stock_in_part_list()[new_part.get_name()] += 1
+            super().get_cmd().get_part_list().get_stock()[new_part.get_name()] += 1
         except KeyError:
-            super().get_cmd().get_items_in_part_list().append(new_part)
-            super().get_cmd().get_stock_in_part_list()[new_part.get_name()] = 1
+            super().get_cmd().get_part_list().get_items().append(new_part)
+            super().get_cmd().get_part_list().get_stock()[new_part.get_name()] = 1
 
 
 class Close(Question):
@@ -1278,11 +1234,11 @@ class Close(Question):
                 print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
-                for item in super().get_cmd().get_items_in_wish_list():
-                    super().get_cmd().get_stock_in_part_list()[item.get_name()] += 1
+                for item in super().get_cmd().get_wish_list().get_items():
+                    super().get_cmd().get_part_list().get_stock()[item.get_name()] += 1
                 # Remove all items from WishList.
-                super().get_cmd().get_items_in_wish_list().clear()
-                super().get_cmd().get_stock_in_wish_list().clear()
+                super().get_cmd().get_wish_list().get_items().clear()
+                super().get_cmd().get_wish_list().get_stock().clear()
 
 
 class NewWishList(Question):
@@ -1319,7 +1275,7 @@ class NewWishList(Question):
             the part list and there is at least 1 stock remaining.
         """
         try:
-            value = super().get_cmd().get_stock_in_part_list()[target_part]
+            value = super().get_cmd().get_part_list().get_stock()[target_part]
         except KeyError:
             print(f'Could not find {target_part}!')
             return False
@@ -1336,7 +1292,7 @@ class NewWishList(Question):
             in the wish list.
         """
         try:
-            value = super().get_cmd().get_stock_in_wish_list()[target_part]
+            value = super().get_cmd().get_wish_list().get_stock()[target_part]
         except KeyError:
             print(f'Could not find {target_part}!')
             return False
@@ -1364,29 +1320,29 @@ class AddFromDatabase(NewWishList):
             part_name = input(f'Enter the name of the part to add: ')
             if super().look_up_part_list(part_name):
                 # The part_name is available in stock.
-                for part_list_item in super().get_cmd().get_items_in_part_list():
+                for part_list_item in super().get_cmd().get_part_list().get_items():
                     if part_list_item.get_name() == part_name:
                         # Decrement that item in Part List.
-                        super().get_cmd().get_stock_in_part_list()[part_name] -= 1
+                        super().get_cmd().get_part_list().get_stock()[part_name] -= 1
                         try:
-                            value = super().get_cmd().get_stock_in_wish_list()[part_name]
+                            value = super().get_cmd().get_wish_list().get_stock()[part_name]
                         except KeyError:
                             # If the item is not in Wish List:
                                 # 1. Adds that new item to Wish List.
                                 # 2. Sets its number in Wish List to 1.
-                            super().get_cmd().get_items_in_wish_list().append(
+                            super().get_cmd().get_wish_list().get_items().append(
                                 part_list_item
                             )
-                            super().get_cmd().get_stock_in_wish_list()[part_name] = 1
+                            super().get_cmd().get_wish_list().get_stock()[part_name] = 1
                         else:
                             # Increment that item in Wish List if it is there.
-                            super().get_cmd().get_stock_in_wish_list()[part_name] += 1
+                            super().get_cmd().get_wish_list().get_stock()[part_name] += 1
                         # Display result.
                         print('Added', part_list_item.__str__(), end='')
                         # Check how many stock left.
                         print(
                             ' (x'
-                            + str(super().get_cmd().get_stock_in_wish_list()[part_name])
+                            + str(super().get_cmd().get_wish_list().get_stock()[part_name])
                             + ')'
                         )
 
@@ -1405,23 +1361,23 @@ class RemoveFromWishList(NewWishList):
             if super().look_up_wish_list(part_name):
                 # The part_name is available in Wish List.
                 for index, wish_list_item in enumerate(
-                    super().get_cmd().get_items_in_wish_list()
+                    super().get_cmd().get_wish_list().get_items()
                 ):
                     if wish_list_item.get_name() == part_name:
                         # Deletes that item from Wish List.
-                        del super().get_cmd().get_items_in_wish_list()[index]
+                        del super().get_cmd().get_wish_list().get_items()[index]
                         # Returns the number of stock back to Part List.
-                        super().get_cmd().get_stock_in_part_list()[part_name] += 1
+                        super().get_cmd().get_part_list().get_stock()[part_name] += 1
                         # Display result.
                         print('Removed', wish_list_item.__str__(), end='')
                         # Check how many stock is in Wish List.
                         print(
                             ' (x'
-                            + str(super().get_cmd().get_stock_in_wish_list()[part_name])
+                            + str(super().get_cmd().get_wish_list().get_stock()[part_name])
                             + ')'
                         )
                         # Delete the entry for the removed part.
-                        del super().get_cmd().get_stock_in_wish_list()[part_name]
+                        del super().get_cmd().get_wish_list().get_stock()[part_name]
 
 
 class ShowWishList(NewWishList):
