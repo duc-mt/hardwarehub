@@ -825,10 +825,7 @@ class PartList():
             for item in self.get_items():
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
-                if isinstance(self, WishList):
-                    stock = self.get_stock_in_wish_list()[item.get_name()]
-                elif isinstance(self, PartList):
-                    stock = self.get_stock()[item.get_name()]
+                stock = self.get_stock()[item.get_name()]
                 # Write that number to file if it is greater than 0.
                 # Otherwise, write out of stock.
                 if stock:
