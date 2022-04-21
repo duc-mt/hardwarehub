@@ -138,10 +138,10 @@ class ComputerPart(metaclass=abc.ABCMeta):
 
     @classmethod
     def display_menu(cls):
-        menu_options = [
+        menu_options = (
             'CPU', 'Graphics Card',
             'Memory', 'Storage', 'Back',
-        ]
+        )
         print(f'---- Part Types ----')
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
@@ -210,11 +210,9 @@ class CPU(ComputerPart):
             Uses these values to construct and return a new CPU.
         """
         csv_list = csv_string.split(',')[1:-1]
-
         csv_list[1] = float(csv_list[1])
         csv_list[2] = int(csv_list[2])
         csv_list[3] = float(csv_list[3])
-
         return CPU(
             csv_list[0],
             csv_list[1],
@@ -703,7 +701,7 @@ class Storage(ComputerPart):
 
 
 # ------------------------------- Data Structure ------------------------------
- 
+
 class PartList():
     """
         A subclass of the WishList class.
@@ -1102,21 +1100,21 @@ class CommandPrompt:
         menu_options = []
 
         # Add four options for Main Menu.
-        menu_options.append([
+        menu_options.append((
             self.convert_class_name(NewWishList(self, execute=False)),
             self.convert_class_name(ListDatabase(self, execute=False)),
             self.convert_class_name(AddPartToDatabase(self, execute=False)),
             self.convert_class_name(Close(self, execute=False)),
-        ])
+        ))
 
         # Add five options for Wish List Menu.
-        menu_options.append([
+        menu_options.append((
             self.convert_class_name(AddFromDatabase(self, execute=False)),
             self.convert_class_name(RemoveFromWishList(self, execute=False)),
             self.convert_class_name(ShowWishList(self, execute=False)),
             self.convert_class_name(PurchaseAndClose(self, execute=False)),
             self.convert_class_name(Close(self, execute=False)),
-        ])
+        ))
 
         self.__menu_options = menu_options
 
@@ -1277,7 +1275,7 @@ class Close(Question):
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
                 super().get_cmd().get_part_list().save_to_csv('test')
-                print('See you again soon.')
+                print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
                 for item in super().get_cmd().get_items_in_wish_list():
