@@ -32,49 +32,6 @@ class ComputerPart(metaclass=abc.ABCMeta):
         self.__name = name
         self.__price = price
 
-    def get_name(self):
-        """
-            Returns the name attribute.
-            Called by subclasses using super().get_name()
-        """
-        return self.__name
-
-    def get_price(self):
-        """
-            Returns the price attribute.
-            Called by subclasses using super().get_price()
-        """
-        return self.__price
-
-    def equals(self, other):
-        """
-            Returns True if the calling object is equal to the other argument.
-            Returns False otherwise.
-            This method will be overridden in each subclass.
-        """
-        if isinstance(other, type(self)):
-            if (self.get_name() == other.get_name() and
-                self.get_price() == other.get_price()):
-                return True
-        return False
-
-    @abc.abstractmethod
-    def to_csv_string(self):
-        """
-            An abstract method.
-            Returns the name of the class followed by each of the instance
-            variables separated by commas.
-        """
-        pass
-
-    @abc.abstractmethod
-    def __str__(self):
-        """
-            An abstract method.
-            Returns the variables as a String.
-        """
-        pass
-
     @abc.abstractclassmethod
     def parse(cls):
         """
@@ -91,6 +48,23 @@ class ComputerPart(metaclass=abc.ABCMeta):
             An abstract class method.
             Takes input for each of the necessary variables.
             Uses these input values to construct and return a new ComputerPart.
+        """
+        pass
+
+    @abc.abstractmethod
+    def __str__(self):
+        """
+            An abstract method.
+            Returns the variables as a String.
+        """
+        pass
+
+    @abc.abstractmethod
+    def to_csv_string(self):
+        """
+            An abstract method.
+            Returns the name of the class followed by each of the instance
+            variables separated by commas.
         """
         pass
 
@@ -146,6 +120,32 @@ class ComputerPart(metaclass=abc.ABCMeta):
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
+    def get_name(self):
+        """
+            Returns the name attribute.
+            Called by subclasses using super().get_name()
+        """
+        return self.__name
+
+    def get_price(self):
+        """
+            Returns the price attribute.
+            Called by subclasses using super().get_price()
+        """
+        return self.__price
+
+    def equals(self, other):
+        """
+            Returns True if the calling object is equal to the other argument.
+            Returns False otherwise.
+            This method will be overridden in each subclass.
+        """
+        if isinstance(other, type(self)):
+            if (self.get_name() == other.get_name() and
+                self.get_price() == other.get_price()):
+                return True
+        return False
+
 
 class CPU(ComputerPart):
     """
@@ -159,39 +159,6 @@ class CPU(ComputerPart):
         super().__init__(name, price)
         self.__cores = cores
         self.__frequency_ghz = frequency_ghz
-
-    def get_cores(self):
-        """
-             Returns the cores attribute.
-        """
-        return self.__cores
-
-    def get_frequency_ghz(self):
-        """
-            Returns the frequency_ghz attribute.
-        """
-        return self.__frequency_ghz
-
-    def equals(self, other):
-        """
-            Returns True if the calling object and the other argument are both
-            CPUs and the values of their variables are the same.
-            Returns False otherwise.
-        """
-        if super().equals(other):
-            if (self.get_cores() == other.get_cores() and
-                self.get_frequency_ghz() == other.get_frequency_ghz()):
-                return True
-        return False
-
-    def to_csv_string(self):
-        """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "CPU,name,price,cores,frequency_ghz".
-        """
-        return f'CPU,{super().get_name()},{super().get_price()},' + \
-               f'{self.get_cores()},{self.get_frequency_ghz()}'
 
     def __str__(self):
         """
@@ -226,7 +193,7 @@ class CPU(ComputerPart):
             Takes input for the name, price, frequency, and number of cores.
             Uses these input values to construct and return a new CPU.
         """
-        return CPU(
+        return cls(
             cls.input_name(),
             cls.input_price(),
             cls.input_cores(),
@@ -275,6 +242,39 @@ class CPU(ComputerPart):
                 valid = True
         return frequency_ghz
 
+    def get_cores(self):
+        """
+             Returns the cores attribute.
+        """
+        return self.__cores
+
+    def get_frequency_ghz(self):
+        """
+            Returns the frequency_ghz attribute.
+        """
+        return self.__frequency_ghz
+
+    def equals(self, other):
+        """
+            Returns True if the calling object and the other argument are both
+            CPUs and the values of their variables are the same.
+            Returns False otherwise.
+        """
+        if super().equals(other):
+            if (self.get_cores() == other.get_cores() and
+                self.get_frequency_ghz() == other.get_frequency_ghz()):
+                return True
+        return False
+
+    def to_csv_string(self):
+        """
+            Return the name of the class followed by each of the class
+            variables separated by commas.
+            Format: "CPU,name,price,cores,frequency_ghz".
+        """
+        return f'CPU,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_cores()},{self.get_frequency_ghz()}'
+
 
 class GraphicsCard(ComputerPart):
     """
@@ -289,39 +289,6 @@ class GraphicsCard(ComputerPart):
         super().__init__(name, price)
         self.__frequency_mhz = frequency_mhz
         self.__memory_gb = memory_gb
-
-    def get_frequency_mhz(self):
-        """
-            Returns the frequency_mhz attribute.
-        """
-        return self.__frequency_mhz
-
-    def get_memory_gb(self):
-        """
-            Returns the memory_gb attribute.
-        """
-        return self.__memory_gb
-
-    def equals(self, other):
-        """
-            Returns True if the calling object and the other argument are both
-            GraphicsCards and the values of their variables are the same.
-            Returns False otherwise.
-        """
-        if super().equals(other):
-            if (self.get_memory_gb() == other.get_memory_gb() and
-                self.get_frequency_mhz() == other.get_frequency_mhz()):
-                return True
-        return False
-
-    def to_csv_string(self):
-        """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
-        """
-        return f'GraphicsCard,{super().get_name()},{super().get_price()},' + \
-               f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
 
     def __str__(self):
         """
@@ -356,7 +323,7 @@ class GraphicsCard(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new GraphicsCard.
         """
-        return GraphicsCard(
+        return cls(
             cls.input_name(),
             cls.input_price(),
             cls.input_frequency_mhz(),
@@ -405,6 +372,39 @@ class GraphicsCard(ComputerPart):
                 valid = True
         return memory_gb
 
+    def get_frequency_mhz(self):
+        """
+            Returns the frequency_mhz attribute.
+        """
+        return self.__frequency_mhz
+
+    def get_memory_gb(self):
+        """
+            Returns the memory_gb attribute.
+        """
+        return self.__memory_gb
+
+    def equals(self, other):
+        """
+            Returns True if the calling object and the other argument are both
+            GraphicsCards and the values of their variables are the same.
+            Returns False otherwise.
+        """
+        if super().equals(other):
+            if (self.get_memory_gb() == other.get_memory_gb() and
+                self.get_frequency_mhz() == other.get_frequency_mhz()):
+                return True
+        return False
+
+    def to_csv_string(self):
+        """
+            Return the name of the class followed by each of the class
+            variables separated by commas.
+            Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
+        """
+        return f'GraphicsCard,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
+
 
 class Memory(ComputerPart):
     """
@@ -420,47 +420,6 @@ class Memory(ComputerPart):
         self.__capacity_gb = capacity_gb
         self.__frequency_mhz = frequency_mhz
         self.__ddr = ddr
-
-    def get_capacity_gb(self):
-        """
-            Returns the capacity_gb attribute.
-        """
-        return self.__capacity_gb
-
-    def get_frequency_mhz(self):
-        """
-            Returns the frequency_mhz attribute.
-        """
-        return self.__frequency_mhz
-
-    def get_ddr(self):
-        """
-            Returns the ddr attribute.
-        """
-        return self.__ddr
-
-    def equals(self, other):
-        """
-            Returns True if the calling object and the other argument are both
-            Memory and the values of their variables are the same.
-            Returns False otherwise.
-        """
-        if super().equals(other):
-            if (self.get_frequency_mhz() == other.get_frequency_mhz() and
-                self.get_capacity_gb() == other.get_capacity_gb() and
-                self.get_ddr() == other.get_ddr()):
-                return True
-        return False
-
-    def to_csv_string(self):
-        """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
-        """
-        return f'Memory,{super().get_name()},{super().get_price()},' + \
-               f'{self.get_capacity_gb()},{self.get_frequency_mhz()},' + \
-               f'{self.get_ddr()}'
 
     def __str__(self):
         """
@@ -497,7 +456,7 @@ class Memory(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Memory.
         """
-        return Memory(
+        return cls(
             cls.input_name(),
             cls.input_price(),
             cls.input_capacity_gb(),
@@ -568,6 +527,47 @@ class Memory(ComputerPart):
                 valid = True
         return ddr
 
+    def get_capacity_gb(self):
+        """
+            Returns the capacity_gb attribute.
+        """
+        return self.__capacity_gb
+
+    def get_frequency_mhz(self):
+        """
+            Returns the frequency_mhz attribute.
+        """
+        return self.__frequency_mhz
+
+    def get_ddr(self):
+        """
+            Returns the ddr attribute.
+        """
+        return self.__ddr
+
+    def equals(self, other):
+        """
+            Returns True if the calling object and the other argument are both
+            Memory and the values of their variables are the same.
+            Returns False otherwise.
+        """
+        if super().equals(other):
+            if (self.get_frequency_mhz() == other.get_frequency_mhz() and
+                self.get_capacity_gb() == other.get_capacity_gb() and
+                self.get_ddr() == other.get_ddr()):
+                return True
+        return False
+
+    def to_csv_string(self):
+        """
+            Return the name of the class followed by each of the class
+            variables separated by commas.
+            Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
+        """
+        return f'Memory,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_capacity_gb()},{self.get_frequency_mhz()},' + \
+               f'{self.get_ddr()}'
+
 
 class Storage(ComputerPart):
     """
@@ -582,39 +582,6 @@ class Storage(ComputerPart):
         super().__init__(name, price)
         self.__capacity_gb = capacity_gb
         self.__storage_type = storage_type
-
-    def get_capacity_gb(self):
-        """
-            Returns the capacity_gb attribute.
-        """
-        return self.__capacity_gb
-
-    def get_storage_type(self):
-        """
-            Returns the storage_type attribute.
-        """
-        return self.__storage_type
-
-    def equals(self, other):
-        """
-            Returns True if the calling object and the other argument are both
-            Storage and the values of their variables are the same.
-            Returns False otherwise.
-        """
-        if super().equals(other):
-            if (self.get_capacity_gb() == other.get_capacity_gb() and
-                self.get_storage_type() == other.get_storage_type()):
-                return True
-        return False
-
-    def to_csv_string(self):
-        """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "Storage,name,price,capacity_gb,storage_type".
-        """
-        return f'Storage,{super().get_name()},{super().get_price()},' + \
-               f'{self.get_capacity_gb()},{self.get_storage_type()}'
 
     def __str__(self):
         """
@@ -648,7 +615,7 @@ class Storage(ComputerPart):
             Takes input for the name, price, memory, and frequency.
             Uses these input values to construct and return a new Storage.
         """
-        return Storage(
+        return cls(
             cls.input_name(),
             cls.input_price(),
             cls.input_capacity_gb(),
@@ -699,6 +666,39 @@ class Storage(ComputerPart):
                 valid = True
         return storage_type
 
+    def get_capacity_gb(self):
+        """
+            Returns the capacity_gb attribute.
+        """
+        return self.__capacity_gb
+
+    def get_storage_type(self):
+        """
+            Returns the storage_type attribute.
+        """
+        return self.__storage_type
+
+    def equals(self, other):
+        """
+            Returns True if the calling object and the other argument are both
+            Storage and the values of their variables are the same.
+            Returns False otherwise.
+        """
+        if super().equals(other):
+            if (self.get_capacity_gb() == other.get_capacity_gb() and
+                self.get_storage_type() == other.get_storage_type()):
+                return True
+        return False
+
+    def to_csv_string(self):
+        """
+            Return the name of the class followed by each of the class
+            variables separated by commas.
+            Format: "Storage,name,price,capacity_gb,storage_type".
+        """
+        return f'Storage,{super().get_name()},{super().get_price()},' + \
+               f'{self.get_capacity_gb()},{self.get_storage_type()}'
+
 
 # ------------------------------- Data Structure ------------------------------
 
@@ -717,6 +717,32 @@ class PartList():
             2. Value is the number of stock that key has in stock.
         """
         self.__stock = dict()
+
+    def __str__(self):
+        """
+            Return a string that represents the PartList in the format:
+            "---- Part List ----
+            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+            AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
+            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
+            Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
+            --------------------"
+        """
+        result = ''
+        result += '---- Part List ----\n'
+        for item in self.get_items():
+            result += item.__str__()
+            # Check how many stock left.
+            stock = self.get_stock()[item.get_name()]
+                # Print that number if it is greater than 0.
+                # Otherwise, write out of stock.
+            if stock:
+                result += ' (x' + str(stock) + ')'
+            else:
+                result += ' (OUT OF STOCK)'
+            result += '\n'
+        result += '--------------------'
+        return result
 
     def __len__(self):
         """
@@ -811,32 +837,6 @@ class PartList():
                     outfile.write(',OUT OF STOCK')
                 outfile.write('\n')
 
-    def __str__(self):
-        """
-            Return a string that represents the PartList in the format:
-            "---- Part List ----
-            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
-            AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
-            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
-            Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
-            --------------------"
-        """
-        result = ''
-        result += '---- Part List ----\n'
-        for item in self.get_items():
-            result += item.__str__()
-            # Check how many stock left.
-            stock = self.get_stock()[item.get_name()]
-                # Print that number if it is greater than 0.
-                # Otherwise, write out of stock.
-            if stock:
-                result += ' (x' + str(stock) + ')'
-            else:
-                result += ' (OUT OF STOCK)'
-            result += '\n'
-        result += '--------------------'
-        return result
-
 
 class WishList(PartList):
     """
@@ -852,6 +852,47 @@ class WishList(PartList):
             2. Value is the number of stock that key has in Wish List.
         """
         self.__stock = dict()
+
+    def __str__(self):
+        """
+            Returns a string that represents the WishList in the format:
+            "---- Gary's Wish List ----
+            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+            AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
+            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
+            Seagate FireCuda: 1000GB SSHD for $105.00 (x1)
+            Toshiba P300: 3000GB HDD for $115.00 (x1)
+            --------------------
+            $7117.99
+            Valid computer"
+
+            The last line is either "Valid computer" or "Not a valid computer".
+        """
+        result = ''
+        result += f'\n---- {self.get_username()}\'s Wish List ----'
+
+        if len(self):
+            for item in self.get_items():
+                result += '\n'
+                result += item.__str__()
+                # Check how many stock left.
+                stock_in_part_list = self.get_stock()[item.get_name()]
+                # Print that number if it is greater than 0.
+                # Otherwise, write out of stock.
+                if stock_in_part_list:
+                    result += ' (x' + str(stock_in_part_list) + ')'
+                else:
+                    result += ' (OUT OF STOCK)'
+
+        result += '\n--------------------\n'
+        result += f'${self.__get_total_cost():.2f}\n'
+
+        if self.__is_valid_computer():
+            result += 'Valid computer'
+        else:
+            result += 'Not a valid computer'
+
+        return result
 
     def __len__(self):
         """
@@ -887,8 +928,9 @@ class WishList(PartList):
         """
         return self.__stock
 
-    def get_total_cost(self):
+    def __get_total_cost(self):
         """
+            A private method.
             Calculates and returns the total cost of all parts.
         """
         price = 0
@@ -897,8 +939,9 @@ class WishList(PartList):
             price += item.get_price() * number
         return price
 
-    def is_valid_computer(self):
+    def __is_valid_computer(self):
         """
+            A private method.
             Determines if the parts will make up a valid computer.
             A valid computer requires at least:
                - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
@@ -930,48 +973,6 @@ class WishList(PartList):
             return False
 
 
-    def __str__(self):
-        """
-            Returns a string that represents the WishList in the format:
-            "---- Gary's Wish List ----
-            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
-            AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
-            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
-            Seagate FireCuda: 1000GB SSHD for $105.00 (x1)
-            Toshiba P300: 3000GB HDD for $115.00 (x1)
-            --------------------
-            $7117.99
-            Valid computer"
-
-            The last line is either "Valid computer" or "Not a valid computer".
-        """
-        result = ''
-        result += f'\n---- {self.get_username()}\'s Wish List ----'
-
-        if len(self):
-            for item in self.get_items():
-                result += '\n'
-                result += item.__str__()
-                # Check how many stock left.
-                stock_in_part_list = self.get_stock()[item.get_name()]
-                # Print that number if it is greater than 0.
-                # Otherwise, write out of stock.
-                if stock_in_part_list:
-                    result += ' (x' + str(stock_in_part_list) + ')'
-                else:
-                    result += ' (OUT OF STOCK)'
-
-        result += '\n--------------------\n'
-        result += f'${self.get_total_cost():.2f}\n'
-
-        if self.is_valid_computer():
-            result += 'Valid computer'
-        else:
-            result += 'Not a valid computer'
-
-        return result
-
-
 # ------------------------------- User Interface ------------------------------
 class CommandPrompt:
     """
@@ -981,45 +982,8 @@ class CommandPrompt:
     def __init__(self):
         self.__part_list = PartList()
         self.__wish_list = None
-        self.read_from_csv()
-        self.construct_menu()
-
-    def read_from_csv(self):
-        """
-            This method is automatically invoked when an object of type
-            CommandPrompt is constructed.
-            By invoking this method, the CommandPrompt class should
-            automatically construct a part list and fill it with items that
-            it reads from the CSV file named "database.csv".
-        """
-        with open('database.csv') as infile:
-            list_of_csv_strings = list()
-            line = None
-            while line is None or line != '':
-                line = infile.readline().rstrip('\n')
-                list_of_csv_strings.append(line)
-
-            for csv_string in list_of_csv_strings:
-                if 'CPU' in csv_string:
-                    # Construct a CPU object.
-                    self.get_part_list().add_to_part_list(
-                        CPU.parse(csv_string)
-                    )
-                elif 'GraphicsCard' in csv_string:
-                    # Construct a GraphicsCard object.
-                    self.get_part_list().add_to_part_list(
-                        GraphicsCard.parse(csv_string)
-                    )
-                elif 'Memory' in csv_string:
-                    # Construct a Memory object.
-                    self.get_part_list().add_to_part_list(
-                        Memory.parse(csv_string)
-                    )
-                elif 'Storage' in csv_string:
-                    # Construct a Storage object.
-                    self.get_part_list().add_to_part_list(
-                        Storage.parse(csv_string)
-                    )
+        self.__read_from_csv()
+        self.__construct_menu()
 
     def get_part_list(self):
         """
@@ -1042,55 +1006,11 @@ class CommandPrompt:
         else:
             raise TypeError('WishListError')
 
-    def construct_menu(self):
-        """
-            Appends each question from the list menu_options (parameter)
-            to the menu_options attribute.
-            Meanwhile, invokes the convert_class_name method to convert
-            the name of each question to the proper format.
-        """
-        menu_options = []
-
-        # Add four options for Main Menu.
-        menu_options.append((
-            self.convert_class_name(NewWishList(self, execute=False)),
-            self.convert_class_name(ListDatabase(self, execute=False)),
-            self.convert_class_name(AddPartToDatabase(self, execute=False)),
-            self.convert_class_name(Close(self, execute=False)),
-        ))
-
-        # Add five options for Wish List Menu.
-        menu_options.append((
-            self.convert_class_name(AddFromDatabase(self, execute=False)),
-            self.convert_class_name(RemoveFromWishList(self, execute=False)),
-            self.convert_class_name(ShowWishList(self, execute=False)),
-            self.convert_class_name(PurchaseAndClose(self, execute=False)),
-            self.convert_class_name(Close(self, execute=False)),
-        ))
-
-        self.__menu_options = menu_options
-
     def get_menu_options(self):
         """
             Returns the menu_options attribute.
         """
         return self.__menu_options
-
-    def convert_class_name(self, obj):
-        """
-            Convert a class name to a human-readable name.
-            E.g. 'New Wish List' is transformed into 'NewWishList'.
-        """
-        obj_name = type(obj).__name__
-        result = ''
-        result += obj_name[0]
-        for index, letter in enumerate(obj_name):
-            if letter.islower():
-                result += letter
-            else:
-                if index != 0:
-                    result += ' ' + letter
-        return result
 
     def display_menu(self, menu_type):
         """
@@ -1128,6 +1048,87 @@ class CommandPrompt:
                 )
                 option = None
         return option
+
+    def __read_from_csv(self):
+        """
+            This method is automatically invoked when an object of type
+            CommandPrompt is constructed.
+            By invoking this method, the CommandPrompt class should
+            automatically construct a part list and fill it with items that
+            it reads from the CSV file named "database.csv".
+        """
+        with open('database.csv') as infile:
+            list_of_csv_strings = list()
+            line = None
+            while line is None or line != '':
+                line = infile.readline().rstrip('\n')
+                list_of_csv_strings.append(line)
+
+            for csv_string in list_of_csv_strings:
+                if 'CPU' in csv_string:
+                    # Construct a CPU object.
+                    self.get_part_list().add_to_part_list(
+                        CPU.parse(csv_string)
+                    )
+                elif 'GraphicsCard' in csv_string:
+                    # Construct a GraphicsCard object.
+                    self.get_part_list().add_to_part_list(
+                        GraphicsCard.parse(csv_string)
+                    )
+                elif 'Memory' in csv_string:
+                    # Construct a Memory object.
+                    self.get_part_list().add_to_part_list(
+                        Memory.parse(csv_string)
+                    )
+                elif 'Storage' in csv_string:
+                    # Construct a Storage object.
+                    self.get_part_list().add_to_part_list(
+                        Storage.parse(csv_string)
+                    )
+
+    def __construct_menu(self):
+        """
+            Appends each question from the list menu_options (parameter)
+            to the menu_options attribute.
+            Meanwhile, invokes the convert_class_name method to convert
+            the name of each question to the proper format.
+        """
+        menu_options = []
+
+        # Add four options for Main Menu.
+        menu_options.append((
+            self.__convert_class_name(NewWishList(self, execute=False)),
+            self.__convert_class_name(ListDatabase(self, execute=False)),
+            self.__convert_class_name(AddPartToDatabase(self, execute=False)),
+            self.__convert_class_name(Close(self, execute=False)),
+        ))
+
+        # Add five options for Wish List Menu.
+        menu_options.append((
+            self.__convert_class_name(AddFromDatabase(self, execute=False)),
+            self.__convert_class_name(RemoveFromWishList(self, execute=False)),
+            self.__convert_class_name(ShowWishList(self, execute=False)),
+            self.__convert_class_name(PurchaseAndClose(self, execute=False)),
+            self.__convert_class_name(Close(self, execute=False)),
+        ))
+
+        self.__menu_options = menu_options
+
+    def __convert_class_name(self, obj):
+        """
+            Convert a class name to a human-readable name.
+            E.g. 'New Wish List' is transformed into 'NewWishList'.
+        """
+        obj_name = type(obj).__name__
+        result = ''
+        result += obj_name[0]
+        for index, letter in enumerate(obj_name):
+            if letter.islower():
+                result += letter
+            else:
+                if index != 0:
+                    result += ' ' + letter
+        return result
 
 
 class Question:
@@ -1191,9 +1192,19 @@ class AddPartToDatabase(Question):
                         new_part = Memory.input()
                     elif option == 4:
                         new_part = Storage.input()
-                    self.look_up_part_list(new_part)
-                    print('Added', new_part.__str__(), end='')
 
+                    if self.__look_up_part_list(new_part):
+                        # If it exists in the Part List
+                        # increments that part in stock by 1.
+                        super().get_cmd().get_part_list().get_stock()[new_part.get_name()] += 1
+                    else:
+                        # Otherwise:
+                        #     1. Adds that new part to the Part List
+                        #     2. Sets its stock to 1.
+                        super().get_cmd().get_part_list().get_items().append(new_part)
+                        super().get_cmd().get_part_list().get_stock()[new_part.get_name()] = 1
+
+                    print('Added', new_part.__str__(), end='')
                     # Check how many stock left.
                     print(
                         ' (x'
@@ -1202,20 +1213,18 @@ class AddPartToDatabase(Question):
                     )
                     print()
 
-    def look_up_part_list(self, new_part):
+    def __look_up_part_list(self, new_part):
         """
             Searchs for a part (parameter) which is a newly created part
             to see if it exists in the Part List.
-            If it is, increments that part in stock by 1.
-            Otherwise:
-                1. Adds that new part to the Part List
-                2. Sets its stock to 1.
+            Returns True if it is, False otherwise.
         """
         try:
-            super().get_cmd().get_part_list().get_stock()[new_part.get_name()] += 1
+            value = super().get_cmd().get_part_list().get_stock()[new_part.get_name()]
         except KeyError:
-            super().get_cmd().get_part_list().get_items().append(new_part)
-            super().get_cmd().get_part_list().get_stock()[new_part.get_name()] = 1
+            return False
+        else:
+            return True
 
 
 class Close(Question):
@@ -1271,38 +1280,38 @@ class NewWishList(Question):
                         else:
                             Close(cmd, 'Wish List')
 
-    def look_up_part_list(self, target_part):
+    def look_up_part_list(self, part_name):
         """
             Search for a part with the name (parameter) to see if it exists in
             the part list and there is at least 1 stock remaining.
         """
         try:
-            value = super().get_cmd().get_part_list().get_stock()[target_part]
+            value = super().get_cmd().get_part_list().get_stock()[part_name]
         except KeyError:
-            print(f'Could not find {target_part}!')
+            print(f'Could not find {part_name}!')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!')
+                print(f'Not enough of {part_name} in stock!')
                 return False
 
-    def look_up_wish_list(self, target_part):
+    def look_up_wish_list(self, part_name):
         """
             Search for a part with the name (parameter) to see if it exists
             in the wish list.
         """
         try:
-            value = super().get_cmd().get_wish_list().get_stock()[target_part]
+            value = super().get_cmd().get_wish_list().get_stock()[part_name]
         except KeyError:
-            print(f'Could not find {target_part}!')
+            print(f'Could not find {part_name}!')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {target_part} in stock!')
+                print(f'Not enough of {part_name} in stock!')
                 return False
 
 
