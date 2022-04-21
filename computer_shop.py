@@ -709,7 +709,7 @@ class PartList():
         available in stock.
     """
     def __init__(self):
-        # A variable to store the items listed in the store.
+        # A variable to store the items (ComputerParts) listed in the store.
         self.__items = list()
         """
             A dictionary
@@ -1033,11 +1033,14 @@ class CommandPrompt:
         """
         return self.__wish_list
 
-    def set_wish_list(self, wish_list_object):
+    def set_wish_list(self, obj):
         """
             Sets the wish_list attribute to the argument (a WishList object).
         """
-        self.__wish_list = wish_list_object
+        if isinstance(obj, WishList):
+            self.__wish_list = obj
+        else:
+            raise TypeError('WishListError')
 
     def get_menu_options(self):
         """
