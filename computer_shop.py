@@ -1042,12 +1042,6 @@ class CommandPrompt:
         else:
             raise TypeError('WishListError')
 
-    def get_menu_options(self):
-        """
-            Returns the menu_options attribute.
-        """
-        return self.__menu_options
-
     def construct_menu(self):
         """
             Appends each question from the list menu_options (parameter)
@@ -1076,15 +1070,21 @@ class CommandPrompt:
 
         self.__menu_options = menu_options
 
-    def convert_class_name(self, an_object):
+    def get_menu_options(self):
+        """
+            Returns the menu_options attribute.
+        """
+        return self.__menu_options
+
+    def convert_class_name(self, obj):
         """
             Convert a class name to a human-readable name.
             E.g. 'New Wish List' is transformed into 'NewWishList'.
         """
-        object_name = type(an_object).__name__
+        obj_name = type(obj).__name__
         result = ''
-        result += object_name[0]
-        for index, letter in enumerate(object_name):
+        result += obj_name[0]
+        for index, letter in enumerate(obj_name):
             if letter.islower():
                 result += letter
             else:
