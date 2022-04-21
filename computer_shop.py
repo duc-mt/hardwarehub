@@ -658,7 +658,7 @@ class Storage(ComputerPart):
                     f'Argument was {repr(storage_type)}, '
                     f'type {type(storage_type)}. Must be a string.'
                 )
-            elif storage_type not in ('HDD', 'SSD', 'SSHD'):
+            elif storage_type not in {'HDD', 'SSD', 'SSHD'}:
                 print(
                     'ValueError: Storage type must be one of HDD, SSD, or SSHD.'
                 )
@@ -1261,7 +1261,7 @@ class NewWishList(Question):
                 super().get_cmd().set_wish_list(WishList())
                 # The menu is kept repeating until the user enters 5.
                 option = None
-                while option is None or option not in range(1, 6) or option not in (4, 5):
+                while option is None or option not in range(1, 6) or option not in {4, 5}:
                     super().get_cmd().display_menu('Wish List')
                     option = cmd.prompt_for_option(limit=6)
                     if option in range(1, 6):
