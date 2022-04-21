@@ -892,10 +892,9 @@ class WishList(PartList):
             Calculates and returns the total cost of all parts.
         """
         price = 0
-
         for item in self.get_items():
-            price += item.get_price()
-
+            number = self.get_stock()[item.get_name()]
+            price += item.get_price() * number
         return price
 
     def is_valid_computer(self):
