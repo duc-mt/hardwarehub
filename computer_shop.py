@@ -120,6 +120,18 @@ class ComputerPart(metaclass=abc.ABCMeta):
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
+    @classmethod
+    def csv_string_to_list(cls, csv_string):
+        csv_list = list()
+        value = str()
+        for letter in csv_string:
+            if letter != ',':
+                value += letter
+            else:
+                csv_list.append(value)
+                value = str()
+        return csv_list
+
     def get_name(self):
         """
             Returns the name attribute.
@@ -175,14 +187,7 @@ class CPU(ComputerPart):
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new CPU.
         """
-        csv_list = list()
-        value = str()
-        for letter in csv_string:
-            if letter != ',':
-                value += letter
-            else:
-                csv_list.append(value)
-                value = str()
+        csv_list = ComputerPart.csv_string_to_list(csv_string)
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -202,8 +207,8 @@ class CPU(ComputerPart):
             Uses these input values to construct and return a new CPU.
         """
         return cls(
-            cls.input_name(),
-            cls.input_price(),
+            ComputerPart.input_name(),
+            ComputerPart.input_price(),
             cls.input_cores(),
             cls.input_frequency_ghz(),
         )
@@ -313,14 +318,7 @@ class GraphicsCard(ComputerPart):
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new GraphicsCard.
         """
-        csv_list = list()
-        value = str()
-        for letter in csv_string:
-            if letter != ',':
-                value += letter
-            else:
-                csv_list.append(value)
-                value = str()
+        csv_list = ComputerPart.csv_string_to_list(csv_string)
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -340,8 +338,8 @@ class GraphicsCard(ComputerPart):
             Uses these input values to construct and return a new GraphicsCard.
         """
         return cls(
-            cls.input_name(),
-            cls.input_price(),
+            ComputerPart.input_name(),
+            ComputerPart.input_price(),
             cls.input_frequency_mhz(),
             cls.input_memory_gb(),
         )
@@ -453,14 +451,7 @@ class Memory(ComputerPart):
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Memory.
         """
-        csv_list = list()
-        value = str()
-        for letter in csv_string:
-            if letter != ',':
-                value += letter
-            else:
-                csv_list.append(value)
-                value = str()
+        csv_list = ComputerPart.csv_string_to_list(csv_string)
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -481,8 +472,8 @@ class Memory(ComputerPart):
             Uses these input values to construct and return a new Memory.
         """
         return cls(
-            cls.input_name(),
-            cls.input_price(),
+            ComputerPart.input_name(),
+            ComputerPart.input_price(),
             cls.input_capacity_gb(),
             cls.input_frequency_mhz(),
             cls.input_ddr(),
@@ -622,14 +613,7 @@ class Storage(ComputerPart):
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Storage.
         """
-        csv_list = list()
-        value = str()
-        for letter in csv_string:
-            if letter != ',':
-                value += letter
-            else:
-                csv_list.append(value)
-                value = str()
+        csv_list = ComputerPart.csv_string_to_list(csv_string)
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -648,8 +632,8 @@ class Storage(ComputerPart):
             Uses these input values to construct and return a new Storage.
         """
         return cls(
-            cls.input_name(),
-            cls.input_price(),
+            ComputerPart.input_name(),
+            ComputerPart.input_price(),
             cls.input_capacity_gb(),
             cls.input_storage_type(),
         )
