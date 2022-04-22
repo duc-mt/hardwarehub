@@ -897,7 +897,7 @@ class WishList(PartList):
 
             The last line is either "Valid computer" or "Not a valid computer".
         """
-        result = ''
+        result = str()
         result += f'\n---- {self.get_username()}\'s Wish List ----'
 
         if len(self):
@@ -1149,7 +1149,7 @@ class CommandPrompt:
             E.g. 'New Wish List' is transformed into 'NewWishList'.
         """
         obj_name = type(obj).__name__
-        result = ''
+        result = str()
         result += obj_name[0]
         for index, letter in enumerate(obj_name):
             if letter.islower():
