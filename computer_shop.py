@@ -171,20 +171,28 @@ class CPU(ComputerPart):
     @classmethod
     def parse(cls, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the
-            values as a list.
+            Splits the csv_string into separate values.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new CPU.
         """
-        csv_list = csv_string.split(',')[1:-1]
-        csv_list[1] = float(csv_list[1])
-        csv_list[2] = int(csv_list[2])
-        csv_list[3] = float(csv_list[3])
+        csv_list = list()
+        value = str()
+        for letter in csv_string:
+            if letter != ',':
+                value += letter
+            else:
+                csv_list.append(value)
+                value = str()
+
+        csv_list[2] = float(csv_list[2])
+        csv_list[3] = int(csv_list[3])
+        csv_list[4] = float(csv_list[4])
+
         return CPU(
-            csv_list[0],
             csv_list[1],
             csv_list[2],
             csv_list[3],
+            csv_list[4],
         )
 
     @classmethod
@@ -301,20 +309,28 @@ class GraphicsCard(ComputerPart):
     @classmethod
     def parse(cls, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the
-            values as a list.
+            Splits the csv_string into separate values.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new GraphicsCard.
         """
-        csv_list = csv_string.split(',')[1:-1]
-        csv_list[1] = float(csv_list[1])
-        csv_list[2] = int(csv_list[2])
+        csv_list = list()
+        value = str()
+        for letter in csv_string:
+            if letter != ',':
+                value += letter
+            else:
+                csv_list.append(value)
+                value = str()
+
+        csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
+        csv_list[4] = int(csv_list[4])
+
         return GraphicsCard(
-            csv_list[0],
             csv_list[1],
             csv_list[2],
             csv_list[3],
+            csv_list[4],
         )
 
     @classmethod
@@ -433,21 +449,29 @@ class Memory(ComputerPart):
     @classmethod
     def parse(cls, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the
-            values as a list.
+            Splits the csv_string into separate values.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Memory.
         """
-        csv_list = csv_string.split(',')[1:-1]
-        csv_list[1] = float(csv_list[1])
-        csv_list[2] = int(csv_list[2])
+        csv_list = list()
+        value = str()
+        for letter in csv_string:
+            if letter != ',':
+                value += letter
+            else:
+                csv_list.append(value)
+                value = str()
+
+        csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
+        csv_list[4] = int(csv_list[4])
+
         return Memory(
-            csv_list[0],
             csv_list[1],
             csv_list[2],
             csv_list[3],
             csv_list[4],
+            csv_list[5],
         )
 
     @classmethod
@@ -594,19 +618,27 @@ class Storage(ComputerPart):
     @classmethod
     def parse(cls, csv_string):
         """
-            Calls the superclass's csv_string_to_list() method to get the values
-            as a list.
+            Splits the csv_string into separate values.
             Parses these values to the correct datatypes.
             Uses these values to construct and return a new Storage.
         """
-        csv_list = csv_string.split(',')[1:-1]
-        csv_list[1] = float(csv_list[1])
-        csv_list[2] = int(csv_list[2])
+        csv_list = list()
+        value = str()
+        for letter in csv_string:
+            if letter != ',':
+                value += letter
+            else:
+                csv_list.append(value)
+                value = str()
+
+        csv_list[2] = float(csv_list[2])
+        csv_list[3] = int(csv_list[3])
+
         return Storage(
-            csv_list[0],
             csv_list[1],
             csv_list[2],
             csv_list[3],
+            csv_list[4],
         )
 
     @classmethod
@@ -728,7 +760,7 @@ class PartList():
             Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
             --------------------"
         """
-        result = ''
+        result = str()
         result += '---- Part List ----\n'
         for item in self.get_items():
             result += item.__str__()
@@ -1128,7 +1160,7 @@ class CommandPrompt:
         return result
 
 
-class Question:
+class Question(metaclass=abc.ABCMeta):
     """
         An abstract class.
         The superclass for other Question types.
