@@ -976,10 +976,10 @@ class WishList(PartList):
             elif isinstance(item, Storage):
                 is_in_wish_list['Storage'] = True
 
-        if (is_in_wish_list['CPU'] == True and
-            is_in_wish_list['GraphicsCard'] == True and
-            is_in_wish_list['Memory'] == True and
-            is_in_wish_list['Storage'] == True):
+        if (is_in_wish_list['CPU'] is True and
+            is_in_wish_list['GraphicsCard'] is True and
+            is_in_wish_list['Memory'] is True and
+            is_in_wish_list['Storage'] is True):
             # Wish List currently has all of the parts -> a valid computer.
             return True
         else:
