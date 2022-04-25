@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>78</x>
-      <y>666</y>
+      <x>84</x>
+      <y>660</y>
       <w>204</w>
       <h>204</h>
     </coordinates>
@@ -36,8 +36,8 @@ _-- Contructs a CPU based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>306</x>
-      <y>666</y>
+      <x>312</x>
+      <y>660</y>
       <w>216</w>
       <h>204</h>
     </coordinates>
@@ -69,8 +69,8 @@ _-- Contructs a GraphicsCard based on validated inputs._
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>534</x>
-      <y>666</y>
+      <x>540</x>
+      <y>660</y>
       <w>234</w>
       <h>234</h>
     </coordinates>
@@ -104,8 +104,8 @@ _-- Contructs a Memory based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>774</x>
-      <y>666</y>
+      <x>780</x>
+      <y>660</y>
       <w>222</w>
       <h>204</h>
     </coordinates>
@@ -136,8 +136,8 @@ _-- Contructs a Storage based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
-      <y>384</y>
+      <x>438</x>
+      <y>378</y>
       <w>192</w>
       <h>222</h>
     </coordinates>
@@ -170,8 +170,8 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>174</x>
-      <y>624</y>
+      <x>180</x>
+      <y>618</y>
       <w>726</w>
       <h>54</h>
     </coordinates>
@@ -182,8 +182,8 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>522</x>
-      <y>600</y>
+      <x>528</x>
+      <y>594</y>
       <w>18</w>
       <h>48</h>
     </coordinates>
@@ -193,8 +193,8 @@ and Storage.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>414</x>
-      <y>102</y>
+      <x>420</x>
+      <y>96</y>
       <w>228</w>
       <h>222</h>
     </coordinates>
@@ -228,8 +228,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>78</x>
-      <y>102</y>
+      <x>84</x>
+      <y>96</y>
       <w>222</w>
       <h>222</h>
     </coordinates>
@@ -262,8 +262,8 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>294</x>
-      <y>210</y>
+      <x>300</x>
+      <y>204</y>
       <w>132</w>
       <h>18</h>
     </coordinates>
@@ -273,8 +273,8 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>522</x>
-      <y>318</y>
+      <x>528</x>
+      <y>312</y>
       <w>30</w>
       <h>78</h>
     </coordinates>
@@ -286,8 +286,8 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>852</x>
-      <y>132</y>
+      <x>858</x>
+      <y>126</y>
       <w>246</w>
       <h>252</h>
     </coordinates>
@@ -323,12 +323,12 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1260</x>
-      <y>306</y>
+      <x>1266</x>
+      <y>300</y>
       <w>168</w>
       <h>96</h>
     </coordinates>
-    <panel_attributes>Question
+    <panel_attributes>/Question/
 --
 - cmd: CommandPrompt
 --
@@ -344,8 +344,8 @@ CommandPrompt can ask the user.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1236</x>
-      <y>492</y>
+      <x>1242</x>
+      <y>486</y>
       <w>222</w>
       <h>144</h>
     </coordinates>
@@ -370,8 +370,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1500</x>
-      <y>492</y>
+      <x>1506</x>
+      <y>486</y>
       <w>174</w>
       <h>90</h>
     </coordinates>
@@ -390,8 +390,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>690</x>
-      <y>492</y>
+      <x>696</x>
+      <y>486</y>
       <w>264</w>
       <h>114</h>
     </coordinates>
@@ -413,8 +413,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>996</x>
-      <y>492</y>
+      <x>1002</x>
+      <y>486</y>
       <w>198</w>
       <h>126</h>
     </coordinates>
@@ -437,8 +437,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1176</x>
-      <y>702</y>
+      <x>1182</x>
+      <y>696</y>
       <w>162</w>
       <h>126</h>
     </coordinates>
@@ -461,8 +461,8 @@ part list.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1350</x>
-      <y>702</y>
+      <x>1356</x>
+      <y>696</y>
       <w>162</w>
       <h>96</h>
     </coordinates>
@@ -482,8 +482,8 @@ name is the user's name.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1002</x>
-      <y>702</y>
+      <x>1008</x>
+      <y>696</y>
       <w>162</w>
       <h>96</h>
     </coordinates>
@@ -502,8 +502,8 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1080</x>
-      <y>654</y>
+      <x>1086</x>
+      <y>648</y>
       <w>534</w>
       <h>60</h>
     </coordinates>
@@ -514,8 +514,8 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1524</x>
-      <y>702</y>
+      <x>1530</x>
+      <y>696</y>
       <w>162</w>
       <h>114</h>
     </coordinates>
@@ -537,8 +537,8 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1338</x>
-      <y>630</y>
+      <x>1344</x>
+      <y>624</y>
       <w>18</w>
       <h>48</h>
     </coordinates>
@@ -548,8 +548,8 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>816</x>
-      <y>462</y>
+      <x>822</x>
+      <y>456</y>
       <w>780</w>
       <h>42</h>
     </coordinates>
@@ -559,8 +559,8 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1338</x>
-      <y>396</y>
+      <x>1344</x>
+      <y>390</y>
       <w>18</w>
       <h>108</h>
     </coordinates>
@@ -570,8 +570,8 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>636</x>
-      <y>198</y>
+      <x>642</x>
+      <y>192</y>
       <w>228</w>
       <h>30</h>
     </coordinates>
@@ -584,8 +584,8 @@ m2=1
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1236</x>
-      <y>102</y>
+      <x>1242</x>
+      <y>96</y>
       <w>216</w>
       <h>114</h>
     </coordinates>
@@ -607,8 +607,8 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1092</x>
-      <y>144</y>
+      <x>1098</x>
+      <y>138</y>
       <w>156</w>
       <h>30</h>
     </coordinates>
@@ -621,8 +621,8 @@ m2=0..1
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1338</x>
-      <y>210</y>
+      <x>1344</x>
+      <y>204</y>
       <w>60</w>
       <h>108</h>
     </coordinates>
@@ -635,8 +635,8 @@ m2=*
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1092</x>
-      <y>348</y>
+      <x>1098</x>
+      <y>342</y>
       <w>180</w>
       <h>30</h>
     </coordinates>
