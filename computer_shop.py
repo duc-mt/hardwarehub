@@ -1012,12 +1012,15 @@ class CommandPrompt:
 
     def set_wish_list(self, obj):
         """
-            Sets the wish_list attribute to the argument (a WishList object).
+            Sets the wish_list attribute to the argument.
+                1. A WishList object
+                2. None (in which case is meant to reset the Wish List after
+                the user chose to Close (or Purchase and Close) the Wish List)
         """
-        if isinstance(obj, WishList):
+        if isinstance(obj, WishList) or obj is None:
             self.__wish_list = obj
         else:
-            raise TypeError('WishListError')
+            raise TypeError(f'WishListError')
 
     def get_menu_options(self):
         """
@@ -1290,8 +1293,10 @@ class NewWishList(Question):
                             ShowWishList(cmd)
                         elif option == 4:
                             PurchaseAndClose(cmd)
+                            super().get_cmd().set_wish_list(None)
                         else:
                             Close(cmd, 'Wish List')
+                            super().get_cmd().set_wish_list(None)
 
     def look_up_part_list(self, part_name):
         """
