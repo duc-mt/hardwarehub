@@ -15,6 +15,7 @@
 
 # ------------------------------- Module Import -------------------------------
 import abc
+from rich.console import Console
 
 
 # ------------------------------- Computer Part -------------------------------
@@ -750,11 +751,11 @@ class PartList():
             result += item.__str__()
             # Check how many stock left.
             stock = self.get_stock()[item.get_name()]
-                # Print that number if it is greater than 0.
-                # Otherwise, write out of stock.
             if stock:
+                # Print that number if it is greater than 0.
                 result += ' (x' + str(stock) + ')'
             else:
+                # Otherwise, write out of stock.
                 result += ' (OUT OF STOCK)'
             result += '\n'
         result += '--------------------'
@@ -799,6 +800,9 @@ class PartList():
             Find and access a part using its name.
             Check to see if that part name is in store.
         """
+
+
+
         for item in self.get_items():
             if item.get_name() == part_name:
                 return item
@@ -1306,13 +1310,14 @@ class NewWishList(Question):
         try:
             value = super().get_cmd().get_part_list().get_stock()[part_name]
         except KeyError:
-            print(f'Could not find {part_name}!')
+            Console().print(f'Could not find {part_name}!', style='red')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {part_name} in stock!')
+                Console().print(f'Not enough of {part_name} in stock!',
+                                style='red')
                 return False
 
     def look_up_wish_list(self, part_name):
@@ -1323,13 +1328,14 @@ class NewWishList(Question):
         try:
             value = super().get_cmd().get_wish_list().get_stock()[part_name]
         except KeyError:
-            print(f'Could not find {part_name}!')
+            Console().print(f'Could not find {part_name}!', style='red')
             return False
         else:
             if value > 0:
                 return True
             else:
-                print(f'Not enough of {part_name} in stock!')
+                Console().print(f'Not enough of {part_name} in stock!',
+                                style='red')
                 return False
 
 
@@ -1433,10 +1439,11 @@ class PurchaseAndClose(NewWishList):
             super().__init__(cmd)
             username = super().get_cmd().get_wish_list().get_username()
             super().get_cmd().get_wish_list().save_to_csv(username)
-            print(
+            Console().print(
                 f'Successful purchase!',
                 f'Receipt in {username}.csv',
                 sep='\n',
+                style='green',
             )
 
 
@@ -1460,7 +1467,7 @@ class ComputerPartShop:
 
 # ------------------------------- Main Function -------------------------------
 def main():
-    print("~~ Welcome to the Computer Store ~~")
+    Console().print("~~ [italic]Welcome to the Computer Store[/] ~~")
     shop = ComputerPartShop(CommandPrompt())  # Construct object
     cmd = shop.get_cmd()
 
