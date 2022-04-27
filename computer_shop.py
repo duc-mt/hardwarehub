@@ -16,6 +16,7 @@
 # ------------------------------- Module Import -------------------------------
 import abc
 from rich.console import Console
+import icontract
 
 
 # ------------------------------- Computer Part -------------------------------
@@ -718,7 +719,11 @@ class Storage(ComputerPart):
 
 
 # ------------------------------- Data Structure ------------------------------
-
+@icontract.invariant(
+    lambda self:
+        (isinstance(self.get_items(), list))
+        & (isinstance(self.get_stock(), dict))
+)
 class PartList():
     """
         A subclass of the WishList class.
@@ -870,6 +875,11 @@ class PartList():
                 outfile.write('\n')
 
 
+@icontract.invariant(
+    lambda self:
+        (isinstance(self.get_items(), list))
+        & (isinstance(self.get_stock(), dict))
+)
 class WishList(PartList):
     """
         A subclass of the PartList class.
@@ -1006,6 +1016,12 @@ class WishList(PartList):
 
 
 # ------------------------------- User Interface ------------------------------
+@icontract.invariant(
+    lambda self:
+        (isinstance(self.get_part_list(), PartList))
+        & ((isinstance(self.get_wish_list(), WishList))
+           | (self.get_wish_list() is None))
+)
 class CommandPrompt:
     """
         The user interface of the system.
@@ -1166,6 +1182,7 @@ class CommandPrompt:
         return result
 
 
+@icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
 class Question(metaclass=abc.ABCMeta):
     """
         An abstract class.
@@ -1419,6 +1436,7 @@ class PurchaseAndClose(NewWishList):
 
 
 # ------------------------------- Computer Shop -------------------------------
+@icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
 class ComputerPartShop:
     """
         Manages the CommandPrompt object of the program.
