@@ -1144,24 +1144,24 @@ class CommandPrompt:
             Meanwhile, invokes the convert_class_name method to convert
             the name of each question to the proper format.
         """
-        menu_options = []
+        menu_options = list()
 
         # Add four options for Main Menu.
-        menu_options.append((
+        menu_options.append([
             self.__convert_class_name(NewWishList(self, execute=False)),
             self.__convert_class_name(ListDatabase(self, execute=False)),
             self.__convert_class_name(AddPartToDatabase(self, execute=False)),
             self.__convert_class_name(Close(self, execute=False)),
-        ))
+        ])
 
         # Add five options for Wish List Menu.
-        menu_options.append((
+        menu_options.append([
             self.__convert_class_name(AddFromDatabase(self, execute=False)),
             self.__convert_class_name(RemoveFromWishList(self, execute=False)),
             self.__convert_class_name(ShowWishList(self, execute=False)),
             self.__convert_class_name(PurchaseAndClose(self, execute=False)),
             self.__convert_class_name(Close(self, execute=False)),
-        ))
+        ])
 
         self.__menu_options = menu_options
 
