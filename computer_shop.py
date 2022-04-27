@@ -782,18 +782,26 @@ class PartList():
         """
         return self.__stock
 
-    def add_to_part_list(self, new_part):
+    def add_to_part_list(self, new_part, print_status=False):
         """
             Add a new item to the store.
             If it is duplicate, the available stock must be incremented by 1.
         """
         name_of_new_part = new_part.get_name()
-        if name_of_new_part not in self.get_items():
+        try:
+            stock = self.get_stock()[name_of_new_part]
+        except KeyError:
             self.get_items().append(new_part)
             self.get_stock()[name_of_new_part] = 1
         else:
             # Duplicate item, so increment available stock by 1.
             self.get_stock()[name_of_new_part] += 1
+            stock = self.get_stock()[name_of_new_part]
+
+        if print_status:
+            Console().print(f'Added {new_part.__str__()} (x{stock})',
+                            style='green')
+            print()
 
     def get_part_using_name(self, part_name):
         """
@@ -826,8 +834,7 @@ class PartList():
         for index, item in enumerate(self.get_items()):
             if item.get_name() == part_name:
                 Console().print(
-                    f'Removed {item.__str__()}',
-                    f'(x{self.get_stock()[part_name]})',
+                    f'Removed {item.__str__()} (x{self.get_stock()[part_name]})',
                     style='green',
                 )
                 # Delete that item and its entry in the stock dictionary.
@@ -1221,38 +1228,9 @@ class AddPartToDatabase(Question):
                     elif option == 4:
                         new_part = Storage.input()
 
-                    if self.__look_up_part_list(new_part):
-                        # If it exists in the Part List
-                        # increments that part in stock by 1.
-                        super().get_cmd().get_part_list().get_stock()[new_part.get_name()] += 1
-                    else:
-                        # Otherwise:
-                        #     1. Adds that new part to the Part List
-                        #     2. Sets its stock to 1.
-                        super().get_cmd().get_part_list().get_items().append(new_part)
-                        super().get_cmd().get_part_list().get_stock()[new_part.get_name()] = 1
-
-                    print('Added', new_part.__str__(), end='')
-                    # Check how many stock left.
-                    print(
-                        ' (x'
-                        + str(super().get_cmd().get_part_list().get_stock()[new_part.get_name()])
-                        + ')'
+                    super().get_cmd().get_part_list().add_to_part_list(
+                        new_part, print_status=True
                     )
-                    print()
-
-    def __look_up_part_list(self, new_part):
-        """
-            Searchs for a part (parameter) which is a newly created part
-            to see if it exists in the Part List.
-            Returns True if it is, False otherwise.
-        """
-        try:
-            value = super().get_cmd().get_part_list().get_stock()[new_part.get_name()]
-        except KeyError:
-            return False
-        else:
-            return True
 
 
 class Close(Question):
@@ -1379,14 +1357,16 @@ class AddFromDatabase(NewWishList):
                             super().get_cmd().get_wish_list().get_stock()[part_name] = 1
                         else:
                             # Increment that item in Wish List if it is there.
-                            super().get_cmd().get_wish_list().get_stock()[part_name] += 1
+                            super().get_cmd().get_wish_list().get_stock()[
+                                part_name
+                            ] += 1
                         # Display result.
-                        print('Added', part_list_item.__str__(), end='')
-                        # Check how many stock left.
-                        print(
-                            ' (x'
-                            + str(super().get_cmd().get_wish_list().get_stock()[part_name])
-                            + ')'
+                        stock = super().get_cmd().get_wish_list().get_stock()[
+                            part_name
+                        ]
+                        Console().print(
+                            f'Added {part_list_item.__str__()} (x{stock})',
+                            style='green',
                         )
 
 
