@@ -823,10 +823,16 @@ class PartList():
             Check to see if that part name is in store.
             Clear all stock of that part in store.
         """
-        for item in self.get_items():
+        for index, item in enumerate(self.get_items()):
             if item.get_name() == part_name:
-                self.get_items().remove(part_name)
-                del self.get_stock()[name_of_new_part]
+                Console().print(
+                    f'Removed {item.__str__()}',
+                    f'(x{self.get_stock()[part_name]})',
+                    style='green',
+                )
+                # Delete that item and its entry in the stock dictionary.
+                del self.get_items()[index]
+                del self.get_stock()[part_name]
 
     def remove_part_using_position(self, part_position):
         """
@@ -1396,25 +1402,8 @@ class RemoveFromWishList(NewWishList):
             super().__init__(cmd)
             part_name = input(f'Enter the name of the part to remove: ')
             if super().look_up_wish_list(part_name):
-                # The part_name is available in Wish List.
-                for index, wish_list_item in enumerate(
-                    super().get_cmd().get_wish_list().get_items()
-                ):
-                    if wish_list_item.get_name() == part_name:
-                        # Deletes that item from Wish List.
-                        del super().get_cmd().get_wish_list().get_items()[index]
-                        # Returns the number of stock back to Part List.
-                        super().get_cmd().get_part_list().get_stock()[part_name] += 1
-                        # Display result.
-                        print('Removed', wish_list_item.__str__(), end='')
-                        # Check how many stock is in Wish List.
-                        print(
-                            ' (x'
-                            + str(super().get_cmd().get_wish_list().get_stock()[part_name])
-                            + ')'
-                        )
-                        # Delete the entry for the removed part.
-                        del super().get_cmd().get_wish_list().get_stock()[part_name]
+                super().get_cmd().get_wish_list().remove_part_using_name(part_name)
+                super().get_cmd().get_part_list().get_stock()[part_name] += 1
 
 
 class ShowWishList(NewWishList):
