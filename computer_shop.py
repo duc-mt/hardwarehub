@@ -800,12 +800,14 @@ class PartList():
             Find and access a part using its name.
             Check to see if that part name is in store.
         """
-
-
-
-        for item in self.get_items():
-            if item.get_name() == part_name:
-                return item
+        found = False
+        i = 0
+        while found is False or i < len(self.get_items()):
+            if self.get_items()[i].get_name() == part_name:
+                result = self.get_items()[i]
+                found = True
+            i += 1
+        return result
 
     def get_part_using_position(self, part_position):
         """
