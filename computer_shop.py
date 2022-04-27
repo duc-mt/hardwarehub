@@ -841,8 +841,8 @@ class PartList():
             Clear all stock of that part in store.
         """
         if part_position < len(self):
-            part_name = self.get_items().pop(part_position)
-            self.get_stock().pop(part_name)
+            removed_part = self.get_items().pop(part_position)
+            self.get_stock().pop(removed_part.get_name())
 
     def save_to_csv(self, filename='database'):
         """
