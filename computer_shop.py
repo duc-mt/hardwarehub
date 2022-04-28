@@ -15,6 +15,7 @@
 
 # ------------------------------- Module Import -------------------------------
 import abc
+from collections import defaultdict
 from rich.console import Console
 import icontract
 
@@ -1070,9 +1071,9 @@ class CommandPrompt:
         """
         print(f'\n---- {menu_type} ----')
         if menu_type == 'Main Menu':
-            menu_options = self.get_menu_options()[0]
+            menu_options = self.__menu_options['Main Menu']
         elif menu_type == 'Wish List':
-            menu_options = self.get_menu_options()[1]
+            menu_options = self.__menu_options['Wish List Menu']
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
@@ -1144,24 +1145,38 @@ class CommandPrompt:
             Meanwhile, invokes the convert_class_name method to convert
             the name of each question to the proper format.
         """
-        menu_options = list()
+        menu_options = defaultdict(list)
 
         # Add four options for Main Menu.
-        menu_options.append([
+        menu_options['Main Menu'].append(
             self.__convert_class_name(NewWishList(self, execute=False)),
+        )
+        menu_options['Main Menu'].append(
             self.__convert_class_name(ListDatabase(self, execute=False)),
+        )
+        menu_options['Main Menu'].append(
             self.__convert_class_name(AddPartToDatabase(self, execute=False)),
+        )
+        menu_options['Main Menu'].append(
             self.__convert_class_name(Close(self, execute=False)),
-        ])
+        )
 
         # Add five options for Wish List Menu.
-        menu_options.append([
+        menu_options['Wish List Menu'].append(
             self.__convert_class_name(AddFromDatabase(self, execute=False)),
+        )
+        menu_options['Wish List Menu'].append(
             self.__convert_class_name(RemoveFromWishList(self, execute=False)),
+        )
+        menu_options['Wish List Menu'].append(
             self.__convert_class_name(ShowWishList(self, execute=False)),
+        )
+        menu_options['Wish List Menu'].append(
             self.__convert_class_name(PurchaseAndClose(self, execute=False)),
+        )
+        menu_options['Wish List Menu'].append(
             self.__convert_class_name(Close(self, execute=False)),
-        ])
+        )
 
         self.__menu_options = menu_options
 
