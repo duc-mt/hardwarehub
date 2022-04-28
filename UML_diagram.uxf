@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>6</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>768</y>
-      <w>204</w>
-      <h>204</h>
+      <x>28</x>
+      <y>756</y>
+      <w>238</w>
+      <h>238</h>
     </coordinates>
     <panel_attributes>CPU
 --
@@ -36,10 +36,10 @@ _-- Contructs a CPU based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>228</x>
-      <y>768</y>
-      <w>216</w>
-      <h>204</h>
+      <x>294</x>
+      <y>756</y>
+      <w>252</w>
+      <h>238</h>
     </coordinates>
     <panel_attributes>GraphicsCard
 --
@@ -69,10 +69,10 @@ _-- Contructs a GraphicsCard based on validated inputs._
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>456</x>
-      <y>768</y>
-      <w>234</w>
-      <h>234</h>
+      <x>560</x>
+      <y>756</y>
+      <w>273</w>
+      <h>273</h>
     </coordinates>
     <panel_attributes>Memory
 --
@@ -104,10 +104,10 @@ _-- Contructs a Memory based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>696</x>
-      <y>768</y>
-      <w>222</w>
-      <h>204</h>
+      <x>840</x>
+      <y>756</y>
+      <w>259</w>
+      <h>238</h>
     </coordinates>
     <panel_attributes>Storage
 --
@@ -136,10 +136,10 @@ _-- Contructs a Storage based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>354</x>
-      <y>486</y>
-      <w>192</w>
-      <h>222</h>
+      <x>441</x>
+      <y>427</y>
+      <w>224</w>
+      <h>259</h>
     </coordinates>
     <panel_attributes>/ComputerPart/
 --
@@ -170,10 +170,10 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>96</x>
-      <y>726</y>
-      <w>726</w>
-      <h>54</h>
+      <x>140</x>
+      <y>707</y>
+      <w>847</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -182,10 +182,10 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>444</x>
-      <y>702</y>
-      <w>18</w>
-      <h>48</h>
+      <x>546</x>
+      <y>679</y>
+      <w>21</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -193,10 +193,10 @@ and Storage.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>336</x>
-      <y>198</y>
-      <w>228</w>
-      <h>234</h>
+      <x>420</x>
+      <y>91</y>
+      <w>266</w>
+      <h>273</h>
     </coordinates>
     <panel_attributes>PartList
 --
@@ -229,10 +229,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>204</y>
-      <w>222</w>
-      <h>222</h>
+      <x>28</x>
+      <y>98</y>
+      <w>259</w>
+      <h>259</h>
     </coordinates>
     <panel_attributes>WishList
 --
@@ -263,10 +263,10 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>216</x>
-      <y>312</y>
-      <w>132</w>
-      <h>18</h>
+      <x>280</x>
+      <y>224</y>
+      <w>154</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>200.0;10.0;10.0;10.0</additional_attributes>
@@ -274,10 +274,10 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>444</x>
-      <y>426</y>
-      <w>30</w>
-      <h>72</h>
+      <x>546</x>
+      <y>357</y>
+      <w>35</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=0..1
@@ -287,10 +287,10 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>774</x>
-      <y>234</y>
-      <w>246</w>
-      <h>252</h>
+      <x>931</x>
+      <y>133</y>
+      <w>287</w>
+      <h>294</h>
     </coordinates>
     <panel_attributes>CommandPrompt
 --
@@ -303,7 +303,6 @@ m2=0..*</panel_attributes>
 + get_part_list(): PartList
 + get_wish_list(): WishList
 + set_wish_list(obj: WishList): void
-+ get_menu_options(): list
 + display_menu(menu_type: str): void
 + prompt_for_option(limit: int): int
 - read_from_csv(): void
@@ -324,10 +323,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1182</x>
-      <y>408</y>
-      <w>168</w>
-      <h>96</h>
+      <x>1407</x>
+      <y>336</y>
+      <w>196</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>/Question/
 --
@@ -345,10 +344,10 @@ CommandPrompt can ask the user.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1158</x>
-      <y>594</y>
-      <w>222</w>
-      <h>144</h>
+      <x>1379</x>
+      <y>553</y>
+      <w>259</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>NewWishList
 --
@@ -371,10 +370,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1422</x>
-      <y>594</y>
-      <w>174</w>
-      <h>90</h>
+      <x>1687</x>
+      <y>553</y>
+      <w>203</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>ListDatabase
 --
@@ -391,10 +390,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>612</x>
-      <y>594</y>
-      <w>264</w>
-      <h>114</h>
+      <x>742</x>
+      <y>553</y>
+      <w>308</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>Close
 --
@@ -414,10 +413,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>918</x>
-      <y>594</y>
-      <w>198</w>
-      <h>126</h>
+      <x>1099</x>
+      <y>553</y>
+      <w>231</w>
+      <h>147</h>
     </coordinates>
     <panel_attributes>AddPartToDatabase
 --
@@ -437,10 +436,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1098</x>
-      <y>804</y>
-      <w>162</w>
-      <h>126</h>
+      <x>1309</x>
+      <y>798</y>
+      <w>189</w>
+      <h>147</h>
     </coordinates>
     <panel_attributes>RemoveFromWishList
 --
@@ -461,10 +460,10 @@ part list.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1272</x>
-      <y>804</y>
-      <w>162</w>
-      <h>96</h>
+      <x>1512</x>
+      <y>798</y>
+      <w>189</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>PurchaseAndClose
 --
@@ -482,10 +481,10 @@ name is the user's name.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>924</x>
-      <y>804</y>
-      <w>162</w>
-      <h>96</h>
+      <x>1106</x>
+      <y>798</y>
+      <w>189</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>ShowWishList
 --
@@ -502,10 +501,10 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1002</x>
-      <y>756</y>
-      <w>534</w>
-      <h>60</h>
+      <x>1197</x>
+      <y>742</y>
+      <w>623</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -514,10 +513,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1446</x>
-      <y>804</y>
-      <w>162</w>
-      <h>114</h>
+      <x>1715</x>
+      <y>798</y>
+      <w>189</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>AddFromDatabase
 --
@@ -537,10 +536,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1260</x>
-      <y>732</y>
-      <w>18</w>
-      <h>48</h>
+      <x>1498</x>
+      <y>714</y>
+      <w>21</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -548,10 +547,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>738</x>
-      <y>564</y>
-      <w>780</w>
-      <h>42</h>
+      <x>889</x>
+      <y>518</y>
+      <w>910</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0;470.0;10.0;470.0;50.0;470.0;10.0;1280.0;10.0;1280.0;50.0</additional_attributes>
@@ -559,10 +558,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1260</x>
-      <y>498</y>
-      <w>18</w>
-      <h>108</h>
+      <x>1498</x>
+      <y>441</y>
+      <w>21</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
@@ -570,10 +569,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>558</x>
-      <y>300</y>
-      <w>228</w>
-      <h>30</h>
+      <x>679</x>
+      <y>210</y>
+      <w>266</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=0..1
@@ -584,10 +583,10 @@ m2=1
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1158</x>
-      <y>204</y>
-      <w>216</w>
-      <h>114</h>
+      <x>1379</x>
+      <y>98</y>
+      <w>252</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>ComputerPartShop
 --
@@ -607,10 +606,10 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1014</x>
-      <y>246</y>
-      <w>156</w>
-      <h>30</h>
+      <x>1211</x>
+      <y>147</y>
+      <w>182</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1
@@ -621,10 +620,10 @@ m2=0..1
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1260</x>
-      <y>312</y>
-      <w>60</w>
-      <h>108</h>
+      <x>1498</x>
+      <y>224</y>
+      <w>70</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1
@@ -635,10 +634,10 @@ m2=*
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1014</x>
-      <y>450</y>
-      <w>180</w>
-      <h>30</h>
+      <x>1211</x>
+      <y>385</y>
+      <w>210</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1

@@ -17,8 +17,12 @@
 import abc
 from collections import defaultdict
 from rich.console import Console
+from rich import print
 import icontract
 
+# Enhance tracebacks
+from rich.traceback import install
+install(show_locals=True)
 
 # ------------------------------- Computer Part -------------------------------
 class ComputerPart(metaclass=abc.ABCMeta):
@@ -1057,12 +1061,6 @@ class CommandPrompt:
             self.__wish_list = obj
         else:
             raise TypeError(f'WishListError')
-
-    def get_menu_options(self):
-        """
-            Returns the menu_options attribute.
-        """
-        return self.__menu_options
 
     def display_menu(self, menu_type):
         """
