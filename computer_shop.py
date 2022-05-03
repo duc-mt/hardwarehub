@@ -804,25 +804,15 @@ class PartList():
             If it is duplicate, the available stock must be incremented by 1.
         """
         name_of_new_part = new_part.get_name()
-        for item in self.__items:
-            if item == new_part:
-                # Duplicate item, so increment available stock by 1.
-                self.__stock[name_of_new_part] += 1
-            else:
-                self.__items.append(new_part)
-                self.__stock[name_of_new_part] = 1
+        try:
             stock = self.__stock[name_of_new_part]
-
-        # name_of_new_part = new_part.get_name()
-        # try:
-        #     stock = self.__stock[name_of_new_part]
-        # except KeyError:
-        #     self.__items.append(new_part)
-        #     self.__stock[name_of_new_part] = 1
-        #     stock = 1
-        # else:
-        #     # Duplicate item, so increment available stock by 1.
-        #     self.__stock[name_of_new_part] += 1
+        except KeyError:
+            self.__items.append(new_part)
+            self.__stock[name_of_new_part] = 1
+            stock = 1
+        else:
+            # Duplicate item, so increment available stock by 1.
+            self.__stock[name_of_new_part] += 1
 
         if print_status:
             Console().print(f'Added {new_part.__str__()} (x{stock})',
@@ -1000,14 +990,14 @@ class WishList(PartList):
     def get_username(self):
         return self.__username
 
-    @icontract.ensure(lambda result: result == self.__items)
+    @icontract.ensure(lambda self, result: result == self.__items)
     def get_items(self):
         """
             Returns the items attribute.
         """
         return self.__items
 
-    @icontract.ensure(lambda result: result == self.__stock)
+    @icontract.ensure(lambda self, result: result == self.__stock)
     def get_stock(self):
         """
             Returns the stock attribute.
