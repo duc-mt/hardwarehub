@@ -804,15 +804,25 @@ class PartList():
             If it is duplicate, the available stock must be incremented by 1.
         """
         name_of_new_part = new_part.get_name()
-        try:
+        for item in self.__items:
+            if item == new_part:
+                # Duplicate item, so increment available stock by 1.
+                self.__stock[name_of_new_part] += 1
+            else:
+                self.__items.append(new_part)
+                self.__stock[name_of_new_part] = 1
             stock = self.__stock[name_of_new_part]
-        except KeyError:
-            self.__items.append(new_part)
-            self.__stock[name_of_new_part] = 1
-            stock = 1
-        else:
-            # Duplicate item, so increment available stock by 1.
-            self.__stock[name_of_new_part] += 1
+
+        # name_of_new_part = new_part.get_name()
+        # try:
+        #     stock = self.__stock[name_of_new_part]
+        # except KeyError:
+        #     self.__items.append(new_part)
+        #     self.__stock[name_of_new_part] = 1
+        #     stock = 1
+        # else:
+        #     # Duplicate item, so increment available stock by 1.
+        #     self.__stock[name_of_new_part] += 1
 
         if print_status:
             Console().print(f'Added {new_part.__str__()} (x{stock})',
@@ -1098,7 +1108,8 @@ class CommandPrompt:
         self.__wish_list = obj
 
     @icontract.require(
-        lambda menu_type: menu_type == 'Main Menu' | menu_type == 'Wish List')
+        lambda menu_type:
+            (menu_type == 'Main Menu') | (menu_type == 'Wish List'))
     @icontract.ensure(lambda result: result is None)
     def display_menu(self, menu_type):
         """
@@ -1113,7 +1124,7 @@ class CommandPrompt:
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
-    @icontract.require(lambda limit: limit == 5 | limit == 6)
+    @icontract.require(lambda limit: (limit == 5) | (limit == 6))
     def prompt_for_option(self, limit):
         """
             Prompts the user for a number as an option for the displayed menu.
@@ -1525,23 +1536,23 @@ def main():
     # cmd.get_part_list().remove_part_using_name('WD Red')
     # cmd.get_part_list().remove_part_using_position(2)
 
-    # # Keep displaying Main Menu until the user enters 4.
-    # option = None
-    # while option is None or option not in range(1, 5) or option != 4:
-    #     cmd.display_menu('Main Menu')
-    #     option = cmd.prompt_for_option(limit=5)
-    #     if option in range(1, 5):
-    #         # Now we have a valid option between 1 and 4.
-    #         if option == 1:
-    #             NewWishList(cmd)
-    #         elif option == 2:
-    #             print()
-    #             ListDatabase(cmd)
-    #         elif option == 3:
-    #             print()
-    #             AddPartToDatabase(cmd)
-    #         else:
-    #             Close(cmd, 'Main Menu')
+    # Keep displaying Main Menu until the user enters 4.
+    option = None
+    while option is None or option not in range(1, 5) or option != 4:
+        cmd.display_menu('Main Menu')
+        option = cmd.prompt_for_option(limit=5)
+        if option in range(1, 5):
+            # Now we have a valid option between 1 and 4.
+            if option == 1:
+                NewWishList(cmd)
+            elif option == 2:
+                print()
+                ListDatabase(cmd)
+            elif option == 3:
+                print()
+                AddPartToDatabase(cmd)
+            else:
+                Close(cmd, 'Main Menu')
 
 
 # --------------------------- Call the Main Function --------------------------
