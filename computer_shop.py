@@ -161,7 +161,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         if isinstance(other, type(self)):
             if (self.get_name() == other.get_name() and
-                self.get_price() == other.get_price()):
+                    self.get_price() == other.get_price()):
                 return True
         return False
 
@@ -282,7 +282,7 @@ class CPU(ComputerPart):
         """
         if super().equals(other):
             if (self.get_cores() == other.get_cores() and
-                self.get_frequency_ghz() == other.get_frequency_ghz()):
+                    self.get_frequency_ghz() == other.get_frequency_ghz()):
                 return True
         return False
 
@@ -413,7 +413,7 @@ class GraphicsCard(ComputerPart):
         """
         if super().equals(other):
             if (self.get_memory_gb() == other.get_memory_gb() and
-                self.get_frequency_mhz() == other.get_frequency_mhz()):
+                    self.get_frequency_mhz() == other.get_frequency_mhz()):
                 return True
         return False
 
@@ -576,7 +576,7 @@ class Memory(ComputerPart):
         if super().equals(other):
             if (self.get_frequency_mhz() == other.get_frequency_mhz() and
                 self.get_capacity_gb() == other.get_capacity_gb() and
-                self.get_ddr() == other.get_ddr()):
+                    self.get_ddr() == other.get_ddr()):
                 return True
         return False
 
@@ -709,7 +709,7 @@ class Storage(ComputerPart):
         """
         if super().equals(other):
             if (self.get_capacity_gb() == other.get_capacity_gb() and
-                self.get_storage_type() == other.get_storage_type()):
+                    self.get_storage_type() == other.get_storage_type()):
                 return True
         return False
 
@@ -724,11 +724,6 @@ class Storage(ComputerPart):
 
 
 # ------------------------------- Data Structure ------------------------------
-@icontract.invariant(
-    lambda self:
-        (isinstance(self.get_items(), list))
-        & (isinstance(self.get_stock(), dict))
-)
 class PartList():
     """
         A subclass of the WishList class.
@@ -745,6 +740,7 @@ class PartList():
         """
         self.__stock = dict()
 
+    @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
             Return a string that represents the PartList in the format:
@@ -771,6 +767,9 @@ class PartList():
         result += '--------------------'
         return result
 
+    @icontract.ensure(
+        lambda self, result:
+            (isinstance(result, int)) & (result == len(self.get_items())))
     def __len__(self):
         """
             Get the length of the items attribute.
@@ -780,18 +779,25 @@ class PartList():
         """
         return len(self.get_items())
 
+    @icontract.ensure(lambda self, result: result == self.__items)
     def get_items(self):
         """
             Returns the items attribute.
         """
         return self.__items
 
+    @icontract.ensure(lambda self, result: result == self.__stock)
     def get_stock(self):
         """
             Returns the stock attribute.
         """
         return self.__stock
 
+    @icontract.require(
+        lambda new_part, print_status:
+            (isinstance(new_part, ComputerPart))
+            & (isinstance(print_status, bool)))
+    @icontract.ensure(lambda result: result is None)
     def add_to_part_list(self, new_part, print_status=False):
         """
             Add a new item to the store.
@@ -799,20 +805,25 @@ class PartList():
         """
         name_of_new_part = new_part.get_name()
         try:
-            stock = self.get_stock()[name_of_new_part]
+            stock = self.__stock[name_of_new_part]
         except KeyError:
-            self.get_items().append(new_part)
-            self.get_stock()[name_of_new_part] = 1
+            self.__items.append(new_part)
+            self.__stock[name_of_new_part] = 1
+            stock = 1
         else:
             # Duplicate item, so increment available stock by 1.
-            self.get_stock()[name_of_new_part] += 1
-            stock = self.get_stock()[name_of_new_part]
+            self.__stock[name_of_new_part] += 1
 
         if print_status:
             Console().print(f'Added {new_part.__str__()} (x{stock})',
                             style='green')
             print()
 
+    @icontract.require(
+        lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
+    @icontract.ensure(
+        lambda result, found:
+            (isinstance(result, ComputerPart)) & (found is True))
     def get_part_using_name(self, part_name):
         """
             Find and access a part using its name.
@@ -827,6 +838,8 @@ class PartList():
             i += 1
         return result
 
+    @icontract.require(lambda part_position: isinstance(part_position, int))
+    @icontract.ensure(lambda result: isinstance(result, ComputerPart))
     def get_part_using_position(self, part_position):
         """
             Find and access a part using its position.
@@ -835,6 +848,9 @@ class PartList():
         if part_position < len(self):
             return self.get_items()[part_position]
 
+    @icontract.require(
+        lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
+    @icontract.ensure(lambda result: result is None)
     def remove_part_using_name(self, part_name):
         """
             Find and remove a part using its name.
@@ -851,6 +867,8 @@ class PartList():
                 del self.get_items()[index]
                 del self.get_stock()[part_name]
 
+    @icontract.require(lambda part_position: isinstance(part_position, int))
+    @icontract.ensure(lambda result: result is None)
     def remove_part_using_position(self, part_position):
         """
             Find and access a part using its position.
@@ -859,8 +877,15 @@ class PartList():
         """
         if part_position < len(self):
             removed_part = self.get_items().pop(part_position)
-            self.get_stock().pop(removed_part.get_name())
+            stock = self.get_stock().pop(removed_part.get_name())
+            Console().print(
+                f'Removed {removed_part.__str__()} (x{stock})',
+                style='green',
+            )
 
+    @icontract.require(
+        lambda filename: (isinstance(filename, str)) & (filename != ''))
+    @icontract.ensure(lambda result: result is None)
     def save_to_csv(self, filename='database'):
         """
             Save all parts to a csv file with an argument file name.
@@ -880,15 +905,11 @@ class PartList():
                 outfile.write('\n')
 
 
-@icontract.invariant(
-    lambda self:
-        (isinstance(self.get_items(), list))
-        & (isinstance(self.get_stock(), dict))
-)
 class WishList(PartList):
     """
         A subclass of the PartList class.
     """
+
     def __init__(self):
         self.set_username()
         # A variable to store the items listed in the store.
@@ -900,6 +921,7 @@ class WishList(PartList):
         """
         self.__stock = dict()
 
+    @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
             Returns a string that represents the WishList in the format:
@@ -941,6 +963,9 @@ class WishList(PartList):
 
         return result
 
+    @icontract.ensure(
+        lambda self, result:
+            (isinstance(result, int)) & (result == len(self.get_items())))
     def __len__(self):
         """
             Get the length of the items attribute.
@@ -950,31 +975,36 @@ class WishList(PartList):
         """
         return len(self.get_items())
 
+    @icontract.ensure(lambda result: result is None)
     def set_username(self):
         username = None
         while username is None or username == '':
             username = input('Enter your name: ')
             if username == '':
                 print(
-                  'ValueError: Cannot create a Wish List with an empty name.'
+                    'ValueError: Cannot create a Wish List with an empty name.'
                 )
         self.__username = username
 
+    @icontract.ensure(lambda result: (isinstance(result, str)) & (result != ''))
     def get_username(self):
         return self.__username
 
+    @icontract.ensure(lambda result: result == self.__items)
     def get_items(self):
         """
             Returns the items attribute.
         """
         return self.__items
 
+    @icontract.ensure(lambda result: result == self.__stock)
     def get_stock(self):
         """
             Returns the stock attribute.
         """
         return self.__stock
 
+    @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
     def __get_total_cost(self):
         """
             A private method.
@@ -986,6 +1016,7 @@ class WishList(PartList):
             price += item.get_price() * number
         return price
 
+    @icontract.ensure(lambda result: isinstance(result, bool))
     def __is_valid_computer(self):
         """
             A private method.
@@ -1024,8 +1055,10 @@ class WishList(PartList):
 @icontract.invariant(
     lambda self:
         (isinstance(self.get_part_list(), PartList))
-        & ((isinstance(self.get_wish_list(), WishList))
-           | (self.get_wish_list() is None))
+        & (
+            (self.get_wish_list() is None)
+            | (isinstance(self.get_wish_list(), WishList))
+        )
 )
 class CommandPrompt:
     """
@@ -1038,18 +1071,23 @@ class CommandPrompt:
         self.__read_from_csv()
         self.__construct_menu()
 
+    @icontract.ensure(lambda result: isinstance(result, PartList))
     def get_part_list(self):
         """
             Returns the PartList object.
         """
         return self.__part_list
 
+    @icontract.ensure(
+        lambda result: (isinstance(result, WishList)) | (result is None))
     def get_wish_list(self):
         """
             Returns the WishList object.
         """
         return self.__wish_list
 
+    @icontract.require(lambda obj: (isinstance(obj, WishList)) | (obj is None))
+    @icontract.ensure(lambda result: result is None)
     def set_wish_list(self, obj):
         """
             Sets the wish_list attribute to the argument.
@@ -1057,11 +1095,11 @@ class CommandPrompt:
                 2. None (in which case is meant to reset the Wish List after
                 the user chose to Close (or Purchase and Close) the Wish List)
         """
-        if isinstance(obj, WishList) or obj is None:
-            self.__wish_list = obj
-        else:
-            raise TypeError(f'WishListError')
+        self.__wish_list = obj
 
+    @icontract.require(
+        lambda menu_type: menu_type == 'Main Menu' | menu_type == 'Wish List')
+    @icontract.ensure(lambda result: result is None)
     def display_menu(self, menu_type):
         """
             Depending on the type of menu: Main Menu/Wish List,
@@ -1075,6 +1113,7 @@ class CommandPrompt:
         for i, question in enumerate(menu_options):
             print(f'{i+1}. {question}')
 
+    @icontract.require(lambda limit: limit == 5 | limit == 6)
     def prompt_for_option(self, limit):
         """
             Prompts the user for a number as an option for the displayed menu.
@@ -1085,20 +1124,19 @@ class CommandPrompt:
         try:
             option = int(option)
         except ValueError as e:
-            print(f'{type(e).__name__}: {repr(option)} is not a number.\n')
+            print(f'{type(e).__name__}: {repr(option)} is not a number.')
             option = None
         # Handle the error if option is a number, but outside range.
         if option is not None and option not in range(1, limit):
             try:
                 raise ValueError(f'{repr} must be in range 1 - {limit}.')
             except ValueError as e:
-                print(
-                    f'{type(e).__name__}: {option} is outside range '
-                    f'1 - {limit}.\n'
-                )
+                print(f'{type(e).__name__}: {option} is outside range '
+                      f'1 - {limit}.')
                 option = None
         return option
 
+    @icontract.ensure(lambda result: result is None)
     def __read_from_csv(self):
         """
             This method is automatically invoked when an object of type
@@ -1136,6 +1174,7 @@ class CommandPrompt:
                         Storage.parse(csv_string)
                     )
 
+    @icontract.ensure(lambda result: result is None)
     def __construct_menu(self):
         """
             Appends each question from the list menu_options (parameter)
@@ -1178,6 +1217,8 @@ class CommandPrompt:
 
         self.__menu_options = menu_options
 
+    @icontract.require(lambda obj: isinstance(obj, Question))
+    @icontract.ensure(lambda result: isinstance(result, str))
     def __convert_class_name(self, obj):
         """
             Convert a class name to a human-readable name.
@@ -1206,6 +1247,7 @@ class Question(metaclass=abc.ABCMeta):
     def __init__(self, cmd):
         self.__cmd = cmd
 
+    @icontract.ensure(lambda result, self: result == self.__cmd)
     def get_cmd(self):
         return self.__cmd
 
@@ -1282,7 +1324,8 @@ class Close(Question):
             else:
                 # Add stock back into PartList.
                 for item in super().get_cmd().get_wish_list().get_items():
-                    super().get_cmd().get_part_list().get_stock()[item.get_name()] += 1
+                    super().get_cmd().get_part_list().get_stock()[
+                        item.get_name()] += 1
                 # Remove all items from WishList.
                 super().get_cmd().get_wish_list().get_items().clear()
                 super().get_cmd().get_wish_list().get_stock().clear()
@@ -1293,6 +1336,7 @@ class NewWishList(Question):
         Takes input for the user's name, then constructs a new WishList and
         displays the Wish List Menu in the format:
     """
+
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
@@ -1300,7 +1344,8 @@ class NewWishList(Question):
                 super().get_cmd().set_wish_list(WishList())
                 # The menu is kept repeating until the user enters 5.
                 option = None
-                while option is None or option not in range(1, 6) or option not in {4, 5}:
+                while option is None or option not in range(
+                        1, 6) or option not in {4, 5}:
                     super().get_cmd().display_menu('Wish List')
                     option = cmd.prompt_for_option(limit=6)
                     if option in range(1, 6):
@@ -1374,17 +1419,20 @@ class AddFromDatabase(NewWishList):
                 for part_list_item in super().get_cmd().get_part_list().get_items():
                     if part_list_item.get_name() == part_name:
                         # Decrement that item in Part List.
-                        super().get_cmd().get_part_list().get_stock()[part_name] -= 1
+                        super().get_cmd().get_part_list(
+                        ).get_stock()[part_name] -= 1
                         try:
-                            value = super().get_cmd().get_wish_list().get_stock()[part_name]
+                            value = super().get_cmd().get_wish_list().get_stock()[
+                                part_name]
                         except KeyError:
                             # If the item is not in Wish List:
-                                # 1. Adds that new item to Wish List.
-                                # 2. Sets its number in Wish List to 1.
+                            # 1. Adds that new item to Wish List.
+                            # 2. Sets its number in Wish List to 1.
                             super().get_cmd().get_wish_list().get_items().append(
                                 part_list_item
                             )
-                            super().get_cmd().get_wish_list().get_stock()[part_name] = 1
+                            super().get_cmd().get_wish_list(
+                            ).get_stock()[part_name] = 1
                         else:
                             # Increment that item in Wish List if it is there.
                             super().get_cmd().get_wish_list().get_stock()[
@@ -1439,7 +1487,7 @@ class PurchaseAndClose(NewWishList):
         if execute:
             super().__init__(cmd)
             username = super().get_cmd().get_wish_list().get_username()
-            super().get_cmd().get_wish_list().save_to_csv(username)
+            super().get_cmd().get_wish_list().save_to_csv(filename=username)
             Console().print(
                 f'Successful purchase!',
                 f'Receipt in {username}.csv',
@@ -1454,6 +1502,7 @@ class ComputerPartShop:
     """
         Manages the CommandPrompt object of the program.
     """
+
     def __init__(self, cmd):
         self.set_cmd(cmd)
 
@@ -1473,23 +1522,26 @@ def main():
     shop = ComputerPartShop(CommandPrompt())  # Construct object
     cmd = shop.get_cmd()
 
-    # Keep displaying Main Menu until the user enters 4.
-    option = None
-    while option is None or option not in range(1, 5) or option != 4:
-        cmd.display_menu('Main Menu')
-        option = cmd.prompt_for_option(limit=5)
-        if option in range(1, 5):
-            # Now we have a valid option between 1 and 4.
-            if option == 1:
-                NewWishList(cmd)
-            elif option == 2:
-                print()
-                ListDatabase(cmd)
-            elif option == 3:
-                print()
-                AddPartToDatabase(cmd)
-            else:
-                Close(cmd, 'Main Menu')
+    # cmd.get_part_list().remove_part_using_name('WD Red')
+    # cmd.get_part_list().remove_part_using_position(2)
+
+    # # Keep displaying Main Menu until the user enters 4.
+    # option = None
+    # while option is None or option not in range(1, 5) or option != 4:
+    #     cmd.display_menu('Main Menu')
+    #     option = cmd.prompt_for_option(limit=5)
+    #     if option in range(1, 5):
+    #         # Now we have a valid option between 1 and 4.
+    #         if option == 1:
+    #             NewWishList(cmd)
+    #         elif option == 2:
+    #             print()
+    #             ListDatabase(cmd)
+    #         elif option == 3:
+    #             print()
+    #             AddPartToDatabase(cmd)
+    #         else:
+    #             Close(cmd, 'Main Menu')
 
 
 # --------------------------- Call the Main Function --------------------------
