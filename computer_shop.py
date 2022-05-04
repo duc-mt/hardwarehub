@@ -821,32 +821,29 @@ class PartList():
 
     @icontract.require(
         lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
-    @icontract.ensure(
-        lambda result, found:
-            (isinstance(result, ComputerPart)) & (found is True))
     def get_part_using_name(self, part_name):
         """
             Find and access a part using its name.
             Check to see if that part name is in store.
         """
-        found = False
         i = 0
-        while found is False or i < len(self.get_items()):
-            if self.get_items()[i].get_name() == part_name:
-                result = self.get_items()[i]
-                found = True
+        while i < len(self) - 1:
+            if self.__items[i].get_name() == part_name:
+                result = self.__items[i]
+                return result
             i += 1
-        return result
+        return f'Could not find {part_name}!'
 
     @icontract.require(lambda part_position: isinstance(part_position, int))
-    @icontract.ensure(lambda result: isinstance(result, ComputerPart))
     def get_part_using_position(self, part_position):
         """
             Find and access a part using its position.
             Check to see if the argument is less than the length of the list.
         """
         if part_position < len(self):
-            return self.get_items()[part_position]
+            return self.__items[part_position]
+        else:
+            return f'{part_position} out of range 1 - {len(self)}'
 
     @icontract.require(
         lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
@@ -857,6 +854,7 @@ class PartList():
             Check to see if that part name is in store.
             Clear all stock of that part in store.
         """
+        done = False
         for index, item in enumerate(self.get_items()):
             if item.get_name() == part_name:
                 Console().print(
@@ -864,8 +862,11 @@ class PartList():
                     style='green',
                 )
                 # Delete that item and its entry in the stock dictionary.
-                del self.get_items()[index]
-                del self.get_stock()[part_name]
+                del self.__items[index]
+                del self.__stock[part_name]
+                done = True
+        if not done:
+            return f'Could not find {part_name}!'
 
     @icontract.require(lambda part_position: isinstance(part_position, int))
     @icontract.ensure(lambda result: result is None)
@@ -875,6 +876,7 @@ class PartList():
             Check to see if the argument is less than the length of the list.
             Clear all stock of that part in store.
         """
+        done = False
         if part_position < len(self):
             removed_part = self.get_items().pop(part_position)
             stock = self.get_stock().pop(removed_part.get_name())
@@ -882,6 +884,13 @@ class PartList():
                 f'Removed {removed_part.__str__()} (x{stock})',
                 style='green',
             )
+            done = True
+        else:
+            return f'{part_position} out of range 1 - {len(self)}'
+            done = True
+
+        if not done:
+            return f'Could not find {part_position}!'
 
     @icontract.require(
         lambda filename: (isinstance(filename, str)) & (filename != ''))
@@ -1522,9 +1531,6 @@ def main():
     Console().print("~~ [italic]Welcome to the Computer Store[/] ~~")
     shop = ComputerPartShop(CommandPrompt())  # Construct object
     cmd = shop.get_cmd()
-
-    # cmd.get_part_list().remove_part_using_name('WD Red')
-    # cmd.get_part_list().remove_part_using_position(2)
 
     # Keep displaying Main Menu until the user enters 4.
     option = None
