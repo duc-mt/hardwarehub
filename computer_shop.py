@@ -808,7 +808,7 @@ class PartList():
         if print_status:
             Console().print(f'Added {new_part.__str__()} (x{stock})',
                             style='green')
-            print()
+        print()
 
     @icontract.require(
         lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
@@ -984,6 +984,7 @@ class WishList(PartList):
                 print(
                     'ValueError: Cannot create a Wish List with an empty name.'
                 )
+        print()
         self.__username = username
 
     @icontract.ensure(lambda result: (isinstance(result, str)) & (result != ''))
@@ -1087,7 +1088,7 @@ class CommandPrompt:
             outputs the appropriate menu.
         """
         # Print Menu
-        print(f'\n---- {menu_type} ----')
+        print(f'---- {menu_type} ----')
         for i, question in enumerate(cls.__menu[menu_type]):
             print(f'{i+1}. {question}')
 
@@ -1192,7 +1193,7 @@ class CommandPrompt:
         try:
             option = int(option)
         except ValueError as e:
-            print(f'{type(e).__name__}: {repr(option)} is not a number.')
+            print(f'{type(e).__name__}: {repr(option)} is not a number.\n')
             option = None
         # Handle the error if option is a number, but outside range.
         if option is not None and option not in range(1, limit):
@@ -1200,7 +1201,7 @@ class CommandPrompt:
                 raise ValueError(f'{repr} must be in range 1 - {limit}.')
             except ValueError as e:
                 print(f'{type(e).__name__}: {option} is outside range '
-                      f'1 - {limit}.')
+                      f'1 - {limit}.\n')
                 option = None
         return option
 
@@ -1286,12 +1287,19 @@ class AddPartToDatabase(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            # The Part Types menu is kept repeating until the user enters 5.
-            option = None
-            while option is None or option not in range(1, 6) or option != 5:
-                CommandPrompt.display_menu('Part Types')
-                option = super().get_cmd().prompt_for_option(limit=6)
-                if option != 5:
+            done = False
+            while not done:
+                # The Part Types menu is kept repeating until the user enters 5.
+                option = None
+                while option is None or option not in range(1, 6):
+                    CommandPrompt.display_menu('Part Types')
+                    option = super().get_cmd().prompt_for_option(limit=6)
+
+                # Now we have a valid option between 1 and 5.
+                if option == 5:
+                    print()
+                    done = True
+                else:
                     """
                         Now we have a valid option between 1 and 5.
                         Depending on the number, constructs the appropriate part.
@@ -1307,7 +1315,7 @@ class AddPartToDatabase(Question):
                     else:
                         new_part = Storage.input()
 
-                    done = False
+                    added = False
                     part_list = super().get_cmd().get_part_list()
                     parts_of_new_part_type = (
                         item for item in part_list.get_items()
@@ -1316,16 +1324,19 @@ class AddPartToDatabase(Question):
                     for item in parts_of_new_part_type:
                         if item.get_name() == new_part.get_name():
                             if not new_part.equals(item):
-                                print(f'Invalid {type(item).__name__}!',
-                                      f'Try again with different arguments.')
+                                Console().print(
+                                    f'Invalid {type(item).__name__}!',
+                                    f'Try again with different arguments.\n',
+                                    style='red',
+                                )
                             else:
                                 part_list.add_to_part_list(new_part,
-                                                           print_status=True)
-                            done = True
+                                                            print_status=True)
+                            added = True
 
-                    if not done:
+                    if not added:
                         part_list.add_to_part_list(new_part,
-                                                   print_status=True)
+                                                    print_status=True)
 
 
 class Close(Question):
@@ -1365,14 +1376,16 @@ class NewWishList(Question):
             super().__init__(cmd)
             if super().get_cmd().get_wish_list() is None:
                 super().get_cmd().set_wish_list(WishList())
-                # The menu is kept repeating until the user enters 5.
-                option = None
-                while option is None or option not in range(
-                        1, 6) or option not in {4, 5}:
-                    CommandPrompt.display_menu('Wish List')
-                    option = cmd.prompt_for_option(limit=6)
+                done = False
+                while not done:
+                    # The menu is kept repeating until the user enters 5.
+                    option = None
+                    while option is None or option not in range(1, 6):
+                        CommandPrompt.display_menu('Wish List')
+                        option = cmd.prompt_for_option(limit=6)
+
+                    # Now we have a valid option between 1 and 5.
                     if option in range(1, 6):
-                        # Now we have a valid option between 1 and 5.
                         if option == 1:
                             AddFromDatabase(cmd)
                         elif option == 2:
@@ -1382,9 +1395,13 @@ class NewWishList(Question):
                         elif option == 4:
                             PurchaseAndClose(cmd)
                             super().get_cmd().set_wish_list(None)
+                            print()
+                            done = True
                         else:
                             Close(cmd, 'Wish List')
                             super().get_cmd().set_wish_list(None)
+                            print()
+                            done = True
 
     def look_up_part_list(self, part_name):
         """
@@ -1542,26 +1559,32 @@ class ComputerPartShop:
 # ------------------------------- Main Function -------------------------------
 def main():
     Console().print("~~ [italic]Welcome to the Computer Store[/] ~~")
+    print()
     shop = ComputerPartShop(CommandPrompt())  # Construct object
     cmd = shop.get_cmd()
 
-    # Keep displaying Main Menu until the user enters 4.
-    option = None
-    while option is None or option not in range(1, 5) or option != 4:
-        CommandPrompt.display_menu('Main Menu')
-        option = cmd.prompt_for_option(limit=5)
-        if option in range(1, 5):
-            # Now we have a valid option between 1 and 4.
+    done = False
+    while not done:
+        # Keep displaying Main Menu until the user enters 4.
+        option = None
+        while option is None or option not in range(1, 5):
+            CommandPrompt.display_menu('Main Menu')
+            option = cmd.prompt_for_option(limit=5)
+
+        # Now we have a valid option between 1 and 4.
+        if option != 4:
             if option == 1:
                 NewWishList(cmd)
             elif option == 2:
                 print()
                 ListDatabase(cmd)
-            elif option == 3:
+                print()
+            else:
                 print()
                 AddPartToDatabase(cmd)
-            else:
-                Close(cmd, 'Main Menu')
+        else:
+            Close(cmd, 'Main Menu')
+            done = True
 
 
 # --------------------------- Call the Main Function --------------------------
