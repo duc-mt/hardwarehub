@@ -795,14 +795,15 @@ class PartList():
         """
         name_of_new_part = new_part.get_name()
         try:
-            stock = self.__stock[name_of_new_part]
+            value = self.__stock[name_of_new_part]
         except KeyError:
             self.__items.append(new_part)
             self.__stock[name_of_new_part] = 1
-            stock = 1
         else:
             # Duplicate item, so increment available stock by 1.
             self.__stock[name_of_new_part] += 1
+
+        stock = self.__stock[name_of_new_part]
 
         if print_status:
             Console().print(f'Added {new_part.__str__()} (x{stock})',
