@@ -1290,7 +1290,7 @@ class AddPartToDatabase(Question):
             while option is None or option not in range(1, 6) or option != 5:
                 CommandPrompt.display_menu('Part Types')
                 option = super().get_cmd().prompt_for_option(limit=6)
-                if option in range(1, 5):
+                if option != 5:
                     """
                         Now we have a valid option between 1 and 5.
                         Depending on the number, constructs the appropriate part.
@@ -1303,12 +1303,28 @@ class AddPartToDatabase(Question):
                         new_part = GraphicsCard.input()
                     elif option == 3:
                         new_part = Memory.input()
-                    elif option == 4:
+                    else:
                         new_part = Storage.input()
 
-                    super().get_cmd().get_part_list().add_to_part_list(
-                        new_part, print_status=True
+                    done = False
+                    part_list = super().get_cmd().get_part_list()
+                    parts_of_new_part_type = (
+                        item for item in part_list.get_items()
+                        if type(new_part).__name__ == type(item).__name__
                     )
+                    for item in parts_of_new_part_type:
+                        if item.get_name() == new_part.get_name():
+                            if not new_part.equals(item):
+                                print(f'Invalid {type(item).__name__}!',
+                                      f'Try again with different arguments.')
+                            else:
+                                part_list.add_to_part_list(new_part,
+                                                           print_status=True)
+                            done = True
+
+                    if not done:
+                        part_list.add_to_part_list(new_part,
+                                                   print_status=True)
 
 
 class Close(Question):
