@@ -1195,14 +1195,11 @@ class CommandPrompt:
         except ValueError as e:
             print(f'{type(e).__name__}: {repr(option)} is not a number.\n')
             option = None
-        # Handle the error if option is a number, but outside range.
+        # Display ValueError if option is a number, but outside range.
         if option is not None and option not in range(1, limit):
-            try:
-                raise ValueError(f'{repr} must be in range 1 - {limit}.')
-            except ValueError as e:
-                print(f'{type(e).__name__}: {option} is outside range '
-                      f'1 - {limit}.\n')
-                option = None
+            print(f'ValueError: {option} is outside range '
+                    f'1 - {limit}.\n')
+            option = None
         return option
 
     @icontract.ensure(lambda result: result is None)
