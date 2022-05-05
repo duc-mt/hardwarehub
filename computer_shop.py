@@ -853,8 +853,8 @@ class PartList():
                     style='green',
                 )
                 # Delete that item and its entry in the stock dictionary.
-                del self.__items[index]
-                del self.__stock[part_name]
+                del self.get_items()[index]
+                del self.get_stock()[part_name]
                 done = True
         if not done:
             return f'Could not find {part_name}!'
