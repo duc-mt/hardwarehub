@@ -1395,13 +1395,12 @@ class NewWishList(Question):
                         elif option == 4:
                             PurchaseAndClose(cmd)
                             super().get_cmd().set_wish_list(None)
-                            print()
                             done = True
                         else:
                             Close(cmd, 'Wish List')
                             super().get_cmd().set_wish_list(None)
-                            print()
                             done = True
+                        print()
 
     def look_up_part_list(self, part_name):
         """
