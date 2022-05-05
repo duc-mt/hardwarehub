@@ -118,16 +118,6 @@ class ComputerPart(metaclass=abc.ABCMeta):
         return price
 
     @classmethod
-    def display_menu(cls):
-        menu_options = (
-            'CPU', 'Graphics Card',
-            'Memory', 'Storage', 'Back',
-        )
-        print(f'---- Part Types ----')
-        for i, question in enumerate(menu_options):
-            print(f'{i+1}. {question}')
-
-    @classmethod
     def csv_string_to_list(cls, csv_string):
         csv_list = list()
         value = str()
@@ -1074,11 +1064,95 @@ class CommandPrompt:
         The user interface of the system.
     """
 
+    __menu = None
+
     def __init__(self):
         self.__part_list = PartList()
         self.__wish_list = None
         self.__read_from_csv()
-        self.__construct_menu()
+        if CommandPrompt.__menu is None:
+            CommandPrompt.__set_menu()
+
+    @classmethod
+    @icontract.require(
+        lambda menu_type:
+            (menu_type == 'Main Menu')
+            | (menu_type == 'Wish List')
+            | (menu_type == 'Part Types'))
+    @icontract.ensure(lambda result: result is None)
+    def display_menu(cls, menu_type):
+        """
+            Depending on the type of menu: Main Menu/Wish List/Part Types,
+            outputs the appropriate menu.
+        """
+        # Print Menu
+        print(f'\n---- {menu_type} ----')
+        for i, question in enumerate(cls.__menu[menu_type]):
+            print(f'{i+1}. {question}')
+
+    @classmethod
+    def __set_menu(cls):
+        """
+            Sets the menu class attribute.
+        """
+        @icontract.require(lambda obj: isinstance(obj, Question))
+        @icontract.ensure(lambda result: isinstance(result, str))
+        def convert_class_name(obj):
+            """
+                Convert a class name to a human-readable name.
+                E.g. 'New Wish List' is transformed into 'NewWishList'.
+            """
+            obj_name = type(obj).__name__
+            result = str()
+            result += obj_name[0]
+            for index, letter in enumerate(obj_name):
+                if letter.islower():
+                    result += letter
+                else:
+                    if index != 0:
+                        result += ' ' + letter
+            return result
+
+        # A defaultdict type variable to store three types of menus.
+        cls.__menu = defaultdict(list)
+
+        # Add four options for Main Menu.
+        cls.__menu['Main Menu'].append(
+            convert_class_name(NewWishList(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Main Menu'].append(
+            convert_class_name(ListDatabase(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Main Menu'].append(
+            convert_class_name(AddPartToDatabase(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Main Menu'].append(
+            convert_class_name(Close(CommandPrompt(), execute=False)),
+        )
+
+        # Add five options for Wish List Menu.
+        cls.__menu['Wish List'].append(
+            convert_class_name(AddFromDatabase(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Wish List'].append(
+            convert_class_name(RemoveFromWishList(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Wish List'].append(
+            convert_class_name(ShowWishList(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Wish List'].append(
+            convert_class_name(PurchaseAndClose(CommandPrompt(), execute=False)),
+        )
+        cls.__menu['Wish List'].append(
+            convert_class_name(Close(CommandPrompt(), execute=False)),
+        )
+
+        # Add five options for Parts Types Menu.
+        cls.__menu['Part Types'].append('CPU')
+        cls.__menu['Part Types'].append('Graphics Card')
+        cls.__menu['Part Types'].append('Memory')
+        cls.__menu['Part Types'].append('Storage')
+        cls.__menu['Part Types'].append('Back')
 
     @icontract.ensure(lambda result: isinstance(result, PartList))
     def get_part_list(self):
@@ -1105,23 +1179,6 @@ class CommandPrompt:
                 the user chose to Close (or Purchase and Close) the Wish List)
         """
         self.__wish_list = obj
-
-    @icontract.require(
-        lambda menu_type:
-            (menu_type == 'Main Menu') | (menu_type == 'Wish List'))
-    @icontract.ensure(lambda result: result is None)
-    def display_menu(self, menu_type):
-        """
-            Depending on the type of menu: Main Menu/Wish List,
-            outputs the appropriate menu.
-        """
-        print(f'\n---- {menu_type} ----')
-        if menu_type == 'Main Menu':
-            menu_options = self.__menu_options['Main Menu']
-        elif menu_type == 'Wish List':
-            menu_options = self.__menu_options['Wish List Menu']
-        for i, question in enumerate(menu_options):
-            print(f'{i+1}. {question}')
 
     @icontract.require(lambda limit: (limit == 5) | (limit == 6))
     def prompt_for_option(self, limit):
@@ -1184,67 +1241,6 @@ class CommandPrompt:
                         Storage.parse(csv_string)
                     )
 
-    @icontract.ensure(lambda result: result is None)
-    def __construct_menu(self):
-        """
-            Appends each question from the list menu_options (parameter)
-            to the menu_options attribute.
-            Meanwhile, invokes the convert_class_name method to convert
-            the name of each question to the proper format.
-        """
-        menu_options = defaultdict(list)
-
-        # Add four options for Main Menu.
-        menu_options['Main Menu'].append(
-            self.__convert_class_name(NewWishList(self, execute=False)),
-        )
-        menu_options['Main Menu'].append(
-            self.__convert_class_name(ListDatabase(self, execute=False)),
-        )
-        menu_options['Main Menu'].append(
-            self.__convert_class_name(AddPartToDatabase(self, execute=False)),
-        )
-        menu_options['Main Menu'].append(
-            self.__convert_class_name(Close(self, execute=False)),
-        )
-
-        # Add five options for Wish List Menu.
-        menu_options['Wish List Menu'].append(
-            self.__convert_class_name(AddFromDatabase(self, execute=False)),
-        )
-        menu_options['Wish List Menu'].append(
-            self.__convert_class_name(RemoveFromWishList(self, execute=False)),
-        )
-        menu_options['Wish List Menu'].append(
-            self.__convert_class_name(ShowWishList(self, execute=False)),
-        )
-        menu_options['Wish List Menu'].append(
-            self.__convert_class_name(PurchaseAndClose(self, execute=False)),
-        )
-        menu_options['Wish List Menu'].append(
-            self.__convert_class_name(Close(self, execute=False)),
-        )
-
-        self.__menu_options = menu_options
-
-    @icontract.require(lambda obj: isinstance(obj, Question))
-    @icontract.ensure(lambda result: isinstance(result, str))
-    def __convert_class_name(self, obj):
-        """
-            Convert a class name to a human-readable name.
-            E.g. 'New Wish List' is transformed into 'NewWishList'.
-        """
-        obj_name = type(obj).__name__
-        result = str()
-        result += obj_name[0]
-        for index, letter in enumerate(obj_name):
-            if letter.islower():
-                result += letter
-            else:
-                if index != 0:
-                    result += ' ' + letter
-        return result
-
 
 @icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
 class Question(metaclass=abc.ABCMeta):
@@ -1292,7 +1288,7 @@ class AddPartToDatabase(Question):
             # The Part Types menu is kept repeating until the user enters 5.
             option = None
             while option is None or option not in range(1, 6) or option != 5:
-                ComputerPart.display_menu()
+                CommandPrompt.display_menu('Part Types')
                 option = super().get_cmd().prompt_for_option(limit=6)
                 if option in range(1, 5):
                     """
@@ -1356,7 +1352,7 @@ class NewWishList(Question):
                 option = None
                 while option is None or option not in range(
                         1, 6) or option not in {4, 5}:
-                    super().get_cmd().display_menu('Wish List')
+                    CommandPrompt.display_menu('Wish List')
                     option = cmd.prompt_for_option(limit=6)
                     if option in range(1, 6):
                         # Now we have a valid option between 1 and 5.
@@ -1535,7 +1531,7 @@ def main():
     # Keep displaying Main Menu until the user enters 4.
     option = None
     while option is None or option not in range(1, 5) or option != 4:
-        cmd.display_menu('Main Menu')
+        CommandPrompt.display_menu('Main Menu')
         option = cmd.prompt_for_option(limit=5)
         if option in range(1, 5):
             # Now we have a valid option between 1 and 4.
