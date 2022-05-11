@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>7</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>28</x>
-      <y>756</y>
-      <w>238</w>
-      <h>238</h>
+      <x>0</x>
+      <y>768</y>
+      <w>272</w>
+      <h>272</h>
     </coordinates>
     <panel_attributes>CPU
 --
@@ -36,10 +36,10 @@ _-- Contructs a CPU based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>756</y>
-      <w>252</w>
-      <h>238</h>
+      <x>304</x>
+      <y>768</y>
+      <w>288</w>
+      <h>272</h>
     </coordinates>
     <panel_attributes>GraphicsCard
 --
@@ -69,10 +69,10 @@ _-- Contructs a GraphicsCard based on validated inputs._
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>560</x>
-      <y>756</y>
-      <w>273</w>
-      <h>273</h>
+      <x>608</x>
+      <y>768</y>
+      <w>312</w>
+      <h>312</h>
     </coordinates>
     <panel_attributes>Memory
 --
@@ -104,10 +104,10 @@ _-- Contructs a Memory based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>840</x>
-      <y>756</y>
-      <w>259</w>
-      <h>238</h>
+      <x>928</x>
+      <y>768</y>
+      <w>296</w>
+      <h>272</h>
     </coordinates>
     <panel_attributes>Storage
 --
@@ -136,10 +136,10 @@ _-- Contructs a Storage based on validated inputs._</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>441</x>
-      <y>427</y>
-      <w>224</w>
-      <h>259</h>
+      <x>472</x>
+      <y>392</y>
+      <w>256</w>
+      <h>296</h>
     </coordinates>
     <panel_attributes>/ComputerPart/
 --
@@ -154,7 +154,7 @@ _/+ input(): void/_
 /+ to_csv_string(): void/
 _+ input_name(): str_
 _+ input_price(): float_
-_+ display_menu(): void_
+_+ csv_string_to_list(csv_string: str): list_
 + get_name(): str
 + get_price(): float
 + equals(other: Any): bool
@@ -170,10 +170,10 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>140</x>
-      <y>707</y>
-      <w>847</w>
-      <h>63</h>
+      <x>128</x>
+      <y>712</y>
+      <w>968</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -182,10 +182,10 @@ and Storage.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>546</x>
-      <y>679</y>
-      <w>21</w>
-      <h>56</h>
+      <x>592</x>
+      <y>680</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -193,10 +193,10 @@ and Storage.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>420</x>
-      <y>91</y>
-      <w>266</w>
-      <h>273</h>
+      <x>432</x>
+      <y>8</y>
+      <w>336</w>
+      <h>312</h>
     </coordinates>
     <panel_attributes>PartList
 --
@@ -211,10 +211,10 @@ and Storage.</panel_attributes>
 + get_stock(): dict
 + add_to_part_list(new_part: ComputerPart, 
                               print_status: bool = False): void
-+ get_part_using_name(part_name: str): ComputerPart
-+ get_part_using_position(part_position: int): ComputerPart
-+ remove_part_using_name(part_name: str): void
-+ remove_part_using_position(part_position: int): void
++ get_part_using_name(part_name: str): ComputerPart | str
++ get_part_using_position(part_position: int): ComputerPart | str
++ remove_part_using_name(part_name: str): None | str
++ remove_part_using_position(part_position: int): None | str
 + save_to_csv(filename: str = 'database'): void
 
 --
@@ -229,10 +229,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>28</x>
-      <y>98</y>
-      <w>259</w>
-      <h>259</h>
+      <x>0</x>
+      <y>16</y>
+      <w>296</w>
+      <h>296</h>
     </coordinates>
     <panel_attributes>WishList
 --
@@ -263,21 +263,21 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>280</x>
-      <y>224</y>
-      <w>154</w>
-      <h>21</h>
+      <x>288</x>
+      <y>160</y>
+      <w>160</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>200.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>180.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>546</x>
-      <y>357</y>
-      <w>35</w>
-      <h>84</h>
+      <x>592</x>
+      <y>312</y>
+      <w>40</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=0..1
@@ -287,27 +287,26 @@ m2=0..*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>931</x>
-      <y>133</y>
-      <w>287</w>
-      <h>294</h>
+      <x>1024</x>
+      <y>0</y>
+      <w>328</w>
+      <h>312</h>
     </coordinates>
     <panel_attributes>CommandPrompt
 --
+_- menu: defaultdict_
 - part_list: PartList
 - wish_list: WishList
-- menu_options: Question[0..*]
 
 --
 + __init__(): void
-+ get_part_list(): PartList
-+ get_wish_list(): WishList
-+ set_wish_list(obj: WishList): void
+_- set_menu(): void_
 + display_menu(menu_type: str): void
++ get_part_list(): PartList
++ get_wish_list(): WishList | None
++ set_wish_list(obj: WishList | None): void
 + prompt_for_option(limit: int): int
 - read_from_csv(): void
-- construct_menu(): void
-- convert_class_name(obj: Question): str
 
 --
 Responsibilities
@@ -323,10 +322,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>336</y>
-      <w>196</w>
-      <h>112</h>
+      <x>1576</x>
+      <y>104</y>
+      <w>224</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>/Question/
 --
@@ -344,10 +343,10 @@ CommandPrompt can ask the user.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1379</x>
-      <y>553</y>
-      <w>259</w>
-      <h>168</h>
+      <x>1544</x>
+      <y>536</y>
+      <w>296</w>
+      <h>192</h>
     </coordinates>
     <panel_attributes>NewWishList
 --
@@ -370,10 +369,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1687</x>
-      <y>553</y>
-      <w>203</w>
-      <h>105</h>
+      <x>1896</x>
+      <y>536</y>
+      <w>232</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>ListDatabase
 --
@@ -390,10 +389,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>742</x>
-      <y>553</y>
-      <w>308</w>
-      <h>133</h>
+      <x>816</x>
+      <y>536</y>
+      <w>352</w>
+      <h>152</h>
     </coordinates>
     <panel_attributes>Close
 --
@@ -413,10 +412,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1099</x>
-      <y>553</y>
-      <w>231</w>
-      <h>147</h>
+      <x>1224</x>
+      <y>536</y>
+      <w>264</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>AddPartToDatabase
 --
@@ -436,10 +435,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1309</x>
-      <y>798</y>
-      <w>189</w>
-      <h>147</h>
+      <x>1464</x>
+      <y>816</y>
+      <w>216</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>RemoveFromWishList
 --
@@ -460,10 +459,10 @@ part list.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1512</x>
-      <y>798</y>
-      <w>189</w>
-      <h>112</h>
+      <x>1696</x>
+      <y>816</y>
+      <w>216</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>PurchaseAndClose
 --
@@ -481,10 +480,10 @@ name is the user's name.</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1106</x>
-      <y>798</y>
-      <w>189</w>
-      <h>112</h>
+      <x>1232</x>
+      <y>816</y>
+      <w>216</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>ShowWishList
 --
@@ -501,10 +500,10 @@ Responsibilities
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1197</x>
-      <y>742</y>
-      <w>623</w>
-      <h>70</h>
+      <x>1336</x>
+      <y>752</y>
+      <w>712</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -513,10 +512,10 @@ Responsibilities
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1715</x>
-      <y>798</y>
-      <w>189</w>
-      <h>133</h>
+      <x>1928</x>
+      <y>816</y>
+      <w>216</w>
+      <h>152</h>
     </coordinates>
     <panel_attributes>AddFromDatabase
 --
@@ -536,10 +535,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1498</x>
-      <y>714</y>
-      <w>21</w>
-      <h>56</h>
+      <x>1680</x>
+      <y>720</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -547,10 +546,10 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>889</x>
-      <y>518</y>
-      <w>910</w>
-      <h>49</h>
+      <x>984</x>
+      <y>496</y>
+      <w>1040</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
     <additional_attributes>10.0;50.0;10.0;10.0;470.0;10.0;470.0;50.0;470.0;10.0;1280.0;10.0;1280.0;50.0</additional_attributes>
@@ -558,91 +557,40 @@ exists and enough stock is remaining.</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1498</x>
-      <y>441</y>
-      <w>21</w>
-      <h>126</h>
+      <x>1680</x>
+      <y>224</y>
+      <w>24</w>
+      <h>328</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;390.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>679</x>
-      <y>210</y>
-      <w>266</w>
-      <h>35</h>
+      <x>760</x>
+      <y>144</y>
+      <w>280</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=0..1
 m2=1
 &lt; constructs</panel_attributes>
-    <additional_attributes>360.0;20.0;10.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1379</x>
-      <y>98</y>
-      <w>252</w>
-      <h>133</h>
-    </coordinates>
-    <panel_attributes>ComputerPartShop
---
-- cmd: CommandPrompt
-
---
-+ __init__(cmd: CommandPrompt): void
-+ get_cmd(): CommandPrompt
-+ set_cmd(cmd: CommandPrompt): void
-
---
-Responsibilities
--- Manages the CommandPrompt object of the program.
--- Ensure the consistency within the program.</panel_attributes>
-    <additional_attributes/>
+    <additional_attributes>330.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1211</x>
-      <y>147</y>
-      <w>182</w>
-      <h>35</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=1
-m2=0..1
-&lt; manages</panel_attributes>
-    <additional_attributes>10.0;20.0;240.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1498</x>
-      <y>224</y>
-      <w>70</w>
-      <h>126</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=1
-m2=*
-&lt; accesses</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;160.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1211</x>
-      <y>385</y>
-      <w>210</w>
-      <h>35</h>
+      <x>1344</x>
+      <y>160</y>
+      <w>248</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
 m2=0..*
 asks users &gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
   </element>
 </diagram>

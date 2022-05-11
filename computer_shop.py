@@ -28,15 +28,15 @@ install(show_locals=True)
 # ------------------------------- Computer Part -------------------------------
 class ComputerPart(metaclass=abc.ABCMeta):
     """
-        An abstract class.
-        The superclass for other ComputerPart types.
+    An abstract class.
+    The superclass for other ComputerPart types.
     """
 
     @icontract.ensure(lambda result: result is None)
     def __init__(self, name, price):
         """
-            Initialises name and price.
-            Called by subclasses using super().__init__()
+        Initialises name and price.
+        Called by subclasses using super().__init__()
         """
         self.__name = name
         self.__price = price
@@ -45,10 +45,10 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: result is None)
     def parse(cls):
         """
-            An abstract class method.
-            Splits the csv_string into separate values and parses them to the
-            correct datatypes.
-            Uses these values to construct and return a new ComputerPart.
+        An abstract class method.
+        Splits the csv_string into separate values and parses them to the
+        correct datatypes.
+        Uses these values to construct and return a new ComputerPart.
         """
         pass
 
@@ -56,9 +56,9 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: result is None)
     def input(cls):
         """
-            An abstract class method.
-            Takes input for each of the necessary variables.
-            Uses these input values to construct and return a new ComputerPart.
+        An abstract class method.
+        Takes input for each of the necessary variables.
+        Uses these input values to construct and return a new ComputerPart.
         """
         pass
 
@@ -66,8 +66,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: result is None)
     def __str__(self):
         """
-            An abstract method.
-            Returns the variables as a String.
+        An abstract method.
+        Returns the variables as a String.
         """
         pass
 
@@ -75,9 +75,9 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: result is None)
     def to_csv_string(self):
         """
-            An abstract method.
-            Returns the name of the class followed by each of the instance
-            variables separated by commas.
+        An abstract method.
+        Returns the name of the class followed by each of the instance
+        variables separated by commas.
         """
         pass
 
@@ -85,8 +85,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: isinstance(result, str) & (result != ''))
     def input_name(cls):
         """
-            Sets the name attribute to the argument
-            Only if the argument is a non-empty string.
+        Sets the name attribute to the argument
+        Only if the argument is a non-empty string.
         """
         name = None
         valid = False
@@ -107,8 +107,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: isinstance(result, float) & (result > 0))
     def input_price(cls):
         """
-            Sets the price attribute to the argument
-            Only if the argument is a positive float.
+        Sets the price attribute to the argument
+        Only if the argument is a positive float.
         """
         price = None
         valid = False
@@ -141,24 +141,24 @@ class ComputerPart(metaclass=abc.ABCMeta):
 
     def get_name(self):
         """
-            Returns the name attribute.
-            Called by subclasses using self.get_name()
+        Returns the name attribute.
+        Called by subclasses using self.get_name()
         """
         return self.__name
 
     def get_price(self):
         """
-            Returns the price attribute.
-            Called by subclasses using self.get_price()
+        Returns the price attribute.
+        Called by subclasses using self.get_price()
         """
         return self.__price
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """
-            Returns True if the calling object is equal to the other argument.
-            Returns False otherwise.
-            This method will be overridden in each subclass.
+        Returns True if the calling object is equal to the other argument.
+        Returns False otherwise.
+        This method will be overridden in each subclass.
         """
         if isinstance(other, type(self)):
             if (self.get_name() == other.get_name() and
@@ -169,13 +169,13 @@ class ComputerPart(metaclass=abc.ABCMeta):
 
 class CPU(ComputerPart):
     """
-        A subclass of the ComputerPart class.
+    A subclass of the ComputerPart class.
     """
 
     @icontract.ensure(lambda result: result is None)
     def __init__(self, name, price, cores, frequency_ghz):
         """
-            Initialises cores and frequency_ghz.
+        Initialises cores and frequency_ghz.
         """
         super().__init__(name, price)
         self.__cores = cores
@@ -184,8 +184,8 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Return the variables as a string.
-            For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
+        Return the variables as a string.
+        For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
         return f'{self.get_name()}: {self.get_cores()} cores @ ' + \
                f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}'
@@ -195,9 +195,9 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, CPU))
     def parse(cls, csv_string):
         """
-            Splits the csv_string into separate values.
-            Parses these values to the correct datatypes.
-            Uses these values to construct and return a new CPU.
+        Splits the csv_string into separate values.
+        Parses these values to the correct datatypes.
+        Uses these values to construct and return a new CPU.
         """
         csv_list = ComputerPart.csv_string_to_list(csv_string)
 
@@ -216,8 +216,8 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, CPU))
     def input(cls):
         """
-            Takes input for the name, price, frequency, and number of cores.
-            Uses these input values to construct and return a new CPU.
+        Takes input for the name, price, frequency, and number of cores.
+        Uses these input values to construct and return a new CPU.
         """
         return cls(
             ComputerPart.input_name(),
@@ -230,8 +230,8 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_cores(cls):
         """
-            Sets the cores attribute to the argument
-            Only if the argument is a positive integer.
+        Sets the cores attribute to the argument
+        Only if the argument is a positive integer.
         """
         cores = None
         valid = False
@@ -252,8 +252,8 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, float) & (result > 0))
     def input_frequency_ghz(cls):
         """
-            Sets the frequency_ghz attribute to the argument
-            Only if the argument is a positive float.
+        Sets the frequency_ghz attribute to the argument
+        Only if the argument is a positive float.
         """
         frequency_ghz = None
         valid = False
@@ -272,22 +272,22 @@ class CPU(ComputerPart):
 
     def get_cores(self):
         """
-             Returns the cores attribute.
+        Returns the cores attribute.
         """
         return self.__cores
 
     def get_frequency_ghz(self):
         """
-            Returns the frequency_ghz attribute.
+        Returns the frequency_ghz attribute.
         """
         return self.__frequency_ghz
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """
-            Returns True if the calling object and the other argument are both
-            CPUs and the values of their variables are the same.
-            Returns False otherwise.
+        Returns True if the calling object and the other argument are both
+        CPUs and the values of their variables are the same.
+        Returns False otherwise.
         """
         if super().equals(other):
             if (self.get_cores() == other.get_cores() and
@@ -298,9 +298,9 @@ class CPU(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
         """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "CPU,name,price,cores,frequency_ghz".
+        Return the name of the class followed by each of the class
+        variables separated by commas.
+        Format: "CPU,name,price,cores,frequency_ghz".
         """
         return f'CPU,{self.get_name()},{self.get_price()},' + \
                f'{self.get_cores()},{self.get_frequency_ghz()}'
@@ -308,14 +308,14 @@ class CPU(ComputerPart):
 
 class GraphicsCard(ComputerPart):
     """
-        A subclass of the ComputerPart class.
+    A subclass of the ComputerPart class.
     """
 
     @icontract.ensure(lambda result: result is None)
     def __init__(self, name, price, frequency_mhz, memory_gb):
         """
-            Initialises frequency_mhz and memory_gb by calling theirs
-            mutator methods.
+        Initialises frequency_mhz and memory_gb by calling theirs
+        mutator methods.
         """
         super().__init__(name, price)
         self.__frequency_mhz = frequency_mhz
@@ -324,8 +324,8 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Return the variables as a string.
-            For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
+        Return the variables as a string.
+        For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
         return f'{self.get_name()}: {self.get_memory_gb()}GB @ ' + \
                f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}'
@@ -335,9 +335,9 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, GraphicsCard))
     def parse(cls, csv_string):
         """
-            Splits the csv_string into separate values.
-            Parses these values to the correct datatypes.
-            Uses these values to construct and return a new GraphicsCard.
+        Splits the csv_string into separate values.
+        Parses these values to the correct datatypes.
+        Uses these values to construct and return a new GraphicsCard.
         """
         csv_list = ComputerPart.csv_string_to_list(csv_string)
 
@@ -356,8 +356,8 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, GraphicsCard))
     def input(cls):
         """
-            Takes input for the name, price, memory, and frequency.
-            Uses these input values to construct and return a new GraphicsCard.
+        Takes input for the name, price, memory, and frequency.
+        Uses these input values to construct and return a new GraphicsCard.
         """
         return cls(
             ComputerPart.input_name(),
@@ -370,8 +370,8 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_frequency_mhz(cls):
         """
-            Sets the frequency_mhz attribute to the argument.
-            Only if the argument is a positive integer.
+        Sets the frequency_mhz attribute to the argument.
+        Only if the argument is a positive integer.
         """
         frequency_mhz = None
         valid = False
@@ -392,8 +392,8 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_memory_gb(cls):
         """
-            Sets the memory_gb attribute to the argument.
-            Only if the argument is a positive integer.
+        Sets the memory_gb attribute to the argument.
+        Only if the argument is a positive integer.
         """
         memory_gb = None
         valid = False
@@ -412,22 +412,22 @@ class GraphicsCard(ComputerPart):
 
     def get_frequency_mhz(self):
         """
-            Returns the frequency_mhz attribute.
+        Returns the frequency_mhz attribute.
         """
         return self.__frequency_mhz
 
     def get_memory_gb(self):
         """
-            Returns the memory_gb attribute.
+        Returns the memory_gb attribute.
         """
         return self.__memory_gb
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """
-            Returns True if the calling object and the other argument are both
-            GraphicsCards and the values of their variables are the same.
-            Returns False otherwise.
+        Returns True if the calling object and the other argument are both
+        GraphicsCards and the values of their variables are the same.
+        Returns False otherwise.
         """
         if super().equals(other):
             if (self.get_memory_gb() == other.get_memory_gb() and
@@ -438,9 +438,9 @@ class GraphicsCard(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
         """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
+        Return the name of the class followed by each of the class
+        variables separated by commas.
+        Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
         return f'GraphicsCard,{self.get_name()},{self.get_price()},' + \
                f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
@@ -448,14 +448,14 @@ class GraphicsCard(ComputerPart):
 
 class Memory(ComputerPart):
     """
-        A subclass of the ComputerPart class.
+    A subclass of the ComputerPart class.
     """
 
     @icontract.ensure(lambda result: result is None)
     def __init__(self, name, price, capacity_gb, frequency_mhz, ddr):
         """
-            Initialises capacity_gb and frequency_mhz by calling theirs
-            mutator methods.
+        Initialises capacity_gb and frequency_mhz by calling theirs
+        mutator methods.
         """
         super().__init__(name, price)
         self.__capacity_gb = capacity_gb
@@ -465,8 +465,8 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Return the variables as a string.
-            For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
+        Return the variables as a string.
+        For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
         return f'{self.get_name()}: {self.get_capacity_gb()}GB, ' + \
                f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ ' + \
@@ -477,9 +477,9 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, Memory))
     def parse(cls, csv_string):
         """
-            Splits the csv_string into separate values.
-            Parses these values to the correct datatypes.
-            Uses these values to construct and return a new Memory.
+        Splits the csv_string into separate values.
+        Parses these values to the correct datatypes.
+        Uses these values to construct and return a new Memory.
         """
         csv_list = ComputerPart.csv_string_to_list(csv_string)
 
@@ -499,8 +499,8 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, Memory))
     def input(cls):
         """
-            Takes input for the name, price, memory, and frequency.
-            Uses these input values to construct and return a new Memory.
+        Takes input for the name, price, memory, and frequency.
+        Uses these input values to construct and return a new Memory.
         """
         return cls(
             ComputerPart.input_name(),
@@ -514,8 +514,8 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_capacity_gb(cls):
         """
-            Sets the capacity_gb attribute to the argument.
-            Only if the argument is a positive integer.
+        Sets the capacity_gb attribute to the argument.
+        Only if the argument is a positive integer.
         """
         capacity_gb = None
         valid = False
@@ -536,8 +536,8 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_frequency_mhz(cls):
         """
-            Sets the frequency_mhz attribute to the argument.
-            Only if the argument is a positive integer.
+        Sets the frequency_mhz attribute to the argument.
+        Only if the argument is a positive integer.
         """
         frequency_mhz = None
         valid = False
@@ -558,8 +558,8 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str) & (result != ''))
     def input_ddr(cls):
         """
-            Sets the ddr attribute to the argument
-            Only if the argument is a non-empty string.
+        Sets the ddr attribute to the argument
+        Only if the argument is a non-empty string.
         """
         ddr = None
         valid = False
@@ -578,28 +578,28 @@ class Memory(ComputerPart):
 
     def get_capacity_gb(self):
         """
-            Returns the capacity_gb attribute.
+        Returns the capacity_gb attribute.
         """
         return self.__capacity_gb
 
     def get_frequency_mhz(self):
         """
-            Returns the frequency_mhz attribute.
+        Returns the frequency_mhz attribute.
         """
         return self.__frequency_mhz
 
     def get_ddr(self):
         """
-            Returns the ddr attribute.
+        Returns the ddr attribute.
         """
         return self.__ddr
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """
-            Returns True if the calling object and the other argument are both
-            Memory and the values of their variables are the same.
-            Returns False otherwise.
+        Returns True if the calling object and the other argument are both
+        Memory and the values of their variables are the same.
+        Returns False otherwise.
         """
         if super().equals(other):
             if (self.get_frequency_mhz() == other.get_frequency_mhz() and
@@ -611,9 +611,9 @@ class Memory(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
         """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
+        Return the name of the class followed by each of the class
+        variables separated by commas.
+        Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
         return f'Memory,{self.get_name()},{self.get_price()},' + \
                f'{self.get_capacity_gb()},{self.get_frequency_mhz()},' + \
@@ -622,14 +622,14 @@ class Memory(ComputerPart):
 
 class Storage(ComputerPart):
     """
-        A subclass of the ComputerPart class.
+    A subclass of the ComputerPart class.
     """
 
     @icontract.ensure(lambda result: result is None)
     def __init__(self, name, price, capacity_gb, storage_type):
         """
-            Initialises capacity_gb and frequency_mhz by calling theirs
-            mutator methods.
+        Initialises capacity_gb and frequency_mhz by calling theirs
+        mutator methods.
         """
         super().__init__(name, price)
         self.__capacity_gb = capacity_gb
@@ -638,8 +638,8 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Return the variables as a string.
-            For example "Seagate Barracuda: 1000GB HDD for $60.00".
+        Return the variables as a string.
+        For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
         return f'{self.get_name()}: {self.get_capacity_gb()}GB, ' + \
                f'{self.get_storage_type()} for ${self.get_price():.2f}'
@@ -649,9 +649,9 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, Storage))
     def parse(cls, csv_string):
         """
-            Splits the csv_string into separate values.
-            Parses these values to the correct datatypes.
-            Uses these values to construct and return a new Storage.
+        Splits the csv_string into separate values.
+        Parses these values to the correct datatypes.
+        Uses these values to construct and return a new Storage.
         """
         csv_list = ComputerPart.csv_string_to_list(csv_string)
 
@@ -669,8 +669,8 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, Storage))
     def input(cls):
         """
-            Takes input for the name, price, memory, and frequency.
-            Uses these input values to construct and return a new Storage.
+        Takes input for the name, price, memory, and frequency.
+        Uses these input values to construct and return a new Storage.
         """
         return cls(
             ComputerPart.input_name(),
@@ -683,8 +683,8 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, int) & (result > 0))
     def input_capacity_gb(cls):
         """
-            Sets the capacity_gb attribute to the argument.
-            Only if the argument is a positive integer.
+        Sets the capacity_gb attribute to the argument.
+        Only if the argument is a positive integer.
         """
         capacity_gb = None
         valid = False
@@ -705,8 +705,8 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: result in {'HDD', 'SSD', 'SSHD'})
     def input_storage_type(cls):
         """
-            Sets the storage_type attribute to the argument.
-            Only if the argument is a not one of HDD/SSD/SSHD.
+        Sets the storage_type attribute to the argument.
+        Only if the argument is a not one of HDD/SSD/SSHD.
         """
         storage_type = None
         valid = False
@@ -727,22 +727,22 @@ class Storage(ComputerPart):
 
     def get_capacity_gb(self):
         """
-            Returns the capacity_gb attribute.
+        Returns the capacity_gb attribute.
         """
         return self.__capacity_gb
 
     def get_storage_type(self):
         """
-            Returns the storage_type attribute.
+        Returns the storage_type attribute.
         """
         return self.__storage_type
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """
-            Returns True if the calling object and the other argument are both
-            Storage and the values of their variables are the same.
-            Returns False otherwise.
+        Returns True if the calling object and the other argument are both
+        Storage and the values of their variables are the same.
+        Returns False otherwise.
         """
         if super().equals(other):
             if (self.get_capacity_gb() == other.get_capacity_gb() and
@@ -753,9 +753,9 @@ class Storage(ComputerPart):
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
         """
-            Return the name of the class followed by each of the class
-            variables separated by commas.
-            Format: "Storage,name,price,capacity_gb,storage_type".
+        Return the name of the class followed by each of the class
+        variables separated by commas.
+        Format: "Storage,name,price,capacity_gb,storage_type".
         """
         return f'Storage,{self.get_name()},{self.get_price()},' + \
                f'{self.get_capacity_gb()},{self.get_storage_type()}'
@@ -764,9 +764,9 @@ class Storage(ComputerPart):
 # ------------------------------- Data Structure ------------------------------
 class PartList():
     """
-        A subclass of the WishList class.
-        Stores the computer parts (instances of the ComputerPart class)
-        available in stock.
+    A subclass of the WishList class.
+    Stores the computer parts (instances of the ComputerPart class)
+    available in stock.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -774,22 +774,22 @@ class PartList():
         # A variable to store the items (ComputerParts) listed in the store.
         self.__items = list()
         """
-            A dictionary
-            1. Key is the computer part.
-            2. Value is the number of stock that key has in stock.
+        A dictionary
+        1. Key is the computer part.
+        2. Value is the number of stock that key has in stock.
         """
         self.__stock = dict()
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Return a string that represents the PartList in the format:
-            "---- Part List ----
-            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
-            AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
-            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
-            Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
-            --------------------"
+        Return a string that represents the PartList in the format:
+        "---- Part List ----
+        NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+        AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
+        Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
+        Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
+        --------------------"
         """
         result = str()
         result += '---- Part List ----\n'
@@ -810,22 +810,22 @@ class PartList():
     @icontract.ensure(lambda self, result: result == len(self.get_items()))
     def __len__(self):
         """
-            Get the length of the items attribute.
-            Called within PartList class using len(self)
-            Called outside PartList class using len(object)
-                - Where object is an instance of the PartList class.
+        Get the length of the items attribute.
+        Called within PartList class using len(self)
+        Called outside PartList class using len(object)
+            - Where object is an instance of the PartList class.
         """
         return len(self.get_items())
 
     def get_items(self):
         """
-            Returns the items attribute.
+        Returns the items attribute.
         """
         return self.__items
 
     def get_stock(self):
         """
-            Returns the stock attribute.
+        Returns the stock attribute.
         """
         return self.__stock
 
@@ -836,8 +836,8 @@ class PartList():
     @icontract.ensure(lambda result: result is None)
     def add_to_part_list(self, new_part, print_status=False):
         """
-            Add a new item to the store.
-            If it is duplicate, the available stock must be incremented by 1.
+        Add a new item to the store.
+        If it is duplicate, the available stock must be incremented by 1.
         """
         name_of_new_part = new_part.get_name()
         try:
@@ -860,8 +860,8 @@ class PartList():
         lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
     def get_part_using_name(self, part_name):
         """
-            Find and access a part using its name.
-            Check to see if that part name is in store.
+        Find and access a part using its name.
+        Check to see if that part name is in store.
         """
         found = False
         i = 0
@@ -877,8 +877,8 @@ class PartList():
     @icontract.require(lambda part_position: isinstance(part_position, int))
     def get_part_using_position(self, part_position):
         """
-            Find and access a part using its position.
-            Check to see if the argument is less than the length of the list.
+        Find and access a part using its position.
+        Check to see if the argument is less than the length of the list.
         """
         if part_position < len(self):
             return self.__items[part_position]
@@ -889,9 +889,9 @@ class PartList():
         lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
     def remove_part_using_name(self, part_name):
         """
-            Find and remove a part using its name.
-            Check to see if that part name is in store.
-            Clear all stock of that part in store.
+        Find and remove a part using its name.
+        Check to see if that part name is in store.
+        Clear all stock of that part in store.
         """
         done = False
         for index, item in enumerate(self.get_items()):
@@ -910,9 +910,9 @@ class PartList():
     @icontract.require(lambda part_position: isinstance(part_position, int))
     def remove_part_using_position(self, part_position):
         """
-            Find and access a part using its position.
-            Check to see if the argument is less than the length of the list.
-            Clear all stock of that part in store.
+        Find and access a part using its position.
+        Check to see if the argument is less than the length of the list.
+        Clear all stock of that part in store.
         """
         done = False
         if part_position < len(self):
@@ -935,8 +935,8 @@ class PartList():
     @icontract.ensure(lambda result: result is None)
     def save_to_csv(self, filename='database'):
         """
-            Save all parts to a csv file with an argument file name.
-            Default to the file name database.csv
+        Save all parts to a csv file with an argument file name.
+        Default to the file name database.csv
         """
         with open(filename + '.csv', mode='w') as outfile:
             for item in self.get_items():
@@ -954,7 +954,7 @@ class PartList():
 
 class WishList(PartList):
     """
-        A subclass of the PartList class.
+    A subclass of the PartList class.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -963,27 +963,27 @@ class WishList(PartList):
         # A variable to store the items listed in the store.
         self.__items = list()
         """
-            A dictionary
-            1. Key is the computer part.
-            2. Value is the number of stock that key has in Wish List.
+        A dictionary
+        1. Key is the computer part.
+        2. Value is the number of stock that key has in Wish List.
         """
         self.__stock = dict()
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-            Returns a string that represents the WishList in the format:
-            "---- Gary's Wish List ----
-            NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
-            AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
-            Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
-            Seagate FireCuda: 1000GB SSHD for $105.00 (x1)
-            Toshiba P300: 3000GB HDD for $115.00 (x1)
-            --------------------
-            $7117.99
-            Valid computer"
+        Returns a string that represents the WishList in the format:
+        "---- Gary's Wish List ----
+        NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
+        AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
+        Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
+        Seagate FireCuda: 1000GB SSHD for $105.00 (x1)
+        Toshiba P300: 3000GB HDD for $115.00 (x1)
+        --------------------
+        $7117.99
+        Valid computer"
 
-            The last line is either "Valid computer" or "Not a valid computer".
+        The last line is either "Valid computer" or "Not a valid computer".
         """
         result = str()
         result += f'\n---- {self.get_username()}\'s Wish List ----'
@@ -1014,10 +1014,10 @@ class WishList(PartList):
     @icontract.ensure(lambda self, result: result == len(self.get_items()))
     def __len__(self):
         """
-            Get the length of the items attribute.
-            Called within WishList class using len(self)
-            Called outside WishList class using len(object)
-                - Where object is an instance of the WishList class.
+        Get the length of the items attribute.
+        Called within WishList class using len(self)
+        Called outside WishList class using len(object)
+            - Where object is an instance of the WishList class.
         """
         return len(self.get_items())
 
@@ -1041,21 +1041,21 @@ class WishList(PartList):
 
     def get_items(self):
         """
-            Returns the items attribute.
+        Returns the items attribute.
         """
         return self.__items
 
     def get_stock(self):
         """
-            Returns the stock attribute.
+        Returns the stock attribute.
         """
         return self.__stock
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
     def __get_total_cost(self):
         """
-            A private method used within this class only.
-            Calculates and returns the total cost of all parts.
+        A private method used within this class only.
+        Calculates and returns the total cost of all parts.
         """
         price = 0
         for item in self.get_items():
@@ -1066,10 +1066,10 @@ class WishList(PartList):
     @icontract.ensure(lambda result: isinstance(result, bool))
     def __is_valid_computer(self):
         """
-            A private method used within this class only.
-            Determines if the parts will make up a valid computer.
-            A valid computer requires at least:
-               - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
+        A private method used within this class only.
+        Determines if the parts will make up a valid computer.
+        A valid computer requires at least:
+            - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
         """
         # A dictionary to check if one of these parts is in the WishList.
         is_in_wish_list = {
@@ -1105,7 +1105,7 @@ class WishList(PartList):
 )
 class CommandPrompt:
     """
-        The user interface of the system.
+    The user interface of the system.
     """
 
     __menu = None
@@ -1127,8 +1127,8 @@ class CommandPrompt:
     @icontract.ensure(lambda result: result is None)
     def display_menu(cls, menu_type):
         """
-            Depending on the type of menu: Main Menu/Wish List/Part Types,
-            outputs the appropriate menu.
+        Depending on the type of menu: Main Menu/Wish List/Part Types,
+        outputs the appropriate menu.
         """
         # Print Menu
         print(f'---- {menu_type} ----')
@@ -1138,14 +1138,14 @@ class CommandPrompt:
     @classmethod
     def __set_menu(cls):
         """
-            Sets the menu class attribute.
+        Sets the menu class attribute.
         """
         @icontract.require(lambda obj: isinstance(obj, Question))
         @icontract.ensure(lambda result: isinstance(result, str))
         def convert_class_name(obj):
             """
-                Convert a class name to a human-readable name.
-                E.g. 'New Wish List' is transformed into 'NewWishList'.
+            Convert a class name to a human-readable name.
+            E.g. 'New Wish List' is transformed into 'NewWishList'.
             """
             obj_name = type(obj).__name__
             result = str()
@@ -1201,13 +1201,13 @@ class CommandPrompt:
 
     def get_part_list(self):
         """
-            Returns the PartList object.
+        Returns the PartList object.
         """
         return self.__part_list
 
     def get_wish_list(self):
         """
-            Returns the WishList object.
+        Returns the WishList object.
         """
         return self.__wish_list
 
@@ -1215,18 +1215,18 @@ class CommandPrompt:
     @icontract.ensure(lambda result: result is None)
     def set_wish_list(self, obj):
         """
-            Sets the wish_list attribute to the argument.
-                1. A WishList object
-                2. None (in which case is meant to reset the Wish List after
-                the user chose to Close (or Purchase and Close) the Wish List)
+        Sets the wish_list attribute to the argument.
+        1. A WishList object
+        2. None (in which case is meant to reset the Wish List after
+        the user chose to Close (or Purchase and Close) the Wish List)
         """
         self.__wish_list = obj
 
     @icontract.require(lambda limit: (limit == 5) | (limit == 6))
     def prompt_for_option(self, limit):
         """
-            Prompts the user for a number as an option for the displayed menu.
-            Option must be an integer number in range 1 - limit.
+        Prompts the user for a number as an option for the displayed menu.
+        Option must be an integer number in range 1 - limit.
         """
         option = input(f'Enter an option (1-{limit-1}): ')
         # Handle the error if option is not a number.
@@ -1245,11 +1245,11 @@ class CommandPrompt:
     @icontract.ensure(lambda result: result is None)
     def __read_from_csv(self):
         """
-            This method is automatically invoked when an object of type
-            CommandPrompt is constructed.
-            By invoking this method, the CommandPrompt class should
-            automatically construct a part list and fill it with items that
-            it reads from the CSV file named "database.csv".
+        This method is automatically invoked when an object of type
+        CommandPrompt is constructed.
+        By invoking this method, the CommandPrompt class should
+        automatically construct a part list and fill it with items that
+        it reads from the CSV file named "database.csv".
         """
         with open('database.csv') as infile:
             list_of_csv_strings = list()
@@ -1284,9 +1284,9 @@ class CommandPrompt:
 @icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
 class Question(metaclass=abc.ABCMeta):
     """
-        An abstract class.
-        The superclass for other Question types.
-        Questions are things the Command Prompt can ask.
+    An abstract class.
+    The superclass for other Question types.
+    Questions are things the Command Prompt can ask.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1299,7 +1299,7 @@ class Question(metaclass=abc.ABCMeta):
 
 class ListDatabase(Question):
     """
-        Display the PartList object.
+    Display the PartList object.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1312,14 +1312,14 @@ class ListDatabase(Question):
 
 class AddPartToDatabase(Question):
     """
-        Display the Part Types menu.
+    Display the Part Types menu.
 
-        Take input for the user's choice. When the user selects a part type,
-        call that type's input() method to create an object of that type. Add
-        the part returned to the database. If the part is already in the
-        database, increase its stock by 1 instead. Use exception handling to
-        display any ValueErrors raised while taking input without crashing the
-        program. The menu should repeat until the user enters 5.
+    Take input for the user's choice. When the user selects a part type,
+    call that type's input() method to create an object of that type. Add
+    the part returned to the database. If the part is already in the
+    database, increase its stock by 1 instead. Use exception handling to
+    display any ValueErrors raised while taking input without crashing the
+    program. The menu should repeat until the user enters 5.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1340,10 +1340,10 @@ class AddPartToDatabase(Question):
                     done = True
                 else:
                     """
-                        Now we have a valid option between 1 and 5.
-                        Depending on the number, constructs the appropriate part.
-                        Also look that newly created part in the Part List to see
-                        if it is already in there.
+                    Now we have a valid option between 1 and 5.
+                    Depending on the number, constructs the appropriate part.
+                    Also look that newly created part in the Part List to see
+                    if it is already in there.
                     """
                     if option == 1:
                         new_part = CPU.input()
@@ -1380,11 +1380,11 @@ class AddPartToDatabase(Question):
 
 class Close(Question):
     """
-        Before closing the main menu (and ending the program), the Part List
-        should be saved to a CSV file called "database.csv".
-                                    or
-        Remove all the items from the Wish List and add their stock back into
-        the Part List.
+    Before closing the main menu (and ending the program), the Part List
+    should be saved to a CSV file called "database.csv".
+                                or
+    Remove all the items from the Wish List and add their stock back into
+    the Part List.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1407,8 +1407,8 @@ class Close(Question):
 
 class NewWishList(Question):
     """
-        Takes input for the user's name, then constructs a new WishList and
-        displays the Wish List Menu in the format:
+    Takes input for the user's name, then constructs a new WishList and
+    displays the Wish List Menu in the format:
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1447,8 +1447,8 @@ class NewWishList(Question):
     @icontract.ensure(lambda result: isinstance(result, bool))
     def look_up_part_list(self, part_name):
         """
-            Search for a part with the name (parameter) to see if it exists in
-            the part list and there is at least 1 stock remaining.
+        Search for a part with the name (parameter) to see if it exists in
+        the part list and there is at least 1 stock remaining.
         """
         try:
             value = self.get_cmd().get_part_list().get_stock()[part_name]
@@ -1467,8 +1467,8 @@ class NewWishList(Question):
     @icontract.ensure(lambda result: isinstance(result, bool))
     def look_up_wish_list(self, part_name):
         """
-            Search for a part with the name (parameter) to see if it exists
-            in the wish list.
+        Search for a part with the name (parameter) to see if it exists
+        in the wish list.
         """
         try:
             value = self.get_cmd().get_wish_list().get_stock()[part_name]
@@ -1486,11 +1486,11 @@ class NewWishList(Question):
 
 class AddFromDatabase(NewWishList):
     """
-        If the user selects to add a part, the application will display
-        all the database items in a list and they will be asked to input
-        the name of the part they want to add. The program will search
-        for a part with that name and add it to the wish list if it
-        exists and there is enough stock remaining.
+    If the user selects to add a part, the application will display
+    all the database items in a list and they will be asked to input
+    the name of the part they want to add. The program will search
+    for a part with that name and add it to the wish list if it
+    exists and there is enough stock remaining.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1535,9 +1535,9 @@ class AddFromDatabase(NewWishList):
 
 class RemoveFromWishList(NewWishList):
     """
-        If the user selects to remove a part from the wish list they
-        will be asked for the name of the part and that part will be
-        removed if it exists and stock will return to the part list.
+    If the user selects to remove a part from the wish list they
+    will be asked for the name of the part and that part will be
+    removed if it exists and stock will return to the part list.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1552,7 +1552,7 @@ class RemoveFromWishList(NewWishList):
 
 class ShowWishList(NewWishList):
     """
-        Display the WishList object.
+    Display the WishList object.
     """
 
     @icontract.ensure(lambda result: result is None)
@@ -1565,9 +1565,9 @@ class ShowWishList(NewWishList):
 
 class PurchaseAndClose(NewWishList):
     """
-        Save the WishList to a CSV file with the user's name as the filename,
-        for example, if the user name is "Gary", save it to a file called
-        "Gary.csv".
+    Save the WishList to a CSV file with the user's name as the filename,
+    for example, if the user name is "Gary", save it to a file called
+    "Gary.csv".
     """
 
     @icontract.ensure(lambda result: result is None)
