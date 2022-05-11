@@ -1350,7 +1350,7 @@ class Close(Question):
             super().__init__(cmd)
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
-                self.get_cmd().get_part_list().save_to_csv('test')
+                self.get_cmd().get_part_list().save_to_csv('database')
                 print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
