@@ -1532,32 +1532,11 @@ class PurchaseAndClose(NewWishList):
             )
 
 
-# ------------------------------- Computer Shop -------------------------------
-@icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
-class ComputerPartShop:
-    """
-        Manages the CommandPrompt object of the program.
-    """
-
-    def __init__(self, cmd):
-        self.set_cmd(cmd)
-
-    def get_cmd(self):
-        return self.__cmd
-
-    def set_cmd(self, cmd):
-        if isinstance(cmd, CommandPrompt):
-            self.__cmd = cmd
-        else:
-            raise TypeError('CommandPromptError')
-
-
 # ------------------------------- Main Function -------------------------------
 def main():
     Console().print("~~ [italic]Welcome to the Computer Store[/] ~~")
     print()
-    shop = ComputerPartShop(CommandPrompt())  # Construct object
-    cmd = shop.get_cmd()
+    cmd = CommandPrompt()           # Construct object
 
     done = False
     while not done:

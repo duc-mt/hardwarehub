@@ -19,10 +19,7 @@ from computer_shop import *
 # ---------------------------- Function Definitions ---------------------------
 @pytest.fixture
 def part_list():
-    shop = ComputerPartShop(CommandPrompt())  # Construct object
-    cmd = shop.get_cmd()
-    part_list = cmd.get_part_list()
-    return part_list
+    return CommandPrompt().get_part_list()
 
 def test_len(part_list):
     # Safe case
