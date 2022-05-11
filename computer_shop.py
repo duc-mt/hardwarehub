@@ -132,14 +132,14 @@ class ComputerPart(metaclass=abc.ABCMeta):
     def get_name(self):
         """
             Returns the name attribute.
-            Called by subclasses using super().get_name()
+            Called by subclasses using self.get_name()
         """
         return self.__name
 
     def get_price(self):
         """
             Returns the price attribute.
-            Called by subclasses using super().get_price()
+            Called by subclasses using self.get_price()
         """
         return self.__price
 
@@ -174,8 +174,8 @@ class CPU(ComputerPart):
             Return the variables as a string.
             For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
-        return f'{super().get_name()}: {self.get_cores()} cores @ ' + \
-               f'{self.get_frequency_ghz()}GHz for ${super().get_price():.2f}'
+        return f'{self.get_name()}: {self.get_cores()} cores @ ' + \
+               f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -282,7 +282,7 @@ class CPU(ComputerPart):
             variables separated by commas.
             Format: "CPU,name,price,cores,frequency_ghz".
         """
-        return f'CPU,{super().get_name()},{super().get_price()},' + \
+        return f'CPU,{self.get_name()},{self.get_price()},' + \
                f'{self.get_cores()},{self.get_frequency_ghz()}'
 
 
@@ -305,8 +305,8 @@ class GraphicsCard(ComputerPart):
             Return the variables as a string.
             For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
-        return f'{super().get_name()}: {self.get_memory_gb()}GB @ ' + \
-               f'{self.get_frequency_mhz()}MHz for ${super().get_price():.2f}'
+        return f'{self.get_name()}: {self.get_memory_gb()}GB @ ' + \
+               f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -413,7 +413,7 @@ class GraphicsCard(ComputerPart):
             variables separated by commas.
             Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
-        return f'GraphicsCard,{super().get_name()},{super().get_price()},' + \
+        return f'GraphicsCard,{self.get_name()},{self.get_price()},' + \
                f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
 
 
@@ -437,9 +437,9 @@ class Memory(ComputerPart):
             Return the variables as a string.
             For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
-        return f'{super().get_name()}: {self.get_capacity_gb()}GB, ' + \
+        return f'{self.get_name()}: {self.get_capacity_gb()}GB, ' + \
                f'{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ ' + \
-               f'for ${super().get_price():.2f}'
+               f'for ${self.get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -576,7 +576,7 @@ class Memory(ComputerPart):
             variables separated by commas.
             Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
-        return f'Memory,{super().get_name()},{super().get_price()},' + \
+        return f'Memory,{self.get_name()},{self.get_price()},' + \
                f'{self.get_capacity_gb()},{self.get_frequency_mhz()},' + \
                f'{self.get_ddr()}'
 
@@ -600,8 +600,8 @@ class Storage(ComputerPart):
             Return the variables as a string.
             For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
-        return f'{super().get_name()}: {self.get_capacity_gb()}GB, ' + \
-               f'{self.get_storage_type()} for ${super().get_price():.2f}'
+        return f'{self.get_name()}: {self.get_capacity_gb()}GB, ' + \
+               f'{self.get_storage_type()} for ${self.get_price():.2f}'
 
     @classmethod
     def parse(cls, csv_string):
@@ -709,7 +709,7 @@ class Storage(ComputerPart):
             variables separated by commas.
             Format: "Storage,name,price,capacity_gb,storage_type".
         """
-        return f'Storage,{super().get_name()},{super().get_price()},' + \
+        return f'Storage,{self.get_name()},{self.get_price()},' + \
                f'{self.get_capacity_gb()},{self.get_storage_type()}'
 
 
