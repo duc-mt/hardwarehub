@@ -1266,7 +1266,7 @@ class ListDatabase(Question):
         if execute:
             super().__init__(cmd)
             # The PartList __str__() method is invoked.
-            print((super().get_cmd().get_part_list()))
+            print((self.get_cmd().get_part_list()))
 
 
 class AddPartToDatabase(Question):
@@ -1290,7 +1290,7 @@ class AddPartToDatabase(Question):
                 option = None
                 while option is None or option not in range(1, 6):
                     CommandPrompt.display_menu('Part Types')
-                    option = super().get_cmd().prompt_for_option(limit=6)
+                    option = self.get_cmd().prompt_for_option(limit=6)
 
                 # Now we have a valid option between 1 and 5.
                 if option == 5:
@@ -1313,7 +1313,7 @@ class AddPartToDatabase(Question):
                         new_part = Storage.input()
 
                     added = False
-                    part_list = super().get_cmd().get_part_list()
+                    part_list = self.get_cmd().get_part_list()
                     parts_of_new_part_type = (
                         item for item in part_list.get_items()
                         if type(new_part).__name__ == type(item).__name__
@@ -1350,16 +1350,16 @@ class Close(Question):
             super().__init__(cmd)
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
-                super().get_cmd().get_part_list().save_to_csv('test')
+                self.get_cmd().get_part_list().save_to_csv('test')
                 print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
-                for item in super().get_cmd().get_wish_list().get_items():
-                    super().get_cmd().get_part_list().get_stock()[
+                for item in self.get_cmd().get_wish_list().get_items():
+                    self.get_cmd().get_part_list().get_stock()[
                         item.get_name()] += 1
                 # Remove all items from WishList.
-                super().get_cmd().get_wish_list().get_items().clear()
-                super().get_cmd().get_wish_list().get_stock().clear()
+                self.get_cmd().get_wish_list().get_items().clear()
+                self.get_cmd().get_wish_list().get_stock().clear()
 
 
 class NewWishList(Question):
@@ -1371,8 +1371,8 @@ class NewWishList(Question):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            if super().get_cmd().get_wish_list() is None:
-                super().get_cmd().set_wish_list(WishList())
+            if self.get_cmd().get_wish_list() is None:
+                self.get_cmd().set_wish_list(WishList())
                 done = False
                 while not done:
                     # The menu is kept repeating until the user enters 5.
@@ -1391,11 +1391,11 @@ class NewWishList(Question):
                             ShowWishList(cmd)
                         elif option == 4:
                             PurchaseAndClose(cmd)
-                            super().get_cmd().set_wish_list(None)
+                            self.get_cmd().set_wish_list(None)
                             done = True
                         else:
                             Close(cmd, 'Wish List')
-                            super().get_cmd().set_wish_list(None)
+                            self.get_cmd().set_wish_list(None)
                             done = True
                         print()
 
@@ -1405,7 +1405,7 @@ class NewWishList(Question):
             the part list and there is at least 1 stock remaining.
         """
         try:
-            value = super().get_cmd().get_part_list().get_stock()[part_name]
+            value = self.get_cmd().get_part_list().get_stock()[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1423,7 +1423,7 @@ class NewWishList(Question):
             in the wish list.
         """
         try:
-            value = super().get_cmd().get_wish_list().get_stock()[part_name]
+            value = self.get_cmd().get_wish_list().get_stock()[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1450,32 +1450,32 @@ class AddFromDatabase(NewWishList):
             super().__init__(cmd)
             ListDatabase(cmd)
             part_name = input(f'Enter the name of the part to add: ')
-            if super().look_up_part_list(part_name):
+            if self.look_up_part_list(part_name):
                 # The part_name is available in stock.
-                for part_list_item in super().get_cmd().get_part_list().get_items():
+                for part_list_item in self.get_cmd().get_part_list().get_items():
                     if part_list_item.get_name() == part_name:
                         # Decrement that item in Part List.
-                        super().get_cmd().get_part_list(
+                        self.get_cmd().get_part_list(
                         ).get_stock()[part_name] -= 1
                         try:
-                            value = super().get_cmd().get_wish_list().get_stock()[
+                            value = self.get_cmd().get_wish_list().get_stock()[
                                 part_name]
                         except KeyError:
                             # If the item is not in Wish List:
                             # 1. Adds that new item to Wish List.
                             # 2. Sets its number in Wish List to 1.
-                            super().get_cmd().get_wish_list().get_items().append(
+                            self.get_cmd().get_wish_list().get_items().append(
                                 part_list_item
                             )
-                            super().get_cmd().get_wish_list(
+                            self.get_cmd().get_wish_list(
                             ).get_stock()[part_name] = 1
                         else:
                             # Increment that item in Wish List if it is there.
-                            super().get_cmd().get_wish_list().get_stock()[
+                            self.get_cmd().get_wish_list().get_stock()[
                                 part_name
                             ] += 1
                         # Display result.
-                        stock = super().get_cmd().get_wish_list().get_stock()[
+                        stock = self.get_cmd().get_wish_list().get_stock()[
                             part_name
                         ]
                         Console().print(
@@ -1495,9 +1495,9 @@ class RemoveFromWishList(NewWishList):
         if execute:
             super().__init__(cmd)
             part_name = input(f'Enter the name of the part to remove: ')
-            if super().look_up_wish_list(part_name):
-                super().get_cmd().get_wish_list().remove_part_using_name(part_name)
-                super().get_cmd().get_part_list().get_stock()[part_name] += 1
+            if self.look_up_wish_list(part_name):
+                self.get_cmd().get_wish_list().remove_part_using_name(part_name)
+                self.get_cmd().get_part_list().get_stock()[part_name] += 1
 
 
 class ShowWishList(NewWishList):
@@ -1509,7 +1509,7 @@ class ShowWishList(NewWishList):
         if execute:
             super().__init__(cmd)
             # The WishList __str__() method is invoked.
-            print(super().get_cmd().get_wish_list())
+            print(self.get_cmd().get_wish_list())
 
 
 class PurchaseAndClose(NewWishList):
@@ -1522,8 +1522,8 @@ class PurchaseAndClose(NewWishList):
     def __init__(self, cmd, execute=True):
         if execute:
             super().__init__(cmd)
-            username = super().get_cmd().get_wish_list().get_username()
-            super().get_cmd().get_wish_list().save_to_csv(filename=username)
+            username = self.get_cmd().get_wish_list().get_username()
+            self.get_cmd().get_wish_list().save_to_csv(filename=username)
             Console().print(
                 f'Successful purchase!',
                 f'Receipt in {username}.csv',
