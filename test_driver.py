@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# -----------------------------------------------------------------------------
-# |
-# |        File:  test_driver.py
-# |      Author:  Tan Duc Mai
-# |          Id:  517925
-# | Description:  A pytest for the PartList class.
-# | This is my own work as defined by the Academic Integrity policy.
-# |
-# -----------------------------------------------------------------------------
+# =============================================================================
+#
+#        FILE:  test_driver.py
+#      AUTHOR:  Tan Duc Mai
+#       EMAIL:  tan.duc.work@gmail.com
+#     CREATED:  13-Apr-2022
+# DESCRIPTION:  A pytest for the PartList class.
+#   I hereby declare that I completed this work without any improper help
+#   from a third party and without using any aids other than those cited.
+#
+# =============================================================================
 
 # ------------------------------- Module Import -------------------------------
 import computer_shop

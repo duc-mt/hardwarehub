@@ -1,16 +1,18 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# -----------------------------------------------------------------------------
-# |
-# |        File:  computer_shop.py
-# |      Author:  Tan Duc Mai
-# |          Id:  517925
-# | Description:  Creates a Computer shop which allows customers
-# |               to select and purchase computer parts.
-# | This is my own work as defined by the Academic Integrity policy.
-# |
-# -----------------------------------------------------------------------------
+# =============================================================================
+#
+#        FILE:  computer_shop.py
+#      AUTHOR:  Tan Duc Mai
+#       EMAIL:  tan.duc.work@gmail.com
+#     CREATED:  13-Apr-2022
+# DESCRIPTION:  Creates a Computer shop which allows customers
+#               to select and purchase computer parts.
+#   I hereby declare that I completed this work without any improper help
+#   from a third party and without using any aids other than those cited.
+#
+# =============================================================================
 
 
 # ------------------------------- Module Import -------------------------------
