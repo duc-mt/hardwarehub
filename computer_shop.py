@@ -1380,18 +1380,21 @@ class Close(Question):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
+            part_list = self.get_cmd().get_part_list()
+            wish_list = self.get_cmd().get_wish_list()
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
-                self.get_cmd().get_part_list().save_to_csv()
+                part_list.save_to_csv()
                 print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
-                for item in self.get_cmd().get_wish_list().get_items():
-                    self.get_cmd().get_part_list().get_stock()[
-                        item.get_name()] += 1
+                for item in wish_list.get_items():
+                    part_list.get_stock()[
+                        item.get_name()
+                    ] += wish_list.get_stock()[item.get_name()]
                 # Remove all items from WishList.
-                self.get_cmd().get_wish_list().get_items().clear()
-                self.get_cmd().get_wish_list().get_stock().clear()
+                wish_list.get_items().clear()
+                wish_list.get_stock().clear()
 
 
 class NewWishList(Question):
