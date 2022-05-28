@@ -36,13 +36,14 @@ from rich.console import Console
 class ComputerPart(metaclass=abc.ABCMeta):
     """An abstract class. The superclass for other ComputerPart types."""
 
-    def __init__(self, name, price):
+    def __init__(self, name, price, stock=1):
         """Initialise name and price.
 
         Called by subclasses using super().__init__()
         """
         self.__name = name
         self.__price = price
+        self.__stock = stock
 
     @abc.abstractclassmethod
     def parse(cls):
@@ -132,9 +133,15 @@ class ComputerPart(metaclass=abc.ABCMeta):
     def csv_string_to_list(cls, csv_string):
         csv_list = []
         value = ''
-        for letter in csv_string:
+        for index, letter in enumerate(csv_string):
             if letter != ',':
                 value += letter
+                if index == (len(csv_string) - 1):
+                    if csv_string[-12:] == 'OUT OF STOCK':
+                        csv_list.append('0')
+                    else:
+                        csv_list.append(value[1:])
+                        value = ''
             else:
                 csv_list.append(value)
                 value = ''
@@ -154,6 +161,13 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         return self.__price
 
+    def get_stock(self):
+        """Return the stock attribute.
+
+        Called by subclasses using self.get_stock()
+        """
+        return self.__stock
+
     @icontract.ensure(lambda result: isinstance(result, bool))
     def equals(self, other):
         """Return a boolean value.
@@ -172,9 +186,9 @@ class ComputerPart(metaclass=abc.ABCMeta):
 class CPU(ComputerPart):
     """A subclass of the ComputerPart class."""
 
-    def __init__(self, name, price, cores, frequency_ghz):
+    def __init__(self, name, price, cores, frequency_ghz, stock=1):
         """Initialise cores and frequency_ghz."""
-        super().__init__(name, price)
+        super().__init__(name, price, stock)
         self.__cores = cores
         self.__frequency_ghz = frequency_ghz
 
@@ -204,12 +218,14 @@ class CPU(ComputerPart):
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
         csv_list[4] = float(csv_list[4])
+        csv_list[5] = int(csv_list[5])
 
         return CPU(
             csv_list[1],
             csv_list[2],
             csv_list[3],
             csv_list[4],
+            csv_list[5],
         )
 
     @classmethod
@@ -307,12 +323,12 @@ class CPU(ComputerPart):
 class GraphicsCard(ComputerPart):
     """A subclass of the ComputerPart class."""
 
-    def __init__(self, name, price, frequency_mhz, memory_gb):
+    def __init__(self, name, price, frequency_mhz, memory_gb, stock=1):
         """
         Initialise frequency_mhz and memory_gb by calling theirs
         mutator methods.
         """
-        super().__init__(name, price)
+        super().__init__(name, price, stock)
         self.__frequency_mhz = frequency_mhz
         self.__memory_gb = memory_gb
 
@@ -342,12 +358,14 @@ class GraphicsCard(ComputerPart):
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
         csv_list[4] = int(csv_list[4])
+        csv_list[5] = int(csv_list[5])
 
         return GraphicsCard(
             csv_list[1],
             csv_list[2],
             csv_list[3],
             csv_list[4],
+            csv_list[5],
         )
 
     @classmethod
@@ -445,12 +463,12 @@ class GraphicsCard(ComputerPart):
 class Memory(ComputerPart):
     """A subclass of the ComputerPart class."""
 
-    def __init__(self, name, price, capacity_gb, frequency_mhz, ddr):
+    def __init__(self, name, price, capacity_gb, frequency_mhz, ddr, stock=1):
         """
         Initialise capacity_gb and frequency_mhz by calling theirs
         mutator methods.
         """
-        super().__init__(name, price)
+        super().__init__(name, price, stock)
         self.__capacity_gb = capacity_gb
         self.__frequency_mhz = frequency_mhz
         self.__ddr = ddr
@@ -482,6 +500,7 @@ class Memory(ComputerPart):
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
         csv_list[4] = int(csv_list[4])
+        csv_list[6] = int(csv_list[6])
 
         return Memory(
             csv_list[1],
@@ -489,6 +508,7 @@ class Memory(ComputerPart):
             csv_list[3],
             csv_list[4],
             csv_list[5],
+            csv_list[6],
         )
 
     @classmethod
@@ -615,9 +635,9 @@ class Memory(ComputerPart):
 class Storage(ComputerPart):
     """A subclass of the ComputerPart class."""
 
-    def __init__(self, name, price, capacity_gb, storage_type):
+    def __init__(self, name, price, capacity_gb, storage_type, stock=1):
         """Initialise capacity_gb and frequency_mhz."""
-        super().__init__(name, price)
+        super().__init__(name, price, stock)
         self.__capacity_gb = capacity_gb
         self.__storage_type = storage_type
 
@@ -628,7 +648,7 @@ class Storage(ComputerPart):
         For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
         return (
-            f'{self.get_name()}: {self.get_capacity_gb()}GB, '
+            f'{self.get_name()}: {self.get_capacity_gb()}GB '
             f'{self.get_storage_type()} for ${self.get_price():.2f}'
         )
 
@@ -646,12 +666,14 @@ class Storage(ComputerPart):
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
+        csv_list[5] = int(csv_list[5])
 
         return Storage(
             csv_list[1],
             csv_list[2],
             csv_list[3],
             csv_list[4],
+            csv_list[5],
         )
 
     @classmethod
@@ -825,7 +847,7 @@ class PartList():
             self.__stock[name_of_new_part]
         except KeyError:
             self.__items.append(new_part)
-            self.__stock[name_of_new_part] = 1
+            self.__stock[name_of_new_part] = new_part.get_stock()
         else:
             # Duplicate item, so increment available stock by 1.
             self.__stock[name_of_new_part] += 1
@@ -1080,7 +1102,6 @@ class CommandPrompt:
 
     def __init__(self):
         """Initialise CommandPrompt object."""
-        self.__part_list = PartList()
         self.__wish_list = None
         self.__read_from_csv()
         if CommandPrompt.__menu is None:
@@ -1213,6 +1234,7 @@ class CommandPrompt:
         construct a part list and fill it with items that it reads from the
         CSV file named "database.csv".
         """
+        self.__part_list = PartList()
         with open('database.csv') as infile:
             list_of_csv_strings = []
             line = None
