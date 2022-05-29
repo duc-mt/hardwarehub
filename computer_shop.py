@@ -149,24 +149,27 @@ class ComputerPart(metaclass=abc.ABCMeta):
                 value = ''
         return csv_list
 
-    def get_name(self):
+    @property
+    def name(self):
         """Return the name attribute.
 
-        Called by subclasses using self.get_name()
+        Called by subclasses using self.name
         """
         return self.__name
 
-    def get_price(self):
+    @property
+    def price(self):
         """Return the price attribute.
 
-        Called by subclasses using self.get_price()
+        Called by subclasses using self.price
         """
         return self.__price
 
-    def get_stock(self):
+    @property
+    def stock(self):
         """Return the stock attribute.
 
-        Called by subclasses using self.get_stock()
+        Called by subclasses using self.stock
         """
         return self.__stock
 
@@ -179,8 +182,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
         2. False otherwise.
         """
         if isinstance(other, type(self)):
-            if (self.get_name() == other.get_name() and
-                    self.get_price() == other.get_price()):
+            if (self.name == other.name and
+                    self.price == other.price):
                 return True
         return False
 
@@ -201,8 +204,8 @@ class CPU(ComputerPart):
         For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
         return (
-            f'{self.get_name()}: {self.get_cores()} cores @ '
-            f'{self.get_frequency_ghz()}GHz for ${self.get_price():.2f}'
+            f'{self.name}: {self.cores} cores @ '
+            f'{self.frequency_ghz}GHz for ${self.price:.2f}'
         )
 
     @classmethod
@@ -241,7 +244,7 @@ class CPU(ComputerPart):
             ComputerPart.input_name(),
             ComputerPart.input_price(),
             cls.input_cores(),
-            cls.input_frequency_ghz(),
+            cls.input_frequency_ghz,
         )
 
     @classmethod
@@ -288,11 +291,13 @@ class CPU(ComputerPart):
                 valid = True
         return frequency_ghz
 
-    def get_cores(self):
+    @property
+    def cores(self):
         """Return the cores attribute."""
         return self.__cores
 
-    def get_frequency_ghz(self):
+    @property
+    def frequency_ghz(self):
         """Return the frequency_ghz attribute."""
         return self.__frequency_ghz
 
@@ -305,8 +310,8 @@ class CPU(ComputerPart):
         2. False otherwise.
         """
         if super().equals(other):
-            if (self.get_cores() == other.get_cores() and
-                    self.get_frequency_ghz() == other.get_frequency_ghz()):
+            if (self.cores == other.cores and
+                    self.frequency_ghz == other.frequency_ghz):
                 return True
         return False
 
@@ -317,8 +322,8 @@ class CPU(ComputerPart):
         Format: "CPU,name,price,cores,frequency_ghz".
         """
         return (
-            f'CPU,{self.get_name()},{self.get_price()},'
-            f'{self.get_cores()},{self.get_frequency_ghz()}'
+            f'CPU,{self.name},{self.price},'
+            f'{self.cores},{self.frequency_ghz}'
         )
 
 
@@ -341,8 +346,8 @@ class GraphicsCard(ComputerPart):
         For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
         return (
-            f'{self.get_name()}: {self.get_memory_gb()}GB @ '
-            f'{self.get_frequency_mhz()}MHz for ${self.get_price():.2f}'
+            f'{self.name}: {self.memory_gb}GB @ '
+            f'{self.frequency_mhz}MHz for ${self.price:.2f}'
         )
 
     @classmethod
@@ -428,11 +433,13 @@ class GraphicsCard(ComputerPart):
                 valid = True
         return memory_gb
 
-    def get_frequency_mhz(self):
+    @property
+    def frequency_mhz(self):
         """Return the frequency_mhz attribute."""
         return self.__frequency_mhz
 
-    def get_memory_gb(self):
+    @property
+    def memory_gb(self):
         """Return the memory_gb attribute."""
         return self.__memory_gb
 
@@ -445,8 +452,8 @@ class GraphicsCard(ComputerPart):
         2. False otherwise.
         """
         if super().equals(other):
-            if (self.get_memory_gb() == other.get_memory_gb() and
-                    self.get_frequency_mhz() == other.get_frequency_mhz()):
+            if (self.memory_gb == other.memory_gb and
+                    self.frequency_mhz == other.frequency_mhz):
                 return True
         return False
 
@@ -457,8 +464,8 @@ class GraphicsCard(ComputerPart):
         Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
         return (
-            f'GraphicsCard,{self.get_name()},{self.get_price()},'
-            f'{self.get_frequency_mhz()},{self.get_memory_gb()}'
+            f'GraphicsCard,{self.name},{self.price},'
+            f'{self.frequency_mhz},{self.memory_gb}'
         )
 
 
@@ -482,9 +489,9 @@ class Memory(ComputerPart):
         For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
         return (
-            f'{self.get_name()}: {self.get_capacity_gb()}GB, '
-            f'DDR{self.get_ddr()} @ {self.get_frequency_mhz()}MHZ '
-            f'for ${self.get_price():.2f}'
+            f'{self.name}: {self.capacity_gb}GB, '
+            f'DDR{self.ddr} @ {self.frequency_mhz}MHZ '
+            f'for ${self.price:.2f}'
         )
 
     @classmethod
@@ -594,15 +601,18 @@ class Memory(ComputerPart):
                 valid = True
         return ddr
 
-    def get_capacity_gb(self):
+    @property
+    def capacity_gb(self):
         """Return the capacity_gb attribute."""
         return self.__capacity_gb
 
-    def get_frequency_mhz(self):
+    @property
+    def frequency_mhz(self):
         """Return the frequency_mhz attribute."""
         return self.__frequency_mhz
 
-    def get_ddr(self):
+    @property
+    def ddr(self):
         """Return the ddr attribute."""
         return self.__ddr
 
@@ -615,9 +625,9 @@ class Memory(ComputerPart):
         2. False otherwise.
         """
         if super().equals(other):
-            if (self.get_frequency_mhz() == other.get_frequency_mhz() and
-                self.get_capacity_gb() == other.get_capacity_gb() and
-                    self.get_ddr() == other.get_ddr()):
+            if (self.frequency_mhz == other.frequency_mhz and
+                self.capacity_gb == other.capacity_gb and
+                    self.ddr == other.ddr):
                 return True
         return False
 
@@ -628,9 +638,9 @@ class Memory(ComputerPart):
         Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
         return (
-            f'Memory,{self.get_name()},{self.get_price()},'
-            f'{self.get_capacity_gb()},{self.get_frequency_mhz()},'
-            f'{self.get_ddr()}'
+            f'Memory,{self.name},{self.price},'
+            f'{self.capacity_gb},{self.frequency_mhz},'
+            f'{self.ddr}'
         )
 
 
@@ -650,8 +660,8 @@ class Storage(ComputerPart):
         For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
         return (
-            f'{self.get_name()}: {self.get_capacity_gb()}GB '
-            f'{self.get_storage_type()} for ${self.get_price():.2f}'
+            f'{self.name}: {self.capacity_gb}GB '
+            f'{self.storage_type} for ${self.price:.2f}'
         )
 
     @classmethod
@@ -737,11 +747,13 @@ class Storage(ComputerPart):
                 valid = True
         return storage_type
 
-    def get_capacity_gb(self):
+    @property
+    def capacity_gb(self):
         """Return the capacity_gb attribute."""
         return self.__capacity_gb
 
-    def get_storage_type(self):
+    @property
+    def storage_type(self):
         """Return the storage_type attribute."""
         return self.__storage_type
 
@@ -754,8 +766,8 @@ class Storage(ComputerPart):
         2. False otherwise.
         """
         if super().equals(other):
-            if (self.get_capacity_gb() == other.get_capacity_gb() and
-                    self.get_storage_type() == other.get_storage_type()):
+            if (self.capacity_gb == other.capacity_gb and
+                    self.storage_type == other.storage_type):
                 return True
         return False
 
@@ -766,8 +778,8 @@ class Storage(ComputerPart):
         Format: "Storage,name,price,capacity_gb,storage_type".
         """
         return (
-            f'Storage,{self.get_name()},{self.get_price()},'
-            f'{self.get_capacity_gb()},{self.get_storage_type()}'
+            f'Storage,{self.name},{self.price},'
+            f'{self.capacity_gb},{self.storage_type}'
         )
 
 
@@ -802,10 +814,10 @@ class PartList():
         --------------------"
         """
         result = '---- Part List ----\n'
-        for item in self.get_items():
+        for item in self.items:
             result += item.__str__()
             # Check how many stock left.
-            stock = self.get_stock()[item.get_name()]
+            stock = self.stock[item.name]
             if stock:
                 # Print that number if it is greater than 0.
                 result += ' (x' + str(stock) + ')'
@@ -816,7 +828,7 @@ class PartList():
         result += '--------------------'
         return result
 
-    @icontract.ensure(lambda self, result: result == len(self.get_items()))
+    @icontract.ensure(lambda self, result: result == len(self.items))
     def __len__(self):
         """
         Get the length of the items attribute.
@@ -824,15 +836,27 @@ class PartList():
         Called outside PartList class using len(object)
             - Where object is an instance of the PartList class.
         """
-        return len(self.get_items())
+        return len(self.items)
 
-    def get_items(self):
+    @property
+    def items(self):
         """Return the items attribute."""
         return self.__items
 
-    def get_stock(self):
+    @items.deleter
+    def items(self):
+        """Clean up the items list."""
+        self.__items.clear()
+
+    @property
+    def stock(self):
         """Return the stock attribute."""
         return self.__stock
+
+    @stock.deleter
+    def stock(self):
+        """Clean up the stock dictionary."""
+        self.__stock.clear()
 
     @icontract.require(
         lambda new_part, print_status:
@@ -844,12 +868,12 @@ class PartList():
         Add a new item to the store.
         If it is duplicate, the available stock must be incremented by 1.
         """
-        name_of_new_part = new_part.get_name()
+        name_of_new_part = new_part.name
         try:
             self.__stock[name_of_new_part]
         except KeyError:
             self.__items.append(new_part)
-            self.__stock[name_of_new_part] = new_part.get_stock()
+            self.__stock[name_of_new_part] = new_part.stock
         else:
             # Duplicate item, so increment available stock by 1.
             self.__stock[name_of_new_part] += 1
@@ -872,7 +896,7 @@ class PartList():
         found = False
         i = 0
         while i < len(self) - 1:
-            if self.__items[i].get_name() == part_name:
+            if self.__items[i].name == part_name:
                 result = self.__items[i]
                 found = True
             i += 1
@@ -902,11 +926,11 @@ class PartList():
         Clear all stock of that part in store.
         """
         done = False
-        for index, item in enumerate(self.get_items()):
-            if item.get_name() == part_name:
+        for index, item in enumerate(self.items):
+            if item.name == part_name:
                 # Delete that item and its entry in the stock dictionary.
-                del self.get_items()[index]
-                stock = self.get_stock().pop(part_name)
+                del self.items[index]
+                stock = self.stock.pop(part_name)
                 done = True
         if not done:
             Console().print(f'Could not find {part_name}!', style='red')
@@ -922,8 +946,8 @@ class PartList():
         Clear all stock of that part in store.
         """
         if part_position < len(self):
-            removed_part = self.get_items().pop(part_position)
-            stock = self.get_stock().pop(removed_part.get_name())
+            removed_part = self.items.pop(part_position)
+            stock = self.stock.pop(removed_part.name)
             Console().print(f'Removed {removed_part.__str__()} (x{stock})',
                             style='green')
         else:
@@ -938,10 +962,10 @@ class PartList():
         Default to the file name database.csv
         """
         with open(filename + '.csv', mode='w') as outfile:
-            for item in self.get_items():
+            for item in self.items:
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
-                stock = self.get_stock()[item.get_name()]
+                stock = self.stock[item.name]
                 # Write that number to file if it is greater than 0.
                 # Otherwise, write out of stock.
                 if stock:
@@ -1006,7 +1030,8 @@ class WishList(PartList):
         print()
         self.__username = username
 
-    def get_username(self):
+    @property
+    def username(self):
         """Return the username attribute."""
         return self.__username
 
@@ -1017,9 +1042,9 @@ class WishList(PartList):
         Calculates and returns the total cost of all parts.
         """
         price = 0
-        for item in self.get_items():
-            number = self.get_stock()[item.get_name()]
-            price += item.get_price() * number
+        for item in self.items:
+            number = self.stock[item.name]
+            price += item.price * number
         return price
 
     @icontract.ensure(lambda result: isinstance(result, bool))
@@ -1037,7 +1062,7 @@ class WishList(PartList):
             'Memory': False,
             'Storage': False,
         }
-        for item in self.get_items():
+        for item in self.items:
             if isinstance(item, CPU):
                 is_in_wish_list['CPU'] = True
             elif isinstance(item, GraphicsCard):
@@ -1056,10 +1081,10 @@ class WishList(PartList):
 # ------------------------------- User Interface ------------------------------
 @icontract.invariant(
     lambda self:
-        (isinstance(self.get_part_list(), PartList))
+        (isinstance(self.part_list, PartList))
         & (
-            (self.get_wish_list() is None)
-            | (isinstance(self.get_wish_list(), WishList))
+            (self.wish_list is None)
+            | (isinstance(self.wish_list, WishList))
         )
 )
 class CommandPrompt:
@@ -1154,17 +1179,20 @@ class CommandPrompt:
         cls.__menu['Part Types'].append('Storage')
         cls.__menu['Part Types'].append('Back')
 
-    def get_part_list(self):
+    @property
+    def part_list(self):
         """Return the PartList object."""
         return self.__part_list
 
-    def get_wish_list(self):
+    @property
+    def wish_list(self):
         """Return the WishList object."""
         return self.__wish_list
 
+    @wish_list.setter
     @icontract.require(lambda obj: (isinstance(obj, WishList)) | (obj is None))
     @icontract.ensure(lambda result: result is None)
-    def set_wish_list(self, obj):
+    def wish_list(self, obj):
         """Set the wish_list attribute to the argument.
 
         1. A WishList object
@@ -1212,27 +1240,27 @@ class CommandPrompt:
             for csv_string in list_of_csv_strings:
                 if 'CPU' in csv_string:
                     # Construct a CPU object.
-                    self.get_part_list().add_to_part_list(
+                    self.part_list.add_to_part_list(
                         CPU.parse(csv_string)
                     )
                 elif 'GraphicsCard' in csv_string:
                     # Construct a GraphicsCard object.
-                    self.get_part_list().add_to_part_list(
+                    self.part_list.add_to_part_list(
                         GraphicsCard.parse(csv_string)
                     )
                 elif 'Memory' in csv_string:
                     # Construct a Memory object.
-                    self.get_part_list().add_to_part_list(
+                    self.part_list.add_to_part_list(
                         Memory.parse(csv_string)
                     )
                 elif 'Storage' in csv_string:
                     # Construct a Storage object.
-                    self.get_part_list().add_to_part_list(
+                    self.part_list.add_to_part_list(
                         Storage.parse(csv_string)
                     )
 
 
-@icontract.invariant(lambda self: isinstance(self.get_cmd(), CommandPrompt))
+@icontract.invariant(lambda self: isinstance(self.cmd, CommandPrompt))
 class Question(metaclass=abc.ABCMeta):
     """An abstract class.
 
@@ -1244,7 +1272,8 @@ class Question(metaclass=abc.ABCMeta):
         """Initialise Question object."""
         self.__cmd = cmd
 
-    def get_cmd(self):
+    @property
+    def cmd(self):
         """Return the cmd attribute."""
         return self.__cmd
 
@@ -1257,7 +1286,7 @@ class ListDatabase(Question):
         if execute:
             super().__init__(cmd)
             # The PartList __str__() method is invoked.
-            print((self.get_cmd().get_part_list()))
+            print((self.cmd.part_list))
 
 
 class AddPartToDatabase(Question):
@@ -1281,7 +1310,7 @@ class AddPartToDatabase(Question):
                 option = None
                 while option is None or option not in range(1, 6):
                     CommandPrompt.display_menu('Part Types')
-                    option = self.get_cmd().prompt_for_option(limit=6)
+                    option = self.cmd.prompt_for_option(limit=6)
 
                 # Now we have a valid option between 1 and 5.
                 if option == 5:
@@ -1305,13 +1334,13 @@ class AddPartToDatabase(Question):
                             new_part = Storage.input()
 
                         added = False
-                        part_list = self.get_cmd().get_part_list()
+                        part_list = self.cmd.part_list
                         parts_of_new_part_type = (
-                            item for item in part_list.get_items()
+                            item for item in part_list.items
                             if type(new_part).__name__ == type(item).__name__
                         )
                         for item in parts_of_new_part_type:
-                            if item.get_name() == new_part.get_name():
+                            if item.name == new_part.name:
                                 if not new_part.equals(item):
                                     Console().print(
                                         'Invalid ' + type(item).__name__ + '!',
@@ -1347,21 +1376,21 @@ class Close(Question):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            part_list = self.get_cmd().get_part_list()
-            wish_list = self.get_cmd().get_wish_list()
+            part_list = self.cmd.part_list
+            wish_list = self.cmd.wish_list
             if current_menu == 'Main Menu':
                 # Save PartList to a csv file.
                 part_list.save_to_csv()
                 print('\nSee you again soon.')
             else:
                 # Add stock back into PartList.
-                for item in wish_list.get_items():
-                    part_list.get_stock()[
-                        item.get_name()
-                    ] += wish_list.get_stock()[item.get_name()]
-                # Remove all items from WishList.
-                wish_list.get_items().clear()
-                wish_list.get_stock().clear()
+                for item in wish_list.items:
+                    part_list.stock[
+                        item.name
+                    ] += wish_list.stock[item.name]
+                # Remove all items from WishList. Deleter is called.
+                del wish_list.items
+                del wish_list.stock
 
 
 class NewWishList(Question):
@@ -1374,8 +1403,8 @@ class NewWishList(Question):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            if self.get_cmd().get_wish_list() is None:
-                self.get_cmd().set_wish_list(WishList())
+            if self.cmd.wish_list is None:
+                self.cmd.wish_list = WishList()
                 done = False
                 while not done:
                     # The menu is kept repeating until the user enters 5.
@@ -1394,11 +1423,11 @@ class NewWishList(Question):
                             ShowWishList(cmd)
                         elif option == 4:
                             PurchaseAndClose(cmd)
-                            self.get_cmd().set_wish_list(None)
+                            self.cmd.wish_list = None
                             done = True
                         else:
                             Close(cmd, 'Wish List')
-                            self.get_cmd().set_wish_list(None)
+                            self.cmd.wish_list = None
                             done = True
                         print()
 
@@ -1410,7 +1439,7 @@ class NewWishList(Question):
         the part list and there is at least 1 stock remaining.
         """
         try:
-            value = self.get_cmd().get_part_list().get_stock()[part_name]
+            value = self.cmd.part_list.stock[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1430,7 +1459,7 @@ class NewWishList(Question):
         in the wish list.
         """
         try:
-            value = self.get_cmd().get_wish_list().get_stock()[part_name]
+            value = self.cmd.wish_list.stock[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1459,26 +1488,26 @@ class AddFromDatabase(NewWishList):
             ListDatabase(cmd)
             part_name = input('Enter the name of the part to add: ')
             if self.look_up_part_list(part_name):
-                part_list = self.get_cmd().get_part_list()
-                wish_list = self.get_cmd().get_wish_list()
+                part_list = self.cmd.part_list
+                wish_list = self.cmd.wish_list
                 # The part_name is available in stock.
-                for part_list_item in part_list.get_items():
-                    if part_list_item.get_name() == part_name:
+                for part_list_item in part_list.items:
+                    if part_list_item.name == part_name:
                         # Decrement that item in Part List.
-                        part_list.get_stock()[part_name] -= 1
+                        part_list.stock[part_name] -= 1
                         try:
-                            wish_list.get_stock()[part_name]
+                            wish_list.stock[part_name]
                         except KeyError:
                             # If the item is not in Wish List:
                             # 1. Add that new item to Wish List.
                             # 2. Set its number in Wish List to 1.
-                            wish_list.get_items().append(part_list_item)
-                            wish_list.get_stock()[part_name] = 1
+                            wish_list.items.append(part_list_item)
+                            wish_list.stock[part_name] = 1
                         else:
                             # Increment that item in Wish List if it is there.
-                            wish_list.get_stock()[part_name] += 1
+                            wish_list.stock[part_name] += 1
                         # Display result.
-                        stock = wish_list.get_stock()[part_name]
+                        stock = wish_list.stock[part_name]
                         Console().print(
                             f'Added {part_list_item.__str__()} (x{stock})',
                             style='green',
@@ -1498,10 +1527,10 @@ class RemoveFromWishList(NewWishList):
             super().__init__(cmd)
             part_name = input('Enter the name of the part to remove: ')
             if self.look_up_wish_list(part_name):
-                self.get_cmd().get_wish_list().remove_part_using_name(
+                self.cmd.wish_list.remove_part_using_name(
                     part_name
                 )
-                self.get_cmd().get_part_list().get_stock()[part_name] += 1
+                self.cmd.part_list.stock[part_name] += 1
 
 
 class ShowWishList(NewWishList):
@@ -1512,7 +1541,7 @@ class ShowWishList(NewWishList):
         if execute:
             super().__init__(cmd)
             # The WishList __str__() method is invoked.
-            print(self.get_cmd().get_wish_list())
+            print(self.cmd.wish_list)
 
 
 class PurchaseAndClose(NewWishList):
@@ -1526,8 +1555,8 @@ class PurchaseAndClose(NewWishList):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            username = self.get_cmd().get_wish_list().get_username()
-            self.get_cmd().get_wish_list().save_to_csv(filename=username)
+            username = self.cmd.wish_list.username
+            self.cmd.wish_list.save_to_csv(filename=username)
             Console().print(f'Successful purchase!\nReceipt in {username}.csv',
                             style='green')
 
