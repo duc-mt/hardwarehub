@@ -784,15 +784,15 @@ class Storage(ComputerPart):
 
 
 # ------------------------------- Data Structure ------------------------------
-class PartList():
+class Partlist():
     """
-    A subclass of the WishList class.
+    A subclass of the Wishlist class.
     Stores the computer parts (instances of the ComputerPart class)
     available in stock.
     """
 
     def __init__(self):
-        """Initialise PartList object."""
+        """Initialise Partlist object."""
         # A variable to store the items (ComputerParts) listed in the store.
         self.__items = []
         """
@@ -804,16 +804,16 @@ class PartList():
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
-        """Return a string that represents the PartList in the format:
+        """Return a string that represents the Partlist in the format:
 
-        "---- Part List ----
+        "---- Partlist ----
         NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
         AMD Ryzen 3: 4.0 cores @ 3.7GHz for $97.99 (OUT OF STOCK)
         Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x4)
         Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
         --------------------"
         """
-        result = '---- Part List ----\n'
+        result = '---- Partlist ----\n'
         for item in self.items:
             result += item.__str__()
             # Check how many stock left.
@@ -832,9 +832,9 @@ class PartList():
     def __len__(self):
         """
         Get the length of the items attribute.
-        Called within PartList class using len(self)
-        Called outside PartList class using len(object)
-            - Where object is an instance of the PartList class.
+        Called within Partlist class using len(self)
+        Called outside Partlist class using len(object)
+            - Where object is an instance of the Partlist class.
         """
         return len(self.items)
 
@@ -863,7 +863,7 @@ class PartList():
             (isinstance(new_part, ComputerPart))
             & (isinstance(print_status, bool)))
     @icontract.ensure(lambda result: result is None)
-    def add_to_part_list(self, new_part, print_status=False):
+    def add_to_partlist(self, new_part, print_status=False):
         """
         Add a new item to the store.
         If it is duplicate, the available stock must be incremented by 1.
@@ -975,19 +975,19 @@ class PartList():
                 outfile.write('\n')
 
 
-class WishList(PartList):
-    """A subclass of the PartList class."""
+class Wishlist(Partlist):
+    """A subclass of the Partlist class."""
 
     def __init__(self):
-        """Initialise WishList object."""
+        """Initialise Wishlist object."""
         super().__init__()
         self.set_username()
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
         """
-        Return a string that represents the WishList in the format:
-        "---- Gary's Wish List ----
+        Return a string that represents the Wishlist in the format:
+        "---- Gary's Wishlist ----
         NVIDIA Quadro RTX: 48GB @ 1005.0MHz for $6300.00 (x1)
         AMD Ryzen 5: 4.0 cores @ 3.2GHz for $119.99 (x1)
         Corsair Vengeance LED: 16GB, DDR4 @ 3000MHz for $239.00 (x2)
@@ -999,7 +999,7 @@ class WishList(PartList):
 
         The last line is either "Valid computer" or "Not a valid computer".
         """
-        result = f"\n---- {self.__username}'s Wish List ----\n"
+        result = f"\n---- {self.__username}'s Wishlist ----\n"
 
         if len(self):
             result += super().__str__()[20:-20]
@@ -1025,7 +1025,7 @@ class WishList(PartList):
             username = input('Enter your name: ')
             if username == '':
                 print(
-                    'ValueError: Cannot create a Wish List with an empty name.'
+                    'ValueError: Cannot create a Wishlist with an empty name.'
                 )
         print()
         self.__username = username
@@ -1055,8 +1055,8 @@ class WishList(PartList):
         A valid computer requires at least:
             - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
         """
-        # A dictionary to check if one of these parts is in the WishList.
-        is_in_wish_list = {
+        # A dictionary to check if one of these parts is in the Wishlist.
+        is_in_wishlist = {
             'CPU': False,
             'GraphicsCard': False,
             'Memory': False,
@@ -1064,27 +1064,27 @@ class WishList(PartList):
         }
         for item in self.items:
             if isinstance(item, CPU):
-                is_in_wish_list['CPU'] = True
+                is_in_wishlist['CPU'] = True
             elif isinstance(item, GraphicsCard):
-                is_in_wish_list['GraphicsCard'] = True
+                is_in_wishlist['GraphicsCard'] = True
             elif isinstance(item, Memory):
-                is_in_wish_list['Memory'] = True
+                is_in_wishlist['Memory'] = True
             elif isinstance(item, Storage):
-                is_in_wish_list['Storage'] = True
+                is_in_wishlist['Storage'] = True
 
-        return (is_in_wish_list['CPU'] is True and
-                is_in_wish_list['GraphicsCard'] is True and
-                is_in_wish_list['Memory'] is True and
-                is_in_wish_list['Storage'] is True)
+        return (is_in_wishlist['CPU'] is True and
+                is_in_wishlist['GraphicsCard'] is True and
+                is_in_wishlist['Memory'] is True and
+                is_in_wishlist['Storage'] is True)
 
 
 # ------------------------------- User Interface ------------------------------
 @icontract.invariant(
     lambda self:
-        (isinstance(self.part_list, PartList))
+        (isinstance(self.partlist, Partlist))
         & (
-            (self.wish_list is None)
-            | (isinstance(self.wish_list, WishList))
+            (self.wishlist is None)
+            | (isinstance(self.wishlist, Wishlist))
         )
 )
 class CommandPrompt:
@@ -1094,7 +1094,7 @@ class CommandPrompt:
 
     def __init__(self):
         """Initialise CommandPrompt object."""
-        self.__wish_list = None
+        self.__wishlist = None
         self.__read_from_csv()
         if CommandPrompt.__menu is None:
             CommandPrompt.__set_menu()
@@ -1103,13 +1103,13 @@ class CommandPrompt:
     @icontract.require(
         lambda menu_type:
             (menu_type == 'Main Menu')
-            | (menu_type == 'Wish List')
+            | (menu_type == 'Wishlist')
             | (menu_type == 'Part Types'))
     @icontract.ensure(lambda result: result is None)
     def display_menu(cls, menu_type):
         """Display one of the three menus.
 
-        Depending on the type of menu: Main Menu/Wish List/Part Types,
+        Depending on the type of menu: Main Menu/Wishlist/Part Types,
         outputs the appropriate menu.
         """
         # Print Menu
@@ -1125,7 +1125,7 @@ class CommandPrompt:
         def convert_class_name(obj):
             """Convert a class name to a human-readable name.
 
-            E.g. 'New Wish List' is transformed into 'NewWishList'.
+            E.g. 'New Wishlist' is transformed into 'NewWishlist'.
             """
             obj_name = type(obj).__name__
             result = ''
@@ -1143,7 +1143,7 @@ class CommandPrompt:
 
         # Add four options for Main Menu.
         cls.__menu['Main Menu'].append(
-            convert_class_name(NewWishList(CommandPrompt(), False)),
+            convert_class_name(NewWishlist(CommandPrompt(), False)),
         )
         cls.__menu['Main Menu'].append(
             convert_class_name(ListDatabase(CommandPrompt(), False)),
@@ -1155,20 +1155,20 @@ class CommandPrompt:
             convert_class_name(Close(CommandPrompt(), execute=False)),
         )
 
-        # Add five options for Wish List Menu.
-        cls.__menu['Wish List'].append(
+        # Add five options for Wishlist Menu.
+        cls.__menu['Wishlist'].append(
             convert_class_name(AddFromDatabase(CommandPrompt(), False)),
         )
-        cls.__menu['Wish List'].append(
-            convert_class_name(RemoveFromWishList(CommandPrompt(), False)),
+        cls.__menu['Wishlist'].append(
+            convert_class_name(RemoveFromWishlist(CommandPrompt(), False)),
         )
-        cls.__menu['Wish List'].append(
-            convert_class_name(ShowWishList(CommandPrompt(), False)),
+        cls.__menu['Wishlist'].append(
+            convert_class_name(ShowWishlist(CommandPrompt(), False)),
         )
-        cls.__menu['Wish List'].append(
+        cls.__menu['Wishlist'].append(
             convert_class_name(PurchaseAndClose(CommandPrompt(), False)),
         )
-        cls.__menu['Wish List'].append(
+        cls.__menu['Wishlist'].append(
             convert_class_name(Close(CommandPrompt(), execute=False)),
         )
 
@@ -1180,26 +1180,26 @@ class CommandPrompt:
         cls.__menu['Part Types'].append('Back')
 
     @property
-    def part_list(self):
-        """Return the PartList object."""
-        return self.__part_list
+    def partlist(self):
+        """Return the Partlist object."""
+        return self.__partlist
 
     @property
-    def wish_list(self):
-        """Return the WishList object."""
-        return self.__wish_list
+    def wishlist(self):
+        """Return the Wishlist object."""
+        return self.__wishlist
 
-    @wish_list.setter
-    @icontract.require(lambda obj: (isinstance(obj, WishList)) | (obj is None))
+    @wishlist.setter
+    @icontract.require(lambda obj: (isinstance(obj, Wishlist)) | (obj is None))
     @icontract.ensure(lambda result: result is None)
-    def wish_list(self, obj):
-        """Set the wish_list attribute to the argument.
+    def wishlist(self, obj):
+        """Set the wishlist attribute to the argument.
 
-        1. A WishList object
-        2. None (in which case is meant to reset the Wish List after
-           the user chose to Close (or Purchase and Close) the Wish List)
+        1. A Wishlist object
+        2. None (in which case is meant to reset the Wishlist after
+           the user chose to Close (or Purchase and Close) the Wishlist)
         """
-        self.__wish_list = obj
+        self.__wishlist = obj
 
     @icontract.require(lambda limit: (limit == 5) | (limit == 6))
     def prompt_for_option(self, limit):
@@ -1229,7 +1229,7 @@ class CommandPrompt:
         construct a part list and fill it with items that it reads from the
         CSV file named "database.csv".
         """
-        self.__part_list = PartList()
+        self.__partlist = Partlist()
         with open('database.csv') as infile:
             list_of_csv_strings = []
             line = None
@@ -1240,22 +1240,22 @@ class CommandPrompt:
             for csv_string in list_of_csv_strings:
                 if 'CPU' in csv_string:
                     # Construct a CPU object.
-                    self.part_list.add_to_part_list(
+                    self.partlist.add_to_partlist(
                         CPU.parse(csv_string)
                     )
                 elif 'GraphicsCard' in csv_string:
                     # Construct a GraphicsCard object.
-                    self.part_list.add_to_part_list(
+                    self.partlist.add_to_partlist(
                         GraphicsCard.parse(csv_string)
                     )
                 elif 'Memory' in csv_string:
                     # Construct a Memory object.
-                    self.part_list.add_to_part_list(
+                    self.partlist.add_to_partlist(
                         Memory.parse(csv_string)
                     )
                 elif 'Storage' in csv_string:
                     # Construct a Storage object.
-                    self.part_list.add_to_part_list(
+                    self.partlist.add_to_partlist(
                         Storage.parse(csv_string)
                     )
 
@@ -1279,14 +1279,14 @@ class Question(metaclass=abc.ABCMeta):
 
 
 class ListDatabase(Question):
-    """Display the PartList object."""
+    """Display the Partlist object."""
 
     def __init__(self, cmd, execute=True):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            # The PartList __str__() method is invoked.
-            print((self.cmd.part_list))
+            # The Partlist __str__() method is invoked.
+            print((self.cmd.partlist))
 
 
 class AddPartToDatabase(Question):
@@ -1320,7 +1320,7 @@ class AddPartToDatabase(Question):
                     """
                     Now we have a valid option between 1 and 5.
                     Depending on the number, constructs the appropriate part.
-                    Also look that newly created part in the Part List to see
+                    Also look that newly created part in the Partlist to see
                     if it is already in there.
                     """
                     try:
@@ -1334,9 +1334,9 @@ class AddPartToDatabase(Question):
                             new_part = Storage.input()
 
                         added = False
-                        part_list = self.cmd.part_list
+                        partlist = self.cmd.partlist
                         parts_of_new_part_type = (
-                            item for item in part_list.items
+                            item for item in partlist.items
                             if type(new_part).__name__ == type(item).__name__
                         )
                         for item in parts_of_new_part_type:
@@ -1349,13 +1349,13 @@ class AddPartToDatabase(Question):
                                         style='red',
                                     )
                                 else:
-                                    part_list.add_to_part_list(
+                                    partlist.add_to_partlist(
                                         new_part, print_status=True
                                     )
                                 added = True
 
                         if not added:
-                            part_list.add_to_part_list(
+                            partlist.add_to_partlist(
                                 new_part, print_status=True
                             )
                     except Exception as e:
@@ -1363,54 +1363,54 @@ class AddPartToDatabase(Question):
 
 
 class Close(Question):
-    """Called when user chooses 4 in Main Menu or 5 in WishList Menu.
+    """Called when user chooses 4 in Main Menu or 5 in Wishlist Menu.
 
-    Before closing the main menu (and ending the program), the Part List
+    Before closing the main menu (and ending the program), the Partlist
     should be saved to a CSV file called "database.csv".
                                 or
-    Remove all the items from the Wish List and add their stock back into
-    the Part List.
+    Remove all the items from the Wishlist and add their stock back into
+    the Partlist.
     """
 
     def __init__(self, cmd, current_menu='Main Menu', execute=True):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            part_list = self.cmd.part_list
-            wish_list = self.cmd.wish_list
+            partlist = self.cmd.partlist
+            wishlist = self.cmd.wishlist
             if current_menu == 'Main Menu':
-                # Save PartList to a csv file.
-                part_list.save_to_csv()
+                # Save Partlist to a csv file.
+                partlist.save_to_csv()
                 print('\nSee you again soon.')
             else:
-                # Add stock back into PartList.
-                for item in wish_list.items:
-                    part_list.stock[
+                # Add stock back into Partlist.
+                for item in wishlist.items:
+                    partlist.stock[
                         item.name
-                    ] += wish_list.stock[item.name]
-                # Remove all items from WishList. Deleter is called.
-                del wish_list.items
-                del wish_list.stock
+                    ] += wishlist.stock[item.name]
+                # Remove all items from Wishlist. Deleter is called.
+                del wishlist.items
+                del wishlist.stock
 
 
-class NewWishList(Question):
-    """Superclass of questions inside the WishList menu (except Close class).
+class NewWishlist(Question):
+    """Superclass of questions inside the Wishlist menu (except Close class).
 
-    Take input for the user's name, then constructs a new WishList.
+    Take input for the user's name, then constructs a new Wishlist.
     """
 
     def __init__(self, cmd, execute=True):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            if self.cmd.wish_list is None:
-                self.cmd.wish_list = WishList()
+            if self.cmd.wishlist is None:
+                self.cmd.wishlist = Wishlist()
                 done = False
                 while not done:
                     # The menu is kept repeating until the user enters 5.
                     option = None
                     while option is None or option not in range(1, 6):
-                        CommandPrompt.display_menu('Wish List')
+                        CommandPrompt.display_menu('Wishlist')
                         option = cmd.prompt_for_option(limit=6)
 
                     # Now we have a valid option between 1 and 5.
@@ -1418,28 +1418,28 @@ class NewWishList(Question):
                         if option == 1:
                             AddFromDatabase(cmd)
                         elif option == 2:
-                            RemoveFromWishList(cmd)
+                            RemoveFromWishlist(cmd)
                         elif option == 3:
-                            ShowWishList(cmd)
+                            ShowWishlist(cmd)
                         elif option == 4:
                             PurchaseAndClose(cmd)
-                            self.cmd.wish_list = None
+                            self.cmd.wishlist = None
                             done = True
                         else:
-                            Close(cmd, 'Wish List')
-                            self.cmd.wish_list = None
+                            Close(cmd, 'Wishlist')
+                            self.cmd.wishlist = None
                             done = True
                         print()
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
     @icontract.ensure(lambda result: isinstance(result, bool))
-    def look_up_part_list(self, part_name):
+    def look_up_partlist(self, part_name):
         """
         Search for a part with the name (parameter) to see if it exists in
         the part list and there is at least 1 stock remaining.
         """
         try:
-            value = self.cmd.part_list.stock[part_name]
+            value = self.cmd.partlist.stock[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1453,13 +1453,13 @@ class NewWishList(Question):
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
     @icontract.ensure(lambda result: isinstance(result, bool))
-    def look_up_wish_list(self, part_name):
+    def look_up_wishlist(self, part_name):
         """
         Search for a part with the name (parameter) to see if it exists
         in the wish list.
         """
         try:
-            value = self.cmd.wish_list.stock[part_name]
+            value = self.cmd.wishlist.stock[part_name]
         except KeyError:
             Console().print(f'Could not find {part_name}!', style='red')
             return False
@@ -1472,7 +1472,7 @@ class NewWishList(Question):
                 return False
 
 
-class AddFromDatabase(NewWishList):
+class AddFromDatabase(NewWishlist):
     """
     If the user selects to add a part, the application will display
     all the database items in a list and they will be asked to input
@@ -1487,34 +1487,34 @@ class AddFromDatabase(NewWishList):
             super().__init__(cmd)
             ListDatabase(cmd)
             part_name = input('Enter the name of the part to add: ')
-            if self.look_up_part_list(part_name):
-                part_list = self.cmd.part_list
-                wish_list = self.cmd.wish_list
+            if self.look_up_partlist(part_name):
+                partlist = self.cmd.partlist
+                wishlist = self.cmd.wishlist
                 # The part_name is available in stock.
-                for part_list_item in part_list.items:
-                    if part_list_item.name == part_name:
-                        # Decrement that item in Part List.
-                        part_list.stock[part_name] -= 1
+                for partlist_item in partlist.items:
+                    if partlist_item.name == part_name:
+                        # Decrement that item in Partlist.
+                        partlist.stock[part_name] -= 1
                         try:
-                            wish_list.stock[part_name]
+                            wishlist.stock[part_name]
                         except KeyError:
-                            # If the item is not in Wish List:
-                            # 1. Add that new item to Wish List.
-                            # 2. Set its number in Wish List to 1.
-                            wish_list.items.append(part_list_item)
-                            wish_list.stock[part_name] = 1
+                            # If the item is not in Wishlist:
+                            # 1. Add that new item to Wishlist.
+                            # 2. Set its number in Wishlist to 1.
+                            wishlist.items.append(partlist_item)
+                            wishlist.stock[part_name] = 1
                         else:
-                            # Increment that item in Wish List if it is there.
-                            wish_list.stock[part_name] += 1
+                            # Increment that item in Wishlist if it is there.
+                            wishlist.stock[part_name] += 1
                         # Display result.
-                        stock = wish_list.stock[part_name]
+                        stock = wishlist.stock[part_name]
                         Console().print(
-                            f'Added {part_list_item.__str__()} (x{stock})',
+                            f'Added {partlist_item.__str__()} (x{stock})',
                             style='green',
                         )
 
 
-class RemoveFromWishList(NewWishList):
+class RemoveFromWishlist(NewWishlist):
     """
     If the user selects to remove a part from the wish list they
     will be asked for the name of the part and that part will be
@@ -1526,27 +1526,27 @@ class RemoveFromWishList(NewWishList):
         if execute:
             super().__init__(cmd)
             part_name = input('Enter the name of the part to remove: ')
-            if self.look_up_wish_list(part_name):
-                self.cmd.wish_list.remove_part_using_name(
+            if self.look_up_wishlist(part_name):
+                self.cmd.wishlist.remove_part_using_name(
                     part_name
                 )
-                self.cmd.part_list.stock[part_name] += 1
+                self.cmd.partlist.stock[part_name] += 1
 
 
-class ShowWishList(NewWishList):
-    """Display the WishList object."""
+class ShowWishlist(NewWishlist):
+    """Display the Wishlist object."""
 
     def __init__(self, cmd, execute=True):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            # The WishList __str__() method is invoked.
-            print(self.cmd.wish_list)
+            # The Wishlist __str__() method is invoked.
+            print(self.cmd.wishlist)
 
 
-class PurchaseAndClose(NewWishList):
+class PurchaseAndClose(NewWishlist):
     """
-    Save the WishList to a CSV file with the user's name as the filename,
+    Save the Wishlist to a CSV file with the user's name as the filename,
     for example, if the user name is "Gary", save it to a file called
     "Gary.csv".
     """
@@ -1555,8 +1555,8 @@ class PurchaseAndClose(NewWishList):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            username = self.cmd.wish_list.username
-            self.cmd.wish_list.save_to_csv(filename=username)
+            username = self.cmd.wishlist.username
+            self.cmd.wishlist.save_to_csv(filename=username)
             Console().print(f'Successful purchase!\nReceipt in {username}.csv',
                             style='green')
 
@@ -1578,7 +1578,7 @@ if __name__ == '__main__':
         # Now we have a valid option between 1 and 4.
         if option != 4:
             if option == 1:
-                NewWishList(cmd)
+                NewWishlist(cmd)
             elif option == 2:
                 print()
                 ListDatabase(cmd)
