@@ -801,8 +801,7 @@ class PartList():
         Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
         --------------------"
         """
-        result = ''
-        result += '---- Part List ----\n'
+        result = '---- Part List ----\n'
         for item in self.get_items():
             result += item.__str__()
             # Check how many stock left.
@@ -817,6 +816,7 @@ class PartList():
         result += '--------------------'
         return result
 
+    @icontract.ensure(lambda self, result: result == len(self.get_items()))
     def __len__(self):
         """
         Get the length of the items attribute.
@@ -956,15 +956,8 @@ class WishList(PartList):
 
     def __init__(self):
         """Initialise WishList object."""
+        super().__init__()
         self.set_username()
-        # A variable to store the items listed in the store.
-        self.__items = []
-        """
-        A dictionary
-        1. Key is the computer part.
-        2. Value is the number of stock that key has in Wish List.
-        """
-        self.__stock = {}
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
@@ -982,22 +975,12 @@ class WishList(PartList):
 
         The last line is either "Valid computer" or "Not a valid computer".
         """
-        result = f"\n---- {self.__username}'s Wish List ----"
+        result = f"\n---- {self.__username}'s Wish List ----\n"
 
         if len(self):
-            for item in self.get_items():
-                result += '\n'
-                result += item.__str__()
-                # Check how many stock left.
-                stock_in_part_list = self.get_stock()[item.get_name()]
-                # Print that number if it is greater than 0.
-                # Otherwise, write out of stock.
-                if stock_in_part_list:
-                    result += ' (x' + str(stock_in_part_list) + ')'
-                else:
-                    result += ' (OUT OF STOCK)'
+            result += super().__str__()[20:-20]
 
-        result += '\n--------------------\n'
+        result += '--------------------\n'
         result += f'${self.__get_total_cost():.2f}\n'
 
         if self.__is_valid_computer():
@@ -1006,16 +989,6 @@ class WishList(PartList):
             result += 'Not a valid computer'
 
         return result
-
-    @icontract.ensure(lambda self, result: result == len(self.get_items()))
-    def __len__(self):
-        """Get the length of the items attribute.
-
-        Called within WishList class using len(self)
-        Called outside WishList class using len(object)
-            - Where object is an instance of the WishList class.
-        """
-        return len(self.get_items())
 
     @icontract.ensure(
         lambda self, result:
@@ -1036,14 +1009,6 @@ class WishList(PartList):
     def get_username(self):
         """Return the username attribute."""
         return self.__username
-
-    def get_items(self):
-        """Return the items attribute."""
-        return self.__items
-
-    def get_stock(self):
-        """Return the stock attribute."""
-        return self.__stock
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
     def __get_total_cost(self):
