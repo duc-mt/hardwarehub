@@ -7,7 +7,7 @@
 #      AUTHOR:  Tan Duc Mai
 #       EMAIL:  tan.duc.work@gmail.com
 #     CREATED:  13-Apr-2022
-# DESCRIPTION:  A pytest for the PartList class.
+# DESCRIPTION:  A pytest for the Partlist class.
 #   I hereby declare that I completed this work without any improper help
 #   from a third party and without using any aids other than those cited.
 #
