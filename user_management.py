@@ -233,15 +233,12 @@ class Authenticator:
             line = None
             while line is None or line != '':
                 line = infile.readline().rstrip('\n')
-                if line != '':
+                if line != '' and len(line.split(',')) == 3:
                     csv_list = line.split(',')
-                    if len(csv_list) == 3:
-                        self.__users[csv_list[0]] = User(csv_list[0],
-                                                    csv_list[1],
-                                                    csv_list[2])
-                        self.__user_email[csv_list[0]] = csv_list[1]
-                    else:
-                        raise ValueError('Invalid csv string.')
+                    self.__users[csv_list[0]] = User(csv_list[0],
+                                                     csv_list[1],
+                                                     csv_list[2])
+                    self.__user_email[csv_list[0]] = csv_list[1]
 
 
 # ---------------------------------- Program ----------------------------------
@@ -255,8 +252,8 @@ if __name__ == '__main__':
         print(auth.is_logged_in('johnny'))
 
         """Raise InvalidPassword exception."""
-        # auth.add_user('susan', 'susan123@gmail.net', 'susanpassword')
-        # auth.login('susan', '5U54N')
+        auth.add_user('susan', 'susan123@gmail.net', 'susanpassword')
+        auth.login('susan', '5U54N')
 
         """Raise UsernameAlreadyExists exception."""
         auth.add_user('johnny', 'johnny121@gmail.com.au', 'johnnypassword')

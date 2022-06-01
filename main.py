@@ -103,7 +103,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
                     f'Must be a string.'
                 )
             elif name == '':
-                print('ValueError: Name must not be empty.')
+                raise ValueError('Name must not be empty.')
             else:
                 valid = True
         return name
@@ -126,7 +126,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
                     f'Must be a float.'
                 )
             elif price <= 0:
-                print('ValueError: Price must not be negative.')
+                raise ValueError('Price must not be negative.')
             else:
                 valid = True
         return price
@@ -266,7 +266,7 @@ class CPU(ComputerPart):
                     f'Must be an integer.'
                 )
             elif cores <= 0:
-                print('ValueError: Number of Cores must not be negative.')
+                raise ValueError('Number of Cores must not be negative.')
             else:
                 valid = True
         return cores
@@ -288,7 +288,7 @@ class CPU(ComputerPart):
                     f'{type(frequency_ghz)}. Must be a float.'
                 )
             elif frequency_ghz <= 0:
-                print('ValueError: Frequency must not be negative.')
+                raise ValueError('Frequency must not be negative.')
             else:
                 valid = True
         return frequency_ghz
@@ -408,7 +408,7 @@ class GraphicsCard(ComputerPart):
                     f'{type(frequency_mhz)}. Must be an integer.'
                 )
             elif frequency_mhz <= 0:
-                print('ValueError: Frequency must not be negative.')
+                raise ValueError('Frequency must not be negative.')
             else:
                 valid = True
         return frequency_mhz
@@ -430,7 +430,7 @@ class GraphicsCard(ComputerPart):
                     f'Must be an integer.'
                 )
             elif memory_gb <= 0:
-                print('ValueError: Memory must not be negative.')
+                raise ValueError('Memory must not be negative.')
             else:
                 valid = True
         return memory_gb
@@ -554,7 +554,7 @@ class Memory(ComputerPart):
                     f'{type(capacity_gb)}. Must be an integer.'
                 )
             elif capacity_gb <= 0:
-                print('ValueError: Capacity must not be negative.')
+                raise ValueError('Capacity must not be negative.')
             else:
                 valid = True
         return capacity_gb
@@ -576,7 +576,7 @@ class Memory(ComputerPart):
                     f'type {type(frequency_mhz)}. Must be an integer.'
                 )
             elif frequency_mhz <= 0:
-                print('ValueError: Frequency must not be negative.')
+                raise ValueError('Frequency must not be negative.')
             else:
                 valid = True
         return frequency_mhz
@@ -598,7 +598,7 @@ class Memory(ComputerPart):
                     f'Must be a string.'
                 )
             elif ddr == '':
-                print('ValueError: DDR must not be empty.')
+                raise ValueError('DDR must not be empty.')
             else:
                 valid = True
         return ddr
@@ -721,7 +721,7 @@ class Storage(ComputerPart):
                     f'type {type(capacity_gb)}. Must be an integer.'
                 )
             elif capacity_gb <= 0:
-                print('ValueError: Capacity must not be negative.')
+                raise ValueError('Capacity must not be negative.')
             else:
                 valid = True
         return capacity_gb
@@ -743,8 +743,8 @@ class Storage(ComputerPart):
                     f'type {type(storage_type)}. Must be a string.'
                 )
             elif storage_type not in {'HDD', 'SSD', 'SSHD'}:
-                print('ValueError: Storage type must be one of',
-                      'HDD, SSD, or SSHD.')
+                raise ValueError('Storage type must be one of '
+                                 'HDD, SSD, or SSHD.')
             else:
                 valid = True
         return storage_type
