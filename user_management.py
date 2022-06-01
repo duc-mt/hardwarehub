@@ -40,6 +40,10 @@ COUNTRY_CODEs = {
 # ------------------------------ Class Definitions ----------------------------
 class User:
 
+    @icontract.require(
+        lambda username, email, password: isinstance(username, str)
+            & isinstance(email, str) & isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, username, email, password):
         # Create a new user object.
         # The password will be encrypted before storing.
@@ -53,18 +57,22 @@ class User:
         return self.__email
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__username)
     def username(self):
         return self.__username
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__password)
     def password(self):
         return self.__password
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__email)
     def email(self):
         return self.__email
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__is_logged_in)
     def is_logged_in(self):
         return self.__is_logged_in
 
@@ -74,11 +82,13 @@ class User:
     def is_logged_in(self, boolean):
         self.__is_logged_in = boolean
 
+    @icontract.require(lambda password: isinstance(password, str))
     def check_password(self, password):
         # Return True if the password is valid for this user, False otherwise.
         encrypted = self.__encrypt_pw(password)
         return encrypted == self.__password
 
+    @icontract.require(lambda password: isinstance(password, str))
     def __encrypt_pw(self, password):
         # Encrypt the password with the username and return the sha digest.
         hash_string = self.__username + password
@@ -88,12 +98,18 @@ class User:
 
 class AuthException(Exception):
 
+    @icontract.require(lambda message: isinstance(message, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, message):
         super().__init__(message)
 
 
 class UsernameAlreadyExists(AuthException):
 
+    @icontract.require(
+        lambda message, user:
+            isinstance(message, str) & isinstance(user, dict))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, username, user):
         super().__init__(
             repr(username) + ' already exists for ' + str(user) + '.\n'
@@ -102,6 +118,10 @@ class UsernameAlreadyExists(AuthException):
 
 class EmailAlreadyExists(AuthException):
 
+    @icontract.require(
+        lambda message, user:
+            isinstance(message, str) & isinstance(user, dict))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, email, user):
         super().__init__(
             repr(email) + ' already exists for ' + str(user) + '.\n'
@@ -110,30 +130,40 @@ class EmailAlreadyExists(AuthException):
 
 class PasswordTooShort(AuthException):
 
+    @icontract.require(lambda password: isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, password):
         super().__init__(repr(password) + ' is too short' + '.\n')
 
 
 class InvalidUsername(AuthException):
 
+    @icontract.require(lambda username: isinstance(username, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, username):
         super().__init__(repr(username) + ' does not exist' + '.\n')
 
 
 class InvalidPassword(AuthException):
 
+    @icontract.require(lambda password: isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, password):
         super().__init__(repr(password) + ' does not match' + '.\n')
 
 
 class InvalidEmail(AuthException):
 
+    @icontract.require(lambda email: isinstance(email, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, email):
         super().__init__(repr(email) + ' does not match' + '.\n')
 
 
 class InappropriateEmail(AuthException):
 
+    @icontract.require(lambda email: isinstance(email, str))
+    @icontract.ensure(lambda result: result is None)
     def __init__(self, email):
         super().__init__(
             'Your email ' + repr(email) + ' is not of a valid format:\n'
@@ -143,6 +173,7 @@ class InappropriateEmail(AuthException):
 
 class Authenticator:
 
+    @icontract.ensure(lambda result: result is None)
     def __init__(self):
         """
         The initialization method creates an empty dictionary and assigns it
@@ -151,13 +182,19 @@ class Authenticator:
         self.__read_from_csv()
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__users)
     def users(self):
         return self.__users
 
     @property
+    @icontract.ensure(lambda self, result: result == self.__user_email)
     def user_email(self):
         return self.__user_email
 
+    @icontract.require(
+        lambda username, email, password: isinstance(username, str)
+            & isinstance(email, str) & isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def add_user(self, username, email, password):
         """
         Check two conditions for adding a user:
@@ -193,6 +230,10 @@ class Authenticator:
             self.__users[username] = User(username, email, password)
             self.__user_email[username] = email
 
+    @icontract.require(
+        lambda username, password:
+            isinstance(username, str) & isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def login(self, username, password):
         """
         • Check if the username is included in the users dictionary. If it is
@@ -210,10 +251,16 @@ class Authenticator:
         else:
             self.__users[username].is_logged_in = True
 
+    @icontract.require(
+        lambda username, email, password:
+            isinstance(username, str) & isinstance(password, str))
+    @icontract.ensure(lambda result: result is None)
     def logout(self, username, password):
         """Log user out of the system."""
         self.__users[username].is_logged_in = False
 
+    @icontract.require(lambda username: isinstance(username, str))
+    @icontract.ensure(lambda result: isinstance(result, bool))
     def is_logged_in(self, username):
         if username in self.__users:
             return self.__users[username].is_logged_in
