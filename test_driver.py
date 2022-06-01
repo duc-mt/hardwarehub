@@ -14,7 +14,7 @@
 # =============================================================================
 
 # ------------------------------- Module Import -------------------------------
-import computer_shop
+import main
 
 import pytest
 
@@ -22,7 +22,7 @@ import pytest
 # ---------------------------- Function Definitions ---------------------------
 @pytest.fixture
 def partlist():
-    return computer_shop.CommandPrompt().partlist
+    return main.CommandPrompt().partlist
 
 
 def test_len(partlist):
@@ -37,39 +37,39 @@ def test_len(partlist):
 def test_get_part_using_name(partlist):
     # Safe cases
     assert isinstance(partlist.get_part_using_name('Toshiba P300'),
-                      computer_shop.Storage)
+                      main.Storage)
     assert isinstance(partlist.get_part_using_name('AMD Ryzen 5'),
-                      computer_shop.CPU)
+                      main.CPU)
 
     # Dangerous cases
-    with pytest.raises(computer_shop.icontract.errors.ViolationError):
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_name('')
         partlist.get_part_using_name(2)
 
     with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_name('Toshiba'),
-                          computer_shop.Storage)
+                          main.Storage)
         assert isinstance(partlist.get_part_using_name('AMD Ryzen 5'),
-                          computer_shop.Memory)
+                          main.Memory)
 
 
 def test_get_part_using_postion(partlist):
     # Safe cases
     assert isinstance(partlist.get_part_using_position(23),
-                      computer_shop.Storage)
+                      main.Storage)
     assert isinstance(partlist.get_part_using_position(2),
-                      computer_shop.CPU)
+                      main.CPU)
 
     # Dangerous cases
-    with pytest.raises(computer_shop.icontract.errors.ViolationError):
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_position('')
         partlist.get_part_using_position(2.0)
 
     with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_position(3),
-                          computer_shop.GraphicsCard)
+                          main.GraphicsCard)
         assert isinstance(partlist.get_part_using_position(25),
-                          computer_shop.Memory)
+                          main.Memory)
 
 
 def test_remove_part_using_name(partlist):
@@ -81,7 +81,7 @@ def test_remove_part_using_name(partlist):
     assert len(partlist) == 22
 
     # Dangerous cases
-    with pytest.raises(computer_shop.icontract.errors.ViolationError):
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.remove_part_using_name('')
 
     with pytest.raises(AssertionError):
@@ -98,7 +98,7 @@ def test_remove_part_using_postion(partlist):
     assert len(partlist) == 22
 
     # Dangerous cases
-    with pytest.raises(computer_shop.icontract.errors.ViolationError):
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.remove_part_using_position('')
         partlist.remove_part_using_position(12.0)
 
