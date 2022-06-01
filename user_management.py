@@ -148,8 +148,7 @@ class Authenticator:
         The initialization method creates an empty dictionary and assigns it
         to the attribute users.
         """
-        self.__users = {}       # A dictionary of users coming to the store.
-        self.__user_email = {}  # Each user is associated with only one email.
+        self.__read_from_csv()
 
     @property
     def users(self):
@@ -219,6 +218,30 @@ class Authenticator:
         if username in self.__users:
             return self.__users[username].is_logged_in
         return False
+
+    @icontract.ensure(lambda result: result is None)
+    def __read_from_csv(self):
+        """Automatically invoked when a CommandPrompt object is constructed.
+
+        By invoking this method, the CommandPrompt class should automatically
+        construct a part list and fill it with items that it reads from the
+        CSV file named "database.csv".
+        """
+        self.__users = {}       # A dictionary of users coming to the store.
+        self.__user_email = {}  # Each user is associated with only one email.
+        with open('database/users.csv') as infile:
+            line = None
+            while line is None or line != '':
+                line = infile.readline().rstrip('\n')
+                if line != '':
+                    csv_list = line.split(',')
+                    if len(csv_list) == 3:
+                        self.__users[csv_list[0]] = User(csv_list[0],
+                                                    csv_list[1],
+                                                    csv_list[2])
+                        self.__user_email[csv_list[0]] = csv_list[1]
+                    else:
+                        raise ValueError('Invalid csv string.')
 
 
 # ---------------------------------- Program ----------------------------------
