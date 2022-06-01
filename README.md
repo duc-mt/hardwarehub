@@ -1,17 +1,11 @@
 # Table of Contents
 
-<!-- vim-markdown-toc GFM -->
-
-* [Aim](#aim)
-* [Libraries](#libraries)
-    * [Standard Library Imports](#standard-library-imports)
-    * [Related Third Party Imports](#related-third-party-imports)
-* [Implementation](#implementation)
-* [File user_management.py](#file-user_managementpy)
-* [File test_driver.py](#file-test_driverpy)
-* [Project Organisation](#project-organisation)
-
-<!-- vim-markdown-toc -->
+1. [Aim](#aim)
+1. [Libraries](#libraries)
+1. [Implementation](#implementation)
+1. [File user_management.py](#file-user_managementpy)
+1. [File test_driver.py](#file-test_driverpy)
+1. [Project Organisation](#project-organisation)
 
 # Aim
 
