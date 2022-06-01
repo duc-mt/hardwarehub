@@ -1,24 +1,24 @@
-CPU,AMD Ryzen 5,119.99,4,3.2,x22
+CPU,AMD Ryzen 5,119.99,4,3.2,x21
 CPU,AMD Ryzen 3,97.99,4,3.7,OUT OF STOCK
 CPU,Intel Core i5,234.96,4,3.3,x13
 CPU,Intel Core i7,679.0,8,3.6,x34
-CPU,Intel Core i9,2005.0,18,2.6,x8
+CPU,Intel Core i9,2005.0,18,2.6,x6
 CPU,Intel Xeon,13000.0,28,2.0,OUT OF STOCK
 CPU,AMD Threadripper,899.99,16,3.5,OUT OF STOCK
 CPU,AMD EPYC,4324.0,64,2.0,OUT OF STOCK
 GraphicsCard,NVIDIA Quadro RTX,6300.0,1005,48,x1
 GraphicsCard,NVIDIA TITAN V,2999.0,1200,32,OUT OF STOCK
-GraphicsCard,NVIDIA TITAN Xp,1200.0,1405,12,x2
+GraphicsCard,NVIDIA TITAN Xp,1200.0,1405,12,OUT OF STOCK
 GraphicsCard,AMD Radeon R9 Fury,399.99,1000,4,x12
-GraphicsCard,AMD Radeon RX,149.99,1168,8,x3
+GraphicsCard,AMD Radeon RX,149.99,1168,8,x2
 Memory,G-Skill Ripjaws V,112.23,8,3200,DDR4,x42
 Memory,Corsair Vengeance LED,239.0,16,3000,DDR4,x4
 Memory,Corsair Dominator,1399.0,64,3000,DDR4,OUT OF STOCK
-Memory,G-Skill TridentZ Series,189.0,8,4266,DDR4,x20
+Memory,G-Skill TridentZ Series,189.0,8,4266,DDR4,x19
 Memory,Kingston ValueRAM,98.0,8,1600,DDR3,x120
 Memory,Samsung CL11,49.52,8,1600,DDR3,x242
 Storage,Seagate Barracuda,60.0,1000,HDD,x100
 Storage,WD Purple,72.0,1000,HDD,x40
 Storage,WD Red,107.0,2000,HDD,x120
-Storage,Toshiba P300,115.0,3000,HDD,x32
+Storage,Toshiba P300,115.0,3000,HDD,x30
 Storage,Seagate FireCuda,105.0,1000,SSHD,x45
