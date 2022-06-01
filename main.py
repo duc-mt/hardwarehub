@@ -1631,9 +1631,11 @@ class PurchaseAndClose(NewWishlist):
         if execute:
             super().__init__(cmd)
             username = self.cmd.wishlist.username
-            self.cmd.wishlist.save_to_csv(filename=username)
-            console.print(f'Successful purchase!\nReceipt in {username}.csv',
-                            style='green')
+            self.cmd.wishlist.save_to_csv(filename='receipts/'+username)
+            console.print('Successful purchase!\n',
+                          'Receipt in database/receipts/' + username + '.csv',
+                          sep='',
+                          style='green')
 
 
 # ---------------------------------- Program ----------------------------------
