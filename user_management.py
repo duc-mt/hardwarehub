@@ -107,8 +107,8 @@ class AuthException(Exception):
 class UsernameAlreadyExists(AuthException):
 
     @icontract.require(
-        lambda message, user:
-            isinstance(message, str) & isinstance(user, dict))
+        lambda username, user:
+            isinstance(username, str) & isinstance(user, dict))
     @icontract.ensure(lambda result: result is None)
     def __init__(self, username, user):
         super().__init__(
@@ -252,7 +252,7 @@ class Authenticator:
             self.__users[username].is_logged_in = True
 
     @icontract.require(
-        lambda username, email, password:
+        lambda username, password:
             isinstance(username, str) & isinstance(password, str))
     @icontract.ensure(lambda result: result is None)
     def logout(self, username, password):
