@@ -16,22 +16,24 @@
 
 
 # ------------------------------- Module Import -------------------------------
-# Stdlib
+"""Stdlib"""
 import abc
 from collections import defaultdict
 
-# Third party
+"""Third party"""
 import icontract
-
-"""
-The rich package is not important in this project, what it does is just to give
-some colours to printed text.
-"""
-# Override print() built-in method to colourise whatever is printed.
 from rich import print
-# Called using Console().print instead of print to give special types for
-# printed text (e.g., italic, bold, red, green).
 from rich.console import Console
+
+"""Local application/library specific imports"""
+from user_management import (Authenticator,
+                             InvalidEmail,
+                             InvalidPassword,
+                             UsernameAlreadyExists)
+
+
+# ------------------------------- Named Constant ------------------------------
+console = Console()
 
 
 # ------------------------------- Computer Part -------------------------------
@@ -244,7 +246,7 @@ class CPU(ComputerPart):
             ComputerPart.input_name(),
             ComputerPart.input_price(),
             cls.input_cores(),
-            cls.input_frequency_ghz,
+            cls.input_frequency_ghz(),
         )
 
     @classmethod
@@ -881,7 +883,7 @@ class Partlist():
         stock = self.__stock[name_of_new_part]
 
         if print_status:
-            Console().print(f'Added {new_part.__str__()} (x{stock})',
+            console.print(f'Added {new_part.__str__()} (x{stock})',
                             style='green')
         print()
 
@@ -933,9 +935,9 @@ class Partlist():
                 stock = self.stock.pop(part_name)
                 done = True
         if not done:
-            Console().print(f'Could not find {part_name}!', style='red')
+            console.print(f'Could not find {part_name}!', style='red')
         else:
-            Console().print(f'Removed {part_name} (x{stock})', style='green')
+            console.print(f'Removed {part_name} (x{stock})', style='green')
 
     @icontract.require(lambda part_position: isinstance(part_position, int))
     def remove_part_using_position(self, part_position):
@@ -948,7 +950,7 @@ class Partlist():
         if part_position < len(self):
             removed_part = self.items.pop(part_position)
             stock = self.stock.pop(removed_part.name)
-            Console().print(f'Removed {removed_part.__str__()} (x{stock})',
+            console.print(f'Removed {removed_part.__str__()} (x{stock})',
                             style='green')
         else:
             print(f'{part_position} out of range 1 - {len(self)}')
@@ -978,10 +980,12 @@ class Partlist():
 class Wishlist(Partlist):
     """A subclass of the Partlist class."""
 
+    __authenticator = Authenticator()
+
     def __init__(self):
         """Initialise Wishlist object."""
         super().__init__()
-        self.set_username()
+        self.__create_user()
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __str__(self):
@@ -1014,6 +1018,15 @@ class Wishlist(Partlist):
 
         return result
 
+    @classmethod
+    def get_authenticator(cls):
+        return cls.__authenticator
+
+    @property
+    def username(self):
+        """Return the username attribute."""
+        return self.__username
+
     @icontract.ensure(
         lambda self, result:
             (result is None)
@@ -1027,13 +1040,53 @@ class Wishlist(Partlist):
                 print(
                     'ValueError: Cannot create a Wishlist with an empty name.'
                 )
-        print()
         self.__username = username
 
-    @property
-    def username(self):
-        """Return the username attribute."""
-        return self.__username
+    @icontract.ensure(lambda result: result is None)
+    def __update_users(self, username, email, password):
+        with open('users.csv', mode='a') as outfile:
+            outfile.write(self.username + ',' + email + ',' + password + '\n')
+
+    @icontract.ensure(lambda result: result is None)
+    def __create_user(self):
+        """Keep trying to add/validate new username/password."""
+        valid = False
+        while not valid:
+            self.set_username()
+            email = input('Enter your email: ')
+            password = input('Enter your password: ')
+            try:
+                Wishlist.__authenticator.add_user(self.__username,
+                                                  email,
+                                                  password)
+            except UsernameAlreadyExists as e1:
+                is_returned = input('Are you a returned customer? [Y/n] ')
+                if is_returned in ('y'.lower(), ''):
+                    try:
+                        if email != self.get_authenticator().user_email[
+                            self.__username
+                        ]:
+                            raise InvalidEmail(email)
+                        else:
+                            self.get_authenticator().login(self.__username,
+                                                           password)
+                    except (InvalidPassword, InvalidEmail) as e2:
+                        print(e2)
+                    else:
+                        valid = True
+                        print()
+                else:
+                    print(e1)
+            except Exception as default_exception:
+                print(default_exception)
+            else:
+                valid = True
+                print()
+                self.__update_users(
+                    self.__username,
+                    Wishlist.__authenticator.users[self.username].email,
+                    Wishlist.__authenticator.users[self.username].password,
+                )
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
     def __get_total_cost(self):
@@ -1261,7 +1314,7 @@ class CommandPrompt:
 
 
 @icontract.invariant(lambda self: isinstance(self.cmd, CommandPrompt))
-class Question(metaclass=abc.ABCMeta):
+class Question:
     """An abstract class.
 
     The superclass for other Question types.
@@ -1286,7 +1339,7 @@ class ListDatabase(Question):
         if execute:
             super().__init__(cmd)
             # The Partlist __str__() method is invoked.
-            print((self.cmd.partlist))
+            print(self.cmd.partlist)
 
 
 class AddPartToDatabase(Question):
@@ -1342,7 +1395,7 @@ class AddPartToDatabase(Question):
                         for item in parts_of_new_part_type:
                             if item.name == new_part.name:
                                 if not new_part.equals(item):
-                                    Console().print(
+                                    console.print(
                                         'Invalid ' + type(item).__name__ + '!',
                                         'Try again with different arguments.',
                                         end='\n\n',
@@ -1359,7 +1412,8 @@ class AddPartToDatabase(Question):
                                 new_part, print_status=True
                             )
                     except Exception as e:
-                        print(type(e).__name__ + ':', e, end='\n\n')
+                        console.print(type(e).__name__ + ':', e, end='\n\n',
+                                      style='red')
 
 
 class Close(Question):
@@ -1415,21 +1469,34 @@ class NewWishlist(Question):
 
                     # Now we have a valid option between 1 and 5.
                     if option in range(1, 6):
-                        if option == 1:
-                            AddFromDatabase(cmd)
-                        elif option == 2:
-                            RemoveFromWishlist(cmd)
-                        elif option == 3:
-                            ShowWishlist(cmd)
-                        elif option == 4:
-                            PurchaseAndClose(cmd)
-                            self.cmd.wishlist = None
-                            done = True
+                        password = input('Please enter your password: ')
+                        try:
+                            self.cmd.wishlist.get_authenticator().login(
+                                self.cmd.wishlist.username,
+                                password,
+                            )
+                        except Exception as e:
+                            print(e)
                         else:
-                            Close(cmd, 'Wishlist')
-                            self.cmd.wishlist = None
-                            done = True
-                        print()
+                            if option == 1:
+                                AddFromDatabase(cmd)
+                            elif option == 2:
+                                RemoveFromWishlist(cmd)
+                            elif option == 3:
+                                ShowWishlist(cmd)
+                            elif option == 4:
+                                PurchaseAndClose(cmd)
+                                done = True
+                            else:
+                                Close(cmd, 'Wishlist')
+                                done = True
+                            print()
+                            self.cmd.wishlist.get_authenticator().logout(
+                                self.cmd.wishlist.username,
+                                password,
+                            )
+                            if option in (4, 5):
+                                self.cmd.wishlist = None
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
     @icontract.ensure(lambda result: isinstance(result, bool))
@@ -1441,13 +1508,13 @@ class NewWishlist(Question):
         try:
             value = self.cmd.partlist.stock[part_name]
         except KeyError:
-            Console().print(f'Could not find {part_name}!', style='red')
+            console.print(f'Could not find {part_name}!', style='red')
             return False
         else:
             if value > 0:
                 return True
             else:
-                Console().print(f'Not enough of {part_name} in stock!',
+                console.print(f'Not enough of {part_name} in stock!',
                                 style='red')
                 return False
 
@@ -1461,13 +1528,13 @@ class NewWishlist(Question):
         try:
             value = self.cmd.wishlist.stock[part_name]
         except KeyError:
-            Console().print(f'Could not find {part_name}!', style='red')
+            console.print(f'Could not find {part_name}!', style='red')
             return False
         else:
             if value > 0:
                 return True
             else:
-                Console().print(f'Not enough of {part_name} in stock!',
+                console.print(f'Not enough of {part_name} in stock!',
                                 style='red')
                 return False
 
@@ -1508,7 +1575,7 @@ class AddFromDatabase(NewWishlist):
                             wishlist.stock[part_name] += 1
                         # Display result.
                         stock = wishlist.stock[part_name]
-                        Console().print(
+                        console.print(
                             f'Added {partlist_item.__str__()} (x{stock})',
                             style='green',
                         )
@@ -1547,7 +1614,7 @@ class ShowWishlist(NewWishlist):
 class PurchaseAndClose(NewWishlist):
     """
     Save the Wishlist to a CSV file with the user's name as the filename,
-    for example, if the user name is "Gary", save it to a file called
+    for example, if the username is "Gary", save it to a file called
     "Gary.csv".
     """
 
@@ -1557,13 +1624,13 @@ class PurchaseAndClose(NewWishlist):
             super().__init__(cmd)
             username = self.cmd.wishlist.username
             self.cmd.wishlist.save_to_csv(filename=username)
-            Console().print(f'Successful purchase!\nReceipt in {username}.csv',
+            console.print(f'Successful purchase!\nReceipt in {username}.csv',
                             style='green')
 
 
 # ---------------------------------- Program ----------------------------------
 if __name__ == '__main__':
-    Console().print('~~ [italic]Welcome to the Computer Store[/] ~~')
+    console.print('~~ [italic]Welcome to the Computer Store[/] ~~')
     print()
     cmd = CommandPrompt()
 
