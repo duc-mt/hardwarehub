@@ -963,7 +963,7 @@ class Partlist():
         Save all parts to a csv file with an argument file name.
         Default to the file name database.csv
         """
-        with open(filename + '.csv', mode='w') as outfile:
+        with open('database/' + filename + '.csv', mode='w') as outfile:
             for item in self.items:
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
@@ -1034,17 +1034,25 @@ class Wishlist(Partlist):
     def set_username(self):
         """Set the username attribute by keeping prompting the user."""
         username = None
-        while username is None or username == '':
-            username = input('Enter your name: ')
-            if username == '':
-                print(
-                    'ValueError: Cannot create a Wishlist with an empty name.'
-                )
+        valid = False
+        while username is None or not valid:
+            try:
+                username = input('Enter your username: ')
+                if username == '':
+                    raise ValueError(
+                        'Cannot create a Wishlist with an empty name.')
+                elif ' ' in username:
+                    raise NameError(
+                        'Username cannot contain any space character.')
+            except Exception as e:
+                print(e)
+            else:
+                valid = True
         self.__username = username
 
     @icontract.ensure(lambda result: result is None)
     def __update_users(self, username, email, password):
-        with open('users.csv', mode='a') as outfile:
+        with open('database/users.csv', mode='a') as outfile:
             outfile.write(self.username + ',' + email + ',' + password + '\n')
 
     @icontract.ensure(lambda result: result is None)
@@ -1283,7 +1291,7 @@ class CommandPrompt:
         CSV file named "database.csv".
         """
         self.__partlist = Partlist()
-        with open('database.csv') as infile:
+        with open('database/database.csv') as infile:
             list_of_csv_strings = []
             line = None
             while line is None or line != '':
