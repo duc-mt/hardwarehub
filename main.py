@@ -19,6 +19,7 @@
 """Stdlib"""
 import abc
 from collections import defaultdict
+from getpass import getpass
 
 """Third party"""
 import icontract
@@ -26,11 +27,8 @@ from rich import print
 from rich.console import Console
 
 """Local application/library specific imports"""
-from user_management import (Authenticator,
-                             InvalidEmail,
-                             InvalidPassword,
+from user_management import (Authenticator, InvalidEmail, InvalidPassword,
                              UsernameAlreadyExists)
-
 
 # ------------------------------- Named Constant ------------------------------
 console = Console()
@@ -1062,7 +1060,7 @@ class Wishlist(Partlist):
         while not valid:
             self.set_username()
             email = input('Enter your email: ')
-            password = input('Enter your password: ')
+            password = getpass(prompt='Enter your password: ')
             try:
                 Wishlist.__authenticator.add_user(self.__username,
                                                   email,
@@ -1477,7 +1475,9 @@ class NewWishlist(Question):
 
                     # Now we have a valid option between 1 and 5.
                     if option in range(1, 6):
-                        password = input('Please enter your password: ')
+                        password = getpass(
+                            prompt='Please enter your password: '
+                        )
                         try:
                             self.cmd.wishlist.get_authenticator().login(
                                 self.cmd.wishlist.username,
