@@ -1664,6 +1664,14 @@ class PurchaseAndClose(NewWishlist):
 
 # ---------------------------------- Program ----------------------------------
 if __name__ == '__main__':
+    console.print(
+        'Copyright (C) 2022 Tan Duc Mai '
+        '(tan.duc.work@gmail.com, @tanducmai on LinkedIn)',
+        'http://tanducmai.github.io/computer-shop-management/',
+        sep='\n',
+        end='\n\n' + '-'*30 + '\n\n',
+        style='bold',
+    )
     console.print('~~ [italic]Welcome to the Computer Store[/] ~~')
     print()
     cmd = CommandPrompt()
