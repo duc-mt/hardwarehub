@@ -286,7 +286,7 @@ class Authenticator:
         """Automatically invoked when an Authenticator object is constructed.
 
         By invoking this method, the Authenticator class should automatically
-        construct a users and a user_email dictionaries and fill them with 
+        construct a users and a user_email dictionaries and fill them with
         items that it reads from the CSV file named "users.csv".
         """
         self.__users = {}       # A dictionary of users coming to the store.
