@@ -882,7 +882,7 @@ class Partlist():
 
         if print_status:
             console.print(f'Added {new_part.__str__()} (x{stock})',
-                            style='green')
+                          style='green')
         print()
 
     @icontract.require(
@@ -949,7 +949,7 @@ class Partlist():
             removed_part = self.items.pop(part_position)
             stock = self.stock.pop(removed_part.name)
             console.print(f'Removed {removed_part.__str__()} (x{stock})',
-                            style='green')
+                          style='green')
         else:
             print(f'{part_position} out of range 1 - {len(self)}')
 
@@ -1523,7 +1523,7 @@ class NewWishlist(Question):
                 return True
             else:
                 console.print(f'Not enough of {part_name} in stock!',
-                                style='red')
+                              style='red')
                 return False
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
@@ -1543,7 +1543,7 @@ class NewWishlist(Question):
                 return True
             else:
                 console.print(f'Not enough of {part_name} in stock!',
-                                style='red')
+                              style='red')
                 return False
 
 
