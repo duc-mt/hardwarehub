@@ -79,6 +79,16 @@ Use pytest to test various methods of the Partlist class.
     │   ├── receipts        <- All the receipts of customers buying parts from the store.
     │   │   └── henry.csv
     │.. └── users.csv       <- All the users (customers) coming to the store.
+    ├── exceptions          <- All exceptions raised by during the authentication process.
+    │   ├── __init__.py
+    │   ├── auth_exception.py
+    │   ├── email_already_exists.py
+    │   ├── inappropriate_email.py
+    │   ├── invalid_email.py
+    │   ├── invalid_password.py
+    │   ├── invalid_username.py
+    │   ├── password_too_short.py
+    │   └── username_already_exists.py
     ├── main.py             <- The main code of the system.
     ├── requirements.txt    <- The requirements file for reproducing the analysis environment.
     ├── test_driver.py      <- Test methods of the Partlist class.
