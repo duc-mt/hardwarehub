@@ -15,7 +15,8 @@ allows users to create a Wishlist.
 
 # UML Design
 
-![UML Design](UML_diagram.png)
+![UML Design](UML_design.png)
+
 # Libraries
 
 Note: run pip install -r requirements.txt to get all the required libraries.
