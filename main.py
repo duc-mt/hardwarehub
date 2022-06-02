@@ -1060,12 +1060,25 @@ class Wishlist(Partlist):
         while not valid:
             self.set_username()
             email = input('Enter your email: ')
-            password = getpass(prompt='Enter your password: ')
+
+            password = None
+            verified = False
+            while password is None or not verified:
+                password = getpass(prompt='Enter your password: ')
+                password_verify = getpass(prompt='Verify your password: ')
+                try:
+                    if password != password_verify:
+                        raise InvalidPassword(password_verify)
+                except InvalidPassword as e1:
+                    print(e1)
+                else:
+                    verified = True
+
             try:
                 Wishlist.__authenticator.add_user(self.__username,
                                                   email,
                                                   password)
-            except UsernameAlreadyExists as e1:
+            except UsernameAlreadyExists as e2:
                 is_returned = input('Are you a returned customer? [Y/n] ')
                 if is_returned in ('y'.lower(), ''):
                     try:
@@ -1076,15 +1089,15 @@ class Wishlist(Partlist):
                         else:
                             self.get_authenticator().login(self.__username,
                                                            password)
-                    except (InvalidPassword, InvalidEmail) as e2:
-                        print(e2)
+                    except (InvalidPassword, InvalidEmail) as e3:
+                        print(e3)
                     else:
                         valid = True
                         print()
                 else:
-                    print(e1)
-            except Exception as default_exception:
-                print(default_exception)
+                    print(e2)
+            except Exception as e:
+                print(e)
             else:
                 valid = True
                 print()
