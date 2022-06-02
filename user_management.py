@@ -50,7 +50,7 @@ class User:
         self.__is_logged_in = False
         self.__username = username
         self.__email = email
-        self.__password = self.__encrypt_pw(password)
+        self.__password = Password(username, password)
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def __repr__(self):
@@ -82,8 +82,23 @@ class User:
     def is_logged_in(self, boolean):
         self.__is_logged_in = boolean
 
+
+class Password:
+
+    def __init__(self, username, password):
+        self.__username = username
+        self.__password = self.__encrypt_pw(password)
+
+    @property
+    def username(self):
+        return self.__username
+
+    @property
+    def password(self):
+        return self.__password
+
     @icontract.require(lambda password: isinstance(password, str))
-    def check_password(self, password):
+    def check_pw(self, password):
         # Return True if the password is valid for this user, False otherwise.
         encrypted = self.__encrypt_pw(password)
         return encrypted == self.__password
@@ -239,14 +254,14 @@ class Authenticator:
         • Check if the username is included in the users dictionary. If it is
         not, then raise an InvalidUsername exception.
         • Check the password matches that user's password by calling that
-        user's check_password() method. If it does not, then raise an
+        user's check_pw() method. If it does not, then raise an
         InvalidPassword exception.
         • If both conditions hold then assign True to the attribute
         is_logged_in of the User object.
         """
         if username not in self.__users:
             raise InvalidUsername(username)
-        elif not self.__users[username].check_password(password):
+        elif not self.__users[username].password.check_pw(password):
             raise InvalidPassword(password)
         else:
             self.__users[username].is_logged_in = True

@@ -1051,6 +1051,10 @@ class Wishlist(Partlist):
                 valid = True
         self.__username = username
 
+    @icontract.require(
+        lambda username, email, password:
+            isinstance(username, str) & isinstance(email, str)
+            & isinstance(password, str))
     @icontract.ensure(lambda result: result is None)
     def __update_users(self, username, email, password):
         with open('database/users.csv', mode='a') as outfile:
@@ -1111,7 +1115,7 @@ class Wishlist(Partlist):
                 self.__update_users(
                     self.__username,
                     Wishlist.__authenticator.users[self.username].email,
-                    Wishlist.__authenticator.users[self.username].password,
+                    Wishlist.__authenticator.users[self.username].password.password,
                 )
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
