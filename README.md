@@ -1,10 +1,11 @@
 # Table of Contents
 
 1. [Aim](#aim)
+1. [UML Design](#uml-design)
 1. [Libraries](#libraries)
 1. [Implementation](#implementation)
-1. [File user_management.py](#file-user_managementpy)
-1. [File test_driver.py](#file-test_driverpy)
+1. [User Management File](#user-management-file)
+1. [Test Driver](#test-driver)
 1. [Project Organisation](#project-organisation)
 
 # Aim
@@ -12,6 +13,9 @@
 Management of a computer shop, with various stocks stored in the database which
 allows users to create a Wishlist.
 
+# UML Design
+
+![UML Design](UML_diagram.png)
 # Libraries
 
 Note: run pip install -r requirements.txt to get all the required libraries.
@@ -50,7 +54,7 @@ CommandPrompt is the user interface which interacts with the user, asking user
 questions (derived from the Question class).
 
 
-# File user_management.py
+# User Management File
 
 Store user records (name, email, password) so that each user is distinguished
 and manageable.
@@ -61,14 +65,14 @@ details which will be compared with those stored in the user database.
 Appropriate errors will be raised and handled to allow only authenticated user
 to use the system and control their Wishlist.
 
-# File test_driver.py
+# Test Driver
 
 Use pytest to test various methods of the Partlist class.
 
 # Project Organisation
 
     ├── README.md
-    ├── UML_diagram.png     <- The diagram showing relationships between classes.
+    ├── UML_design.png      <- The diagram showing relationships between classes.
     ├── database
     │.. ├── database.csv    <- All the parts stored in the system.
     │   ├── receipts        <- All the receipts of customers buying parts from the store.
