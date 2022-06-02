@@ -13,14 +13,16 @@
 #
 # =============================================================================
 
-# ------------------------------- Module Import -------------------------------
-import main
-
+# ------------------------------- Module Imports ------------------------------
+"""Third party"""
 import pytest
+
+"""Local application/library specific imports"""
+import main
 
 
 # ---------------------------- Function Definitions ---------------------------
-@pytest.fixture
+@pytest.fixture()
 def partlist():
     return main.CommandPrompt().partlist
 
@@ -44,11 +46,15 @@ def test_get_part_using_name(partlist):
     # Dangerous cases
     with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_name('')
+
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_name(2)
 
     with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_name('Toshiba'),
                           main.Storage)
+
+    with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_name('AMD Ryzen 5'),
                           main.Memory)
 
@@ -63,11 +69,15 @@ def test_get_part_using_postion(partlist):
     # Dangerous cases
     with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_position('')
+
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.get_part_using_position(2.0)
 
     with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_position(3),
                           main.GraphicsCard)
+
+    with pytest.raises(AssertionError):
         assert isinstance(partlist.get_part_using_position(25),
                           main.Memory)
 
@@ -84,8 +94,8 @@ def test_remove_part_using_name(partlist):
     with pytest.raises(main.icontract.errors.ViolationError):
         partlist.remove_part_using_name('')
 
+    partlist.remove_part_using_name('WD')
     with pytest.raises(AssertionError):
-        partlist.remove_part_using_name('WD')
         assert len(partlist) == 21
 
 
@@ -100,8 +110,10 @@ def test_remove_part_using_postion(partlist):
     # Dangerous cases
     with pytest.raises(main.icontract.errors.ViolationError):
         partlist.remove_part_using_position('')
+
+    with pytest.raises(main.icontract.errors.ViolationError):
         partlist.remove_part_using_position(12.0)
 
+    partlist.remove_part_using_position(25)
     with pytest.raises(AssertionError):
-        partlist.remove_part_using_position(25)
         assert len(partlist) == 21
