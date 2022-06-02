@@ -23,6 +23,7 @@ import re
 
 """Third party"""
 import icontract
+from exceptions import *
 
 
 # ------------------------------- Named Constant ------------------------------
@@ -109,81 +110,6 @@ class Password:
         hash_string = self.__username + password
         hash_string = hash_string.encode('utf8')
         return hashlib.sha256(hash_string).hexdigest()
-
-
-class AuthException(Exception):
-
-    @icontract.require(lambda message: isinstance(message, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, message):
-        super().__init__(message)
-
-
-class UsernameAlreadyExists(AuthException):
-
-    @icontract.require(
-        lambda username, user:
-            isinstance(username, str) & isinstance(user, dict))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, username, user):
-        super().__init__(
-            repr(username) + ' already exists for ' + str(user) + '.\n'
-        )
-
-
-class EmailAlreadyExists(AuthException):
-
-    @icontract.require(
-        lambda message, user:
-            isinstance(message, str) & isinstance(user, dict))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, email, user):
-        super().__init__(
-            repr(email) + ' already exists for ' + str(user) + '.\n'
-        )
-
-
-class PasswordTooShort(AuthException):
-
-    @icontract.require(lambda password: isinstance(password, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, password):
-        super().__init__(repr(password) + ' is too short' + '.\n')
-
-
-class InvalidUsername(AuthException):
-
-    @icontract.require(lambda username: isinstance(username, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, username):
-        super().__init__(repr(username) + ' does not exist' + '.\n')
-
-
-class InvalidPassword(AuthException):
-
-    @icontract.require(lambda password: isinstance(password, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, password):
-        super().__init__(repr(password) + ' does not match' + '.\n')
-
-
-class InvalidEmail(AuthException):
-
-    @icontract.require(lambda email: isinstance(email, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, email):
-        super().__init__(repr(email) + ' does not match' + '.\n')
-
-
-class InappropriateEmail(AuthException):
-
-    @icontract.require(lambda email: isinstance(email, str))
-    @icontract.ensure(lambda result: result is None)
-    def __init__(self, email):
-        super().__init__(
-            'Your email ' + repr(email) + ' is not of a valid format:\n'
-            "    '(string1)@(string2).(2+characters)'.\n"
-            'Therefore, we generate a random one for you,')
 
 
 class Authenticator:
