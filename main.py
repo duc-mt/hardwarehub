@@ -18,8 +18,8 @@
 # ------------------------------- Module Import -------------------------------
 """Stdlib"""
 import abc
-from collections import defaultdict
-from getpass import getpass
+import collections
+import getpass
 
 """Third party"""
 import icontract
@@ -27,8 +27,11 @@ from rich import print
 from rich.console import Console
 
 """Local application/library specific imports"""
-from user_management import (Authenticator, InvalidEmail, InvalidPassword,
+from user_management import (Authenticator,
+                             InvalidEmail,
+                             InvalidPassword,
                              UsernameAlreadyExists)
+
 
 # ------------------------------- Named Constant ------------------------------
 console = Console()
@@ -1064,8 +1067,12 @@ class Wishlist(Partlist):
             password = None
             verified = False
             while password is None or not verified:
-                password = getpass(prompt='Enter your password: ')
-                password_verify = getpass(prompt='Verify your password: ')
+                password = getpass.getpass(
+                    prompt='Enter your password: '
+                )
+                password_verify = getpass.getpass(
+                    prompt='Verify your password: '
+                )
                 try:
                     if password != password_verify:
                         raise InvalidPassword(password_verify)
@@ -1211,7 +1218,7 @@ class CommandPrompt:
             return result
 
         # A defaultdict type variable to store three types of menus.
-        cls.__menu = defaultdict(list)
+        cls.__menu = collections.defaultdict(list)
 
         # Add four options for Main Menu.
         cls.__menu['Main Menu'].append(
@@ -1488,7 +1495,7 @@ class NewWishlist(Question):
 
                     # Now we have a valid option between 1 and 5.
                     if option in range(1, 6):
-                        password = getpass(
+                        password = getpass.getpass(
                             prompt='Please enter your password: '
                         )
                         try:

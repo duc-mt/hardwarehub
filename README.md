@@ -22,18 +22,18 @@ package.
 ## Standard Library Imports
 
 1. abc                     <- Implement abstract classes for ComputerPart.
-2. collections.defaultdict <- Call a factory function to supply missing values.
-3. getpass.getpass         <- Hidden password as user types.
-4. import hashlib          <- Encode user's password stored in the database.
-5. import random           <- Randomly pick out an item from a list/tuple.
-6. import re               <- Perfom regular expression to validate emails.
+2. collections             <- Call a factory function to supply missing values.
+3. getpass                 <- Hidden password as user types.
+4. hashlib                 <- Encode user's password stored in the database.
+5. random                  <- Randomly pick out an item from a list/tuple.
+6. re                      <- Perfom regular expression to validate emails.
 
 ## Related Third Party Imports
 
-3. icontract               <- Implement design-by-contract.
-4. rich.print              <- Override print() built-in method to colourise
+7. icontract               <- Implement design-by-contract.
+8. rich.print              <- Override print() built-in method to colourise
                               whatever is printed.
-5. rich.console.Console    <- Called using Console().print instead of print to
+9. rich.console.Console    <- Called using Console().print instead of print to
                               give special types for printed text
 
 # Implementation
