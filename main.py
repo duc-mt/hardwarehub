@@ -139,7 +139,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
             if letter != ',':
                 value += letter
                 if index == (len(csv_string) - 1):
-                    if csv_string[-12:] == 'OUT OF STOCK':
+                    if value == 'OUT OF STOCK':
                         csv_list.append('0')
                     else:
                         csv_list.append(value[1:])
