@@ -21,24 +21,25 @@ allows users to create a Wishlist.
 
 Note: run pip install -r requirements.txt to get all the required libraries.
 
-Throughout the project, I will use five Python modules, two of which are of the
-package.
+Throughout the project, I will use seven standard modules, three third party
+ones which require installation via pip.
 
 ## Standard Library Imports
 
 1. abc                     <- Implement abstract classes for ComputerPart.
 2. collections             <- Call a factory function to supply missing values.
-3. getpass                 <- Hidden password as user types.
-4. hashlib                 <- Encode user's password stored in the database.
-5. random                  <- Randomly pick out an item from a list/tuple.
-6. re                      <- Perfom regular expression to validate emails.
+3. csv                     <- Read, write, and append to csv files.
+4. getpass                 <- Hidden password as user types.
+5. hashlib                 <- Encode user's password stored in the database.
+6. random                  <- Randomly pick out an item from a list/tuple.
+7. re                      <- Perform regular expression to validate emails.
 
 ## Related Third Party Imports
 
-7. icontract               <- Implement design-by-contract.
-8. rich.print              <- Override print() built-in method to colourise
+8. icontract               <- Implement design-by-contract.
+9. rich.print              <- Override print() built-in method to colourise
                               whatever is printed.
-9. rich.console.Console    <- Called using Console().print instead of print to
+10. rich.console.Console   <- Called using Console().print instead of print to
                               give special types for printed text
 
 # Implementation
