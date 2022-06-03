@@ -27,10 +27,10 @@ from rich import print
 from rich.console import Console
 
 """Local application/library specific imports"""
-from user_management import (Authenticator,
-                             InvalidEmail,
-                             InvalidPassword,
-                             UsernameAlreadyExists)
+from authenticator import (Authenticator,
+                           InvalidEmail,
+                           InvalidPassword,
+                           UsernameAlreadyExists)
 
 
 # ------------------------------- Named Constant ------------------------------

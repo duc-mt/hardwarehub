@@ -3,7 +3,7 @@
 
 # =============================================================================
 #
-#        FILE:  user_management.py
+#        FILE:  authenticator.py
 #      AUTHOR:  Tan Duc Mai
 #       EMAIL:  tan.duc.work@gmail.com
 #     CREATED:  31-May-2022
