@@ -19,6 +19,7 @@
 """Stdlib"""
 import abc
 import collections
+import csv
 import getpass
 
 """Third party"""
@@ -212,16 +213,19 @@ class CPU(ComputerPart):
         )
 
     @classmethod
-    @icontract.require(lambda csv_string: isinstance(csv_string, str))
+    @icontract.require(lambda csv_list: isinstance(csv_list, list))
     @icontract.ensure(lambda result: isinstance(result, CPU))
-    def parse(cls, csv_string):
+    def parse(cls, csv_list):
         """Return a CPU object. Perform the following procedure.
 
-        Split the csv_string into separate values.
-        Parse these values to the correct datatypes.
+        Check the last element of the argument csv_list.
+        Parse all elements to the correct datatypes.
         Use these values to construct and return a new CPU.
         """
-        csv_list = ComputerPart.csv_string_to_list(csv_string)
+        if csv_list[-1] == 'OUT OF STOCK':
+            csv_list[-1] = '0'
+        else:
+            csv_list[-1] = str(csv_list[-1])[1:]
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -354,16 +358,19 @@ class GraphicsCard(ComputerPart):
         )
 
     @classmethod
-    @icontract.require(lambda csv_string: isinstance(csv_string, str))
+    @icontract.require(lambda csv_list: isinstance(csv_list, list))
     @icontract.ensure(lambda result: isinstance(result, GraphicsCard))
-    def parse(cls, csv_string):
+    def parse(cls, csv_list):
         """Return a CPU object. Perform the following procedure.
 
-        Split the csv_string into separate values.
-        Parse these values to the correct datatypes.
+        Check the last element of the argument csv_list.
+        Parse all elements to the correct datatypes.
         Use these values to construct and return a new GraphicsCard.
         """
-        csv_list = ComputerPart.csv_string_to_list(csv_string)
+        if csv_list[-1] == 'OUT OF STOCK':
+            csv_list[-1] = '0'
+        else:
+            csv_list[-1] = str(csv_list[-1])[1:]
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -498,16 +505,19 @@ class Memory(ComputerPart):
         )
 
     @classmethod
-    @icontract.require(lambda csv_string: isinstance(csv_string, str))
+    @icontract.require(lambda csv_list: isinstance(csv_list, list))
     @icontract.ensure(lambda result: isinstance(result, Memory))
-    def parse(cls, csv_string):
+    def parse(cls, csv_list):
         """Return a CPU object. Perform the following procedure.
 
-        Split the csv_string into separate values.
-        Parse these values to the correct datatypes.
+        Check the last element of the argument csv_list.
+        Parse all elements to the correct datatypes.
         Use these values to construct and return a new Memory.
         """
-        csv_list = ComputerPart.csv_string_to_list(csv_string)
+        if csv_list[-1] == 'OUT OF STOCK':
+            csv_list[-1] = '0'
+        else:
+            csv_list[-1] = str(csv_list[-1])[1:]
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -668,16 +678,19 @@ class Storage(ComputerPart):
         )
 
     @classmethod
-    @icontract.require(lambda csv_string: isinstance(csv_string, str))
+    @icontract.require(lambda csv_list: isinstance(csv_list, list))
     @icontract.ensure(lambda result: isinstance(result, Storage))
-    def parse(cls, csv_string):
+    def parse(cls, csv_list):
         """Return a CPU object. Perform the following procedure.
 
-        Split the csv_string into separate values.
-        Parse these values to the correct datatypes.
+        Check the last element of the argument csv_list.
+        Parse all elements to the correct datatypes.
         Use these values to construct and return a new Storage.
         """
-        csv_list = ComputerPart.csv_string_to_list(csv_string)
+        if csv_list[-1] == 'OUT OF STOCK':
+            csv_list[-1] = '0'
+        else:
+            csv_list[-1] = str(csv_list[-1])[1:]
 
         csv_list[2] = float(csv_list[2])
         csv_list[3] = int(csv_list[3])
@@ -964,7 +977,8 @@ class Partlist():
         Save all parts to a csv file with an argument file name.
         Default to the file name database.csv
         """
-        with open('database/' + filename + '.csv', mode='w') as outfile:
+        with open(file=f'database/{filename}.csv', mode='w',
+                  encoding='UTF8', newline='') as outfile:
             for item in self.items:
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
@@ -1057,8 +1071,11 @@ class Wishlist(Partlist):
             & isinstance(password, str))
     @icontract.ensure(lambda result: result is None)
     def __update_users(self, username, email, password):
-        with open('database/users.csv', mode='a') as outfile:
-            outfile.write(self.username + ',' + email + ',' + password + '\n')
+        with open(file='database/users.csv', mode='a',
+                  encoding='UTF8', newline='') as outfile:
+            csv.writer(outfile).writerow(
+                [self.username, email, password]
+            )
 
     @icontract.ensure(lambda result: result is None)
     def __create_user(self):
@@ -1313,33 +1330,33 @@ class CommandPrompt:
         CSV file named "database.csv".
         """
         self.__partlist = Partlist()
-        with open('database/database.csv') as infile:
-            list_of_csv_strings = []
-            line = None
-            while line is None or line != '':
-                line = infile.readline().rstrip('\n')
-                list_of_csv_strings.append(line)
+        with open(file='database/database.csv', mode='r',
+                    encoding='UTF8', newline='') as infile:
+            csv_lists = [
+                row for row in csv.reader(infile, delimiter=',',
+                                          quotechar='|')
+            ]
 
-            for csv_string in list_of_csv_strings:
-                if csv_string.startswith('CPU'):
+            for csv_list in csv_lists:
+                if csv_list[0] == ('CPU'):
                     # Construct a CPU object.
                     self.partlist.add_to_partlist(
-                        CPU.parse(csv_string)
+                        CPU.parse(csv_list)
                     )
-                elif csv_string.startswith('GraphicsCard'):
+                elif csv_list[0] == ('GraphicsCard'):
                     # Construct a GraphicsCard object.
                     self.partlist.add_to_partlist(
-                        GraphicsCard.parse(csv_string)
+                        GraphicsCard.parse(csv_list)
                     )
-                elif csv_string.startswith('Memory'):
+                elif csv_list[0] == ('Memory'):
                     # Construct a Memory object.
                     self.partlist.add_to_partlist(
-                        Memory.parse(csv_string)
+                        Memory.parse(csv_list)
                     )
-                elif csv_string.startswith('Storage'):
+                elif csv_list[0] == ('Storage'):
                     # Construct a Storage object.
                     self.partlist.add_to_partlist(
-                        Storage.parse(csv_string)
+                        Storage.parse(csv_list)
                     )
 
 
