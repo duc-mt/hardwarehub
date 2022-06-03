@@ -1321,22 +1321,22 @@ class CommandPrompt:
                 list_of_csv_strings.append(line)
 
             for csv_string in list_of_csv_strings:
-                if 'CPU' in csv_string:
+                if csv_string.startswith('CPU'):
                     # Construct a CPU object.
                     self.partlist.add_to_partlist(
                         CPU.parse(csv_string)
                     )
-                elif 'GraphicsCard' in csv_string:
+                elif csv_string.startswith('GraphicsCard'):
                     # Construct a GraphicsCard object.
                     self.partlist.add_to_partlist(
                         GraphicsCard.parse(csv_string)
                     )
-                elif 'Memory' in csv_string:
+                elif csv_string.startswith('Memory'):
                     # Construct a Memory object.
                     self.partlist.add_to_partlist(
                         Memory.parse(csv_string)
                     )
-                elif 'Storage' in csv_string:
+                elif csv_string.startswith('Storage'):
                     # Construct a Storage object.
                     self.partlist.add_to_partlist(
                         Storage.parse(csv_string)
