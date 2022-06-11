@@ -74,7 +74,7 @@ Use pytest to test various methods of the Partlist class.
 
     ├── README.md
     ├── UML_design.png      <- The diagram showing relationships between classes.
-    ├── authenticator.py  <- Manage user records and perform authentication.
+    ├── authenticator.py    <- Manage user records and perform authentication.
     ├── database
     │.. ├── database.csv    <- All the parts stored in the system.
     │   ├── receipts        <- All the receipts of customers buying parts from the store.
