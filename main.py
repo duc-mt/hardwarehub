@@ -876,8 +876,8 @@ class Partlist():
 
     @icontract.require(
         lambda new_part, print_status:
-            (isinstance(new_part, ComputerPart))
-            & (isinstance(print_status, bool)))
+            isinstance(new_part, ComputerPart)
+            & isinstance(print_status, bool))
     @icontract.ensure(lambda result: result is None)
     def add_to_partlist(self, new_part, print_status=False):
         """
@@ -902,7 +902,7 @@ class Partlist():
         print()
 
     @icontract.require(
-        lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
+        lambda part_name: isinstance(part_name, str) & (part_name != ''))
     def get_part_using_name(self, part_name):
         """Return a ComputerPart object or an error string.
 
@@ -933,7 +933,7 @@ class Partlist():
             return f'{part_position} out of range 1 - {len(self)}'
 
     @icontract.require(
-        lambda part_name: (isinstance(part_name, str)) & (part_name != ''))
+        lambda part_name: isinstance(part_name, str) & (part_name != ''))
     def remove_part_using_name(self, part_name):
         """Return nothing.
 
@@ -970,7 +970,7 @@ class Partlist():
             print(f'{part_position} out of range 1 - {len(self)}')
 
     @icontract.require(
-        lambda filename: (isinstance(filename, str)) & (filename != ''))
+        lambda filename: isinstance(filename, str) & (filename != ''))
     @icontract.ensure(lambda result: result is None)
     def save_to_csv(self, filename='database'):
         """
@@ -1044,8 +1044,8 @@ class Wishlist(Partlist):
 
     @icontract.ensure(
         lambda self, result:
-            (result is None)
-            & ((isinstance(self.__username, str)) & (self.__username != '')))
+            isinstance(self.__username, str)
+            & (result is None) & (self.__username != ''))
     def set_username(self):
         """Set the username attribute by keeping prompting the user."""
         username = None
@@ -1486,9 +1486,7 @@ class Close(Question):
             else:
                 # Add stock back into Partlist.
                 for item in wishlist.items:
-                    partlist.stock[
-                        item.name
-                    ] += wishlist.stock[item.name]
+                    partlist.stock[item.name] += wishlist.stock[item.name]
                 # Remove all items from Wishlist. Deleter is called.
                 del wishlist.items
                 del wishlist.stock
