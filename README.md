@@ -44,7 +44,7 @@ ones which require installation via pip.
 
 # Implementation
 
-ComputerPart class are the abstract classes of four parts sold by the store,
+ComputerPart class is the abstract classes of four parts sold by the store,
 namely CPU, Graphics Card, Memory, and Storage.
 
 Partlist class serves as the database of the store.
@@ -52,8 +52,8 @@ Partlist class serves as the database of the store.
 Wishlist class is derived from the Partlist, created by the user, with an
 additional attribute to store the username.
 
-CommandPrompt is the user interface which interacts with the user, asking user
-questions (derived from the Question class).
+CommandPrompt class is the user interface which interacts with the user, 
+asking user questions (derived from the Question class).
 
 # Authenticator
 
