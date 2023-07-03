@@ -14,10 +14,10 @@
 # =============================================================================
 
 # ------------------------------- Module Imports ------------------------------
-"""Third party"""
+# Third party
 import pytest
 
-"""Local application/library specific imports"""
+# Local application/library specific imports
 import main
 
 

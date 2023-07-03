@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 # ------------------------------- Module Imports ------------------------------
-"""Third party"""
+# Third party
 import icontract
 
-"""Local application/library specific import"""
+# Local application/library specific import
 from .auth_exception import AuthException
 
 

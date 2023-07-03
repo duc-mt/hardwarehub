@@ -16,14 +16,14 @@
 
 
 # ------------------------------- Module Import -------------------------------
-"""Stdlib"""
+# Stdlib
 import hashlib
 import random
 import re
 
-"""Third party"""
+# Third party
 import icontract
-from exceptions import *
+import exceptions
 
 
 # ------------------------------- Named Constant ------------------------------
@@ -43,7 +43,8 @@ class User:
 
     @icontract.require(
         lambda username, email, password: isinstance(username, str)
-            & isinstance(email, str) & isinstance(password, str))
+        & isinstance(email, str) & isinstance(password, str)
+    )
     @icontract.ensure(lambda result: result is None)
     def __init__(self, username, email, password):
         # Create a new user object.
@@ -134,7 +135,8 @@ class Authenticator:
 
     @icontract.require(
         lambda username, email, password: isinstance(username, str)
-            & isinstance(email, str) & isinstance(password, str))
+        & isinstance(email, str) & isinstance(password, str)
+    )
     @icontract.ensure(lambda result: result is None)
     def add_user(self, username, email, password):
         """
@@ -148,26 +150,24 @@ class Authenticator:
         username.
         """
         if len(password) < 6:
-            raise PasswordTooShort(password)
+            raise exceptions.PasswordTooShort(password)
         elif username in self.__users:
-            raise UsernameAlreadyExists(username, self.__users)
+            raise exceptions.UsernameAlreadyExists(username, self.__users)
         else:
-            valid_form = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+            valid_form = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')  # noqa: E501
             if not re.fullmatch(valid_form, email):
                 try:
-                    raise InappropriateEmail(email)
-                except InappropriateEmail as e:
+                    raise exceptions.InappropriateEmail(email)
+                except exceptions.InappropriateEmail as e:
                     print(e)
-                    email = (username
-                             + str(random.randint(100, 999))
-                             + '@gmail'
-                             + random.choice(tuple(TLDs))
-                             + random.choice(tuple(COUNTRY_CODEs)))
+                    email = (username + str(random.randint(100, 999)) + '@gmail' + random.choice(tuple(TLDs)) + random.choice(tuple(COUNTRY_CODEs)))  # noqa: E501
                     print(f'    {repr(email)}')
             else:
                 for stored_email in self.__user_email.values():
                     if email == stored_email:
-                        raise EmailAlreadyExists(email, self.__users)
+                        raise exceptions.EmailAlreadyExists(
+                                email, self.__users
+                        )
             self.__users[username] = User(username, email, password)
             self.__user_email[username] = email
 
@@ -186,9 +186,9 @@ class Authenticator:
         is_logged_in of the User object.
         """
         if username not in self.__users:
-            raise InvalidUsername(username)
+            raise exceptions.InvalidUsername(username)
         elif not self.__users[username].password.check_pw(password):
-            raise InvalidPassword(password)
+            raise exceptions.InvalidPassword(password)
         else:
             self.__users[username].is_logged_in = True
 
