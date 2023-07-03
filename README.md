@@ -52,8 +52,8 @@ Partlist class serves as the database of the store.
 Wishlist class is derived from the Partlist, created by the user, with an
 additional attribute to store the username.
 
-CommandPrompt class is the user interface which interacts with the user, 
-asking user questions (derived from the Question class).
+CommandPrompt class is the user interface which interacts with the user, asking
+user questions (derived from the Question class).
 
 # Authenticator
 
@@ -72,24 +72,26 @@ Use pytest to test various methods of the Partlist class.
 
 # Project Organisation
 
-    ├── README.md
-    ├── UML_design.png      <- The diagram showing relationships between classes.
-    ├── authenticator.py    <- Manage user records and perform authentication.
-    ├── database
-    │.. ├── database.csv    <- All the parts stored in the system.
-    │   ├── receipts        <- All the receipts of customers buying parts from the store.
-    │   │   └── henry.csv
-    │.. └── users.csv       <- All the users (customers) coming to the store.
-    ├── exceptions          <- All exceptions raised by during the authentication process.
-    │   ├── __init__.py
-    │   ├── auth_exception.py
-    │   ├── email_already_exists.py
-    │   ├── inappropriate_email.py
-    │   ├── invalid_email.py
-    │   ├── invalid_password.py
-    │   ├── invalid_username.py
-    │   ├── password_too_short.py
-    │   └── username_already_exists.py
-    ├── main.py             <- The main code of the system.
-    ├── requirements.txt    <- The requirements file for reproducing the analysis environment.
-    └── test_driver.py      <- Test methods of the Partlist class.
+```
+├── README.md
+├── UML_design.png      <- The diagram showing relationships between classes.
+├── authenticator.py    <- Manage user records and perform authentication.
+├── database
+│.. ├── database.csv    <- All the parts stored in the system.
+│   ├── receipts        <- All the receipts of customers buying parts from the store.
+│   │   └── henry.csv
+│.. └── users.csv       <- All the users (customers) coming to the store.
+├── exceptions          <- All exceptions raised by during the authentication process.
+│   ├── __init__.py
+│   ├── auth_exception.py
+│   ├── email_already_exists.py
+│   ├── inappropriate_email.py
+│   ├── invalid_email.py
+│   ├── invalid_password.py
+│   ├── invalid_username.py
+│   ├── password_too_short.py
+│   └── username_already_exists.py
+├── main.py             <- The main code of the system.
+├── requirements.txt    <- The requirements file for reproducing the analysis environment.
+└── test_driver.py      <- Test methods of the Partlist class.
+```
