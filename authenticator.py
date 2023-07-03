@@ -5,8 +5,8 @@
 #
 #        FILE:  authenticator.py
 #      AUTHOR:  Tan Duc Mai
-#       EMAIL:  tan.duc.work@gmail.com
-#     CREATED:  31-May-2022
+#       EMAIL:  henryfromvietnam@gmail.com
+#     CREATED:  2022-05-31
 # DESCRIPTION:  Stores every customer of the system, including the
 #               authentication of their identity.
 #   I hereby declare that I completed this work without any improper help

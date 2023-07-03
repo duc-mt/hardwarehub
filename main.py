@@ -3,10 +3,10 @@
 
 # =============================================================================
 #
-#        FILE:  computer_shop.py
+#        FILE:  main.py
 #      AUTHOR:  Tan Duc Mai
-#       EMAIL:  tan.duc.work@gmail.com
-#     CREATED:  13-Apr-2022
+#       EMAIL:  henryfromvietnam@gmail.com
+#     CREATED:  2022-04-13
 # DESCRIPTION:  Creates a Computer shop which allows customers
 #               to select and purchase computer parts.
 #   I hereby declare that I completed this work without any improper help
