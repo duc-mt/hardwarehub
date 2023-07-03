@@ -1,12 +1,18 @@
 # Table of Contents
 
+<!-- vim-markdown-toc GFM -->
+
 1. [Aim](#aim)
 1. [UML Design](#uml-design)
 1. [Libraries](#libraries)
+    1. [Standard Library Imports](#standard-library-imports)
+    1. [Related Third Party Imports](#related-third-party-imports)
 1. [Implementation](#implementation)
 1. [Authenticator](#authenticator)
 1. [Test Driver](#test-driver)
 1. [Project Organisation](#project-organisation)
+
+<!-- vim-markdown-toc -->
 
 # Aim
 
