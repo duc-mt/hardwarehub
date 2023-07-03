@@ -929,8 +929,7 @@ class Partlist():
         """
         if part_position < len(self):
             return self.__items[part_position]
-        else:
-            return f'{part_position} out of range 1 - {len(self)}'
+        return f'{part_position} out of range 1 - {len(self)}'
 
     @icontract.require(
         lambda part_name: isinstance(part_name, str) & (part_name != ''))
