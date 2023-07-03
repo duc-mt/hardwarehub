@@ -16,18 +16,18 @@
 
 
 # ------------------------------- Module Import -------------------------------
-"""Stdlib"""
+# Stdlib
 import abc
 import collections
 import csv
 import getpass
 
-"""Third party"""
+# Third party
 import icontract
 from rich import print
 from rich.console import Console
 
-"""Local application/library specific imports"""
+# Local application/library specific imports
 from authenticator import (Authenticator,
                            InvalidEmail,
                            InvalidPassword,
@@ -52,7 +52,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         self.__stock = stock
 
     @abc.abstractclassmethod
-    def parse(cls):
+    def parse(cls):  # noqa: N805
         """An abstract class method.
 
         Split the csv_string into separate values and parses them to the
@@ -62,7 +62,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def input(cls):
+    def input(cls):  # noqa: N805
         """An abstract class method.
 
         Take input for each of the necessary variables.
@@ -1044,7 +1044,8 @@ class Wishlist(Partlist):
     @icontract.ensure(
         lambda self, result:
             isinstance(self.__username, str)
-            & (result is None) & (self.__username != ''))
+            & (result is None) & (self.__username != '')
+    )
     def set_username(self):
         """Set the username attribute by keeping prompting the user."""
         username = None
@@ -1113,9 +1114,8 @@ class Wishlist(Partlist):
                             self.__username
                         ]:
                             raise InvalidEmail(email)
-                        else:
-                            self.get_authenticator().login(self.__username,
-                                                           password)
+                        self.get_authenticator().login(self.__username,
+                                                       password)
                     except (InvalidPassword, InvalidEmail) as e3:
                         print(e3)
                     else:
@@ -1131,7 +1131,9 @@ class Wishlist(Partlist):
                 self.__update_users(
                     self.__username,
                     Wishlist.__authenticator.users[self.username].email,
-                    Wishlist.__authenticator.users[self.username].password.password,
+                    Wishlist.__authenticator.users[
+                        self.username
+                    ].password.password,
                 )
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
@@ -1203,7 +1205,8 @@ class CommandPrompt:
         lambda menu_type:
             (menu_type == 'Main Menu')
             | (menu_type == 'Wishlist')
-            | (menu_type == 'Part Types'))
+            | (menu_type == 'Part Types')
+    )
     @icontract.ensure(lambda result: result is None)
     def display_menu(cls, menu_type):
         """Display one of the three menus.
@@ -1330,7 +1333,7 @@ class CommandPrompt:
         """
         self.__partlist = Partlist()
         with open(file='database/database.csv', mode='r',
-                    encoding='UTF8', newline='') as infile:
+                  encoding='UTF8', newline='') as infile:
             csv_lists = list(csv.reader(infile, delimiter=',', quotechar='|'))
 
             for csv_list in csv_lists:
