@@ -1332,10 +1332,7 @@ class CommandPrompt:
         self.__partlist = Partlist()
         with open(file='database/database.csv', mode='r',
                     encoding='UTF8', newline='') as infile:
-            csv_lists = [
-                row for row in csv.reader(infile, delimiter=',',
-                                          quotechar='|')
-            ]
+            csv_lists = list(csv.reader(infile, delimiter=',', quotechar='|'))
 
             for csv_list in csv_lists:
                 if csv_list[0] == ('CPU'):
@@ -1558,12 +1555,11 @@ class NewWishlist(Question):
             console.print(f'Could not find {part_name}!', style='red')
             return False
         else:
-            if value > 0:
-                return True
-            else:
+            if value <= 0:
                 console.print(f'Not enough of {part_name} in stock!',
                               style='red')
                 return False
+            return True
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
     @icontract.ensure(lambda result: isinstance(result, bool))
@@ -1578,12 +1574,11 @@ class NewWishlist(Question):
             console.print(f'Could not find {part_name}!', style='red')
             return False
         else:
-            if value > 0:
-                return True
-            else:
+            if value <= 0:
                 console.print(f'Not enough of {part_name} in stock!',
                               style='red')
                 return False
+            return True
 
 
 class AddFromDatabase(NewWishlist):
