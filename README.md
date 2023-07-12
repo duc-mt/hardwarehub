@@ -1,18 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 # Table of Contents
 
-<!-- vim-markdown-toc GFM -->
+- [Aim](#aim)
+- [UML Design](#uml-design)
+- [Libraries](#libraries)
+  - [Standard Library Imports](#standard-library-imports)
+  - [Related Third Party Imports](#related-third-party-imports)
+- [Implementation](#implementation)
+- [Authenticator](#authenticator)
+- [Test Driver](#test-driver)
+- [Project Organisation](#project-organisation)
 
-1. [Aim](#aim)
-1. [UML Design](#uml-design)
-1. [Libraries](#libraries)
-    1. [Standard Library Imports](#standard-library-imports)
-    1. [Related Third Party Imports](#related-third-party-imports)
-1. [Implementation](#implementation)
-1. [Authenticator](#authenticator)
-1. [Test Driver](#test-driver)
-1. [Project Organisation](#project-organisation)
-
-<!-- vim-markdown-toc -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Aim
 
