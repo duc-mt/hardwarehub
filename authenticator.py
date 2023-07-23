@@ -23,7 +23,9 @@ import re
 
 # Third party
 import icontract
-import exceptions
+from exceptions import (EmailAlreadyExists, InappropriateEmail,
+                        InvalidPassword, InvalidUsername,
+                        PasswordTooShort, UsernameAlreadyExists)
 
 
 # ------------------------------- Named Constant ------------------------------
@@ -150,22 +152,22 @@ class Authenticator:
         username.
         """
         if len(password) < 6:
-            raise exceptions.PasswordTooShort(password)
+            raise PasswordTooShort(password)
         elif username in self.__users:
-            raise exceptions.UsernameAlreadyExists(username, self.__users)
+            raise UsernameAlreadyExists(username, self.__users)
         else:
             valid_form = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')  # noqa: E501
             if not re.fullmatch(valid_form, email):
                 try:
-                    raise exceptions.InappropriateEmail(email)
-                except exceptions.InappropriateEmail as e:
+                    raise InappropriateEmail(email)
+                except InappropriateEmail as e:
                     print(e)
                     email = (username + str(random.randint(100, 999)) + '@gmail' + random.choice(tuple(TLDs)) + random.choice(tuple(COUNTRY_CODEs)))  # noqa: E501
                     print(f'    {repr(email)}')
             else:
                 for stored_email in self.__user_email.values():
                     if email == stored_email:
-                        raise exceptions.EmailAlreadyExists(
+                        raise EmailAlreadyExists(
                                 email, self.__users
                         )
             self.__users[username] = User(username, email, password)
@@ -186,9 +188,9 @@ class Authenticator:
         is_logged_in of the User object.
         """
         if username not in self.__users:
-            raise exceptions.InvalidUsername(username)
+            raise InvalidUsername(username)
         elif not self.__users[username].password.check_pw(password):
-            raise exceptions.InvalidPassword(password)
+            raise InvalidPassword(password)
         else:
             self.__users[username].is_logged_in = True
 

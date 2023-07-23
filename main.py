@@ -28,8 +28,8 @@ from rich import print
 from rich.console import Console
 
 # Local application/library specific imports
+from exceptions import InvalidEmail
 from authenticator import (Authenticator,
-                           InvalidEmail,
                            InvalidPassword,
                            UsernameAlreadyExists)
 
