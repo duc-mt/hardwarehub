@@ -63,8 +63,8 @@ user questions (derived from the Question class).
 
 # Authenticator
 
-Store user records (name, email, password) so that each user is distinguished
-and manageable.
+Store user records, including name, email, and password (using hashing
+mechanism)so that each user is distinguished and manageable.
 
 Every time a user creates a Wishlist, they will be asked to provide login
 details which will be compared with those stored in the user database.
