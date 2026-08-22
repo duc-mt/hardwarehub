@@ -1,2 +1,2 @@
 icontract==2.7.3
-rich==14.3.4
+rich==15.0.0
