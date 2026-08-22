@@ -17,6 +17,8 @@ class EmailAlreadyExists(AuthException):
             isinstance(message, str) & isinstance(user, dict))
     @icontract.ensure(lambda result: result is None)
     def __init__(self, email, user):
-        super().__init__(
-            repr(email) + ' already exists for ' + str(user) + '.\n'
-        )
+        # NOTE: `user` (the full users dictionary) is accepted for context
+        # and kept for backward compatibility with existing call sites, but
+        # is intentionally NOT included in the message - see the identical
+        # note in username_already_exists.py.
+        super().__init__(repr(email) + ' is already registered.\n')

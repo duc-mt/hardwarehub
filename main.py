@@ -38,6 +38,67 @@ from authenticator import (Authenticator,
 console = Console()
 
 
+# ---------------------------- Pure Helper Functions ---------------------------
+# The functions below hold logic that used to live inline inside methods
+# that also handled interactive I/O (input()/getpass()/console.print()),
+# which made that logic impossible to unit test without mocking stdin.
+# Each one takes plain data in and returns a plain value out, so it can be
+# tested directly - see tests/test_pure_helpers.py.
+def validate_username(username):
+    """Raise an exception if `username` isn't an acceptable Wishlist
+    username; return None if it is.
+
+    Pulled out of Wishlist.set_username()'s input loop so these two
+    rules can be tested without going through input().
+    """
+    if username == '':
+        raise ValueError('Cannot create a Wishlist with an empty name.')
+    if ' ' in username:
+        raise NameError('Username cannot contain any space character.')
+
+
+def has_available_stock(stock, part_name):
+    """Return True if `part_name` is a key in `stock` with a positive
+    count, printing the matching status message either way.
+
+    Pulled out of NewWishlist.look_up_partlist() and
+    look_up_wishlist(), which were two copies of this exact logic that
+    differed only in which stock dict they read from.
+    """
+    try:
+        value = stock[part_name]
+    except KeyError:
+        console.print(f'Could not find {part_name}!', style='red')
+        return False
+    if value <= 0:
+        console.print(f'Not enough of {part_name} in stock!', style='red')
+        return False
+    return True
+
+
+def total_cost(items, stock):
+    """Return the total price of `items`, each priced at item.price
+    times its count in `stock`.
+
+    Pulled out of Wishlist.__get_total_cost() so it can be tested
+    against a plain list of parts and a plain stock dict.
+    """
+    return sum(item.price * stock[item.name] for item in items)
+
+
+def parts_form_a_valid_computer(items):
+    """Return True if `items` contains at least one each of CPU,
+    GraphicsCard, Memory, and Storage.
+
+    Pulled out of Wishlist.__is_valid_computer() so the "what counts as
+    a complete build" rule can be tested against a plain list of parts.
+    """
+    required = {CPU, GraphicsCard, Memory, Storage}
+    present = {klass for klass in required
+              if any(isinstance(item, klass) for item in items)}
+    return present == required
+
+
 # ------------------------------- Computer Part -------------------------------
 class ComputerPart(metaclass=abc.ABCMeta):
     """An abstract class. The superclass for other ComputerPart types."""
@@ -891,15 +952,20 @@ class Partlist():
             self.__items.append(new_part)
             self.__stock[name_of_new_part] = new_part.stock
         else:
-            # Duplicate item, so increment available stock by 1.
-            self.__stock[name_of_new_part] += 1
+            # NOTE: this used to always add exactly 1, regardless of how
+            # much stock `new_part` actually represents. That's correct
+            # for the interactive "add one part via the menu" flow (where
+            # new_part.stock defaults to 1), but silently under-counted
+            # any duplicate row loaded in bulk from database.csv with a
+            # stock other than 1. Adding the part's own stock is correct
+            # in both cases.
+            self.__stock[name_of_new_part] += new_part.stock
 
         stock = self.__stock[name_of_new_part]
 
         if print_status:
             console.print(f'Added {new_part.__str__()} (x{stock})',
                           style='green')
-        print()
 
     @icontract.require(
         lambda part_name: isinstance(part_name, str) & (part_name != ''))
@@ -909,12 +975,18 @@ class Partlist():
         Find and access a part using its name.
         Check to see if that part name is in store.
         """
+        # NOTE: this used to loop `while i < len(self) - 1`, which skips
+        # the very last item in the list. Any part sitting last in the
+        # catalog (e.g. whichever Storage entry loads last from the CSV)
+        # was permanently unfindable by name, even though it's genuinely
+        # in stock. Corrected to `i < len(self)`.
         found = False
         i = 0
-        while i < len(self) - 1:
+        while i < len(self):
             if self.__items[i].name == part_name:
                 result = self.__items[i]
                 found = True
+                break
             i += 1
         if found:
             return result
@@ -1053,12 +1125,7 @@ class Wishlist(Partlist):
         while username is None or not valid:
             try:
                 username = input('Enter your username: ')
-                if username == '':
-                    raise ValueError(
-                        'Cannot create a Wishlist with an empty name.')
-                elif ' ' in username:
-                    raise NameError(
-                        'Username cannot contain any space character.')
+                validate_username(username)
             except Exception as e:
                 print(e)
             else:
@@ -1142,11 +1209,7 @@ class Wishlist(Partlist):
         A private method used within this class only.
         Calculates and returns the total cost of all parts.
         """
-        price = 0
-        for item in self.items:
-            number = self.stock[item.name]
-            price += item.price * number
-        return price
+        return total_cost(self.items, self.stock)
 
     @icontract.ensure(lambda result: isinstance(result, bool))
     def __is_valid_computer(self):
@@ -1156,27 +1219,7 @@ class Wishlist(Partlist):
         A valid computer requires at least:
             - 1 CPU, 1 GraphicsCard, 1 Memory, and 1 Storage.
         """
-        # A dictionary to check if one of these parts is in the Wishlist.
-        is_in_wishlist = {
-            'CPU': False,
-            'GraphicsCard': False,
-            'Memory': False,
-            'Storage': False,
-        }
-        for item in self.items:
-            if isinstance(item, CPU):
-                is_in_wishlist['CPU'] = True
-            elif isinstance(item, GraphicsCard):
-                is_in_wishlist['GraphicsCard'] = True
-            elif isinstance(item, Memory):
-                is_in_wishlist['Memory'] = True
-            elif isinstance(item, Storage):
-                is_in_wishlist['Storage'] = True
-
-        return (is_in_wishlist['CPU'] is True and
-                is_in_wishlist['GraphicsCard'] is True and
-                is_in_wishlist['Memory'] is True and
-                is_in_wishlist['Storage'] is True)
+        return parts_form_a_valid_computer(self.items)
 
 
 # ------------------------------- User Interface ------------------------------
@@ -1222,14 +1265,25 @@ class CommandPrompt:
     @classmethod
     def __set_menu(cls):
         """Set the menu class attribute."""
-        @icontract.require(lambda obj: isinstance(obj, Question))
+        @icontract.require(lambda klass: issubclass(klass, Question))
         @icontract.ensure(lambda result: isinstance(result, str))
-        def convert_class_name(obj):
+        def convert_class_name(klass):
             """Convert a class name to a human-readable name.
 
-            E.g. 'New Wishlist' is transformed into 'NewWishlist'.
+            E.g. 'NewWishlist' is transformed into 'New Wishlist'.
+
+            NOTE: this used to take a Question *instance* and read
+            `type(obj).__name__` off of it, which meant every single menu
+            label required constructing a throwaway `CommandPrompt()`
+            just to have something to pass in as `cmd` - and each of
+            those threw away a full `Partlist`, re-reading and
+            re-parsing database.csv from disk. That's 9 extra, pointless
+            file reads on every program start, purely to compute display
+            strings. The class name is available on the class itself, so
+            this now takes the class directly and needs no instances -
+            and no CommandPrompt - at all.
             """
-            obj_name = type(obj).__name__
+            obj_name = klass.__name__
             result = ''
             result += obj_name[0]
             for index, letter in enumerate(obj_name):
@@ -1244,35 +1298,17 @@ class CommandPrompt:
         cls.__menu = collections.defaultdict(list)
 
         # Add four options for Main Menu.
-        cls.__menu['Main Menu'].append(
-            convert_class_name(NewWishlist(CommandPrompt(), False)),
-        )
-        cls.__menu['Main Menu'].append(
-            convert_class_name(ListDatabase(CommandPrompt(), False)),
-        )
-        cls.__menu['Main Menu'].append(
-            convert_class_name(AddPartToDatabase(CommandPrompt(), False)),
-        )
-        cls.__menu['Main Menu'].append(
-            convert_class_name(Close(CommandPrompt(), execute=False)),
-        )
+        cls.__menu['Main Menu'].append(convert_class_name(NewWishlist))
+        cls.__menu['Main Menu'].append(convert_class_name(ListDatabase))
+        cls.__menu['Main Menu'].append(convert_class_name(AddPartToDatabase))
+        cls.__menu['Main Menu'].append(convert_class_name(Close))
 
         # Add five options for Wishlist Menu.
-        cls.__menu['Wishlist'].append(
-            convert_class_name(AddFromDatabase(CommandPrompt(), False)),
-        )
-        cls.__menu['Wishlist'].append(
-            convert_class_name(RemoveFromWishlist(CommandPrompt(), False)),
-        )
-        cls.__menu['Wishlist'].append(
-            convert_class_name(ShowWishlist(CommandPrompt(), False)),
-        )
-        cls.__menu['Wishlist'].append(
-            convert_class_name(PurchaseAndClose(CommandPrompt(), False)),
-        )
-        cls.__menu['Wishlist'].append(
-            convert_class_name(Close(CommandPrompt(), execute=False)),
-        )
+        cls.__menu['Wishlist'].append(convert_class_name(AddFromDatabase))
+        cls.__menu['Wishlist'].append(convert_class_name(RemoveFromWishlist))
+        cls.__menu['Wishlist'].append(convert_class_name(ShowWishlist))
+        cls.__menu['Wishlist'].append(convert_class_name(PurchaseAndClose))
+        cls.__menu['Wishlist'].append(convert_class_name(Close))
 
         # Add five options for Parts Types Menu.
         cls.__menu['Part Types'].append('CPU')
@@ -1551,17 +1587,7 @@ class NewWishlist(Question):
         Search for a part with the name (parameter) to see if it exists in
         the part list and there is at least 1 stock remaining.
         """
-        try:
-            value = self.cmd.partlist.stock[part_name]
-        except KeyError:
-            console.print(f'Could not find {part_name}!', style='red')
-            return False
-        else:
-            if value <= 0:
-                console.print(f'Not enough of {part_name} in stock!',
-                              style='red')
-                return False
-            return True
+        return has_available_stock(self.cmd.partlist.stock, part_name)
 
     @icontract.require(lambda part_name: isinstance(part_name, str))
     @icontract.ensure(lambda result: isinstance(result, bool))
@@ -1570,17 +1596,7 @@ class NewWishlist(Question):
         Search for a part with the name (parameter) to see if it exists
         in the wish list.
         """
-        try:
-            value = self.cmd.wishlist.stock[part_name]
-        except KeyError:
-            console.print(f'Could not find {part_name}!', style='red')
-            return False
-        else:
-            if value <= 0:
-                console.print(f'Not enough of {part_name} in stock!',
-                              style='red')
-                return False
-            return True
+        return has_available_stock(self.cmd.wishlist.stock, part_name)
 
 
 class AddFromDatabase(NewWishlist):
