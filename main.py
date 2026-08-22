@@ -4,8 +4,8 @@
 # =============================================================================
 #
 #        FILE:  main.py
-#      AUTHOR:  Tan Duc Mai
-#       EMAIL:  henryfromvietnam@gmail.com
+#      AUTHOR:  Mai Tan Duc
+#       EMAIL:  ducmai.network@gmail.com
 #     CREATED:  2022-04-13
 # DESCRIPTION:  Creates a Computer shop which allows customers
 #               to select and purchase computer parts.
@@ -1693,9 +1693,9 @@ class PurchaseAndClose(NewWishlist):
 # ---------------------------------- Program ----------------------------------
 if __name__ == '__main__':
     console.print(
-        'Copyright (C) 2022 Tan Duc Mai '
-        '(tan.duc.work@gmail.com, @tanducmai on LinkedIn)',
-        'http://tanducmai.github.io/computer-shop-management/',
+        'Copyright (C) 2022 Mai Tan Duc '
+        '(ducmai.network@gmail.com, @tanducmai on LinkedIn)',
+        'https://github.com/duc-mt/computer-shop-management/',
         sep='\n',
         end='\n\n' + '-'*30 + '\n\n',
         style='bold',

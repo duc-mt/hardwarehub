@@ -4,8 +4,8 @@
 # =============================================================================
 #
 #        FILE:  test_driver.py
-#      AUTHOR:  Tan Duc Mai
-#       EMAIL:  henryfromvietnam@gmail.com
+#      AUTHOR:  Mai Tan Duc
+#       EMAIL:  ducmai.network@gmail.com
 #     CREATED:  2022-04-13
 # DESCRIPTION:  A pytest for the Partlist class.
 #   I hereby declare that I completed this work without any improper help
