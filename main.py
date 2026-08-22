@@ -113,7 +113,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         self.__stock = stock
 
     @abc.abstractclassmethod
-    def parse(cls):  # noqa: N805
+    def parse(cls):
         """An abstract class method.
 
         Split the csv_string into separate values and parses them to the
@@ -123,7 +123,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def input(cls):  # noqa: N805
+    def input(cls):
         """An abstract class method.
 
         Take input for each of the necessary variables.
@@ -162,7 +162,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
             name = input('Enter the name: ')
             if not isinstance(name, str):
                 raise TypeError(
-                    f'Argument was {repr(name)}, type {type(name)}. '
+                    f'Argument was {name!r}, type {type(name)}. '
                     f'Must be a string.'
                 )
             elif name == '':
@@ -185,7 +185,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
             price = float(input('Enter the price: '))
             if not isinstance(price, float):
                 raise TypeError(
-                    f'Argument was {repr(price)}, type {type(price)}. '
+                    f'Argument was {price!r}, type {type(price)}. '
                     f'Must be a float.'
                 )
             elif price <= 0:
@@ -246,11 +246,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        if isinstance(other, type(self)):
-            if (self.name == other.name and
-                    self.price == other.price):
-                return True
-        return False
+        return isinstance(other, type(self)) and (self.name == other.name and
+                                                  self.price == other.price)
 
 
 class CPU(ComputerPart):
@@ -328,7 +325,7 @@ class CPU(ComputerPart):
             cores = int(input('Enter the number of cores: '))
             if not isinstance(cores, int):
                 raise TypeError(
-                    f'Argument was {repr(cores)}, type {type(cores)}. '
+                    f'Argument was {cores!r}, type {type(cores)}. '
                     f'Must be an integer.'
                 )
             elif cores <= 0:
@@ -350,7 +347,7 @@ class CPU(ComputerPart):
             frequency_ghz = float(input('Enter the frequency in GHz: '))
             if not isinstance(frequency_ghz, float):
                 raise TypeError(
-                    f'Argument was {repr(frequency_ghz)}, type '
+                    f'Argument was {frequency_ghz!r}, type '
                     f'{type(frequency_ghz)}. Must be a float.'
                 )
             elif frequency_ghz <= 0:
@@ -377,11 +374,8 @@ class CPU(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        if super().equals(other):
-            if (self.cores == other.cores and
-                    self.frequency_ghz == other.frequency_ghz):
-                return True
-        return False
+        return super().equals(other) and (self.cores == other.cores and
+                                          self.frequency_ghz == other.frequency_ghz)
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -473,7 +467,7 @@ class GraphicsCard(ComputerPart):
             frequency_mhz = int(input('Enter the frequency in MHz: '))
             if not isinstance(frequency_mhz, int):
                 raise TypeError(
-                    f'Argument was {repr(frequency_mhz)}, type '
+                    f'Argument was {frequency_mhz!r}, type '
                     f'{type(frequency_mhz)}. Must be an integer.'
                 )
             elif frequency_mhz <= 0:
@@ -495,7 +489,7 @@ class GraphicsCard(ComputerPart):
             memory_gb = int(input('Enter the memory in GB: '))
             if not isinstance(memory_gb, int):
                 raise TypeError(
-                    f'Argument was {repr(memory_gb)}, type {type(memory_gb)}. '
+                    f'Argument was {memory_gb!r}, type {type(memory_gb)}. '
                     f'Must be an integer.'
                 )
             elif memory_gb <= 0:
@@ -522,11 +516,8 @@ class GraphicsCard(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        if super().equals(other):
-            if (self.memory_gb == other.memory_gb and
-                    self.frequency_mhz == other.frequency_mhz):
-                return True
-        return False
+        return super().equals(other) and (self.memory_gb == other.memory_gb and
+                                          self.frequency_mhz == other.frequency_mhz)
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -622,7 +613,7 @@ class Memory(ComputerPart):
             capacity_gb = int(input('Enter the capacity in GB: '))
             if not isinstance(capacity_gb, int):
                 raise TypeError(
-                    f'Argument was {repr(capacity_gb)}, type '
+                    f'Argument was {capacity_gb!r}, type '
                     f'{type(capacity_gb)}. Must be an integer.'
                 )
             elif capacity_gb <= 0:
@@ -644,7 +635,7 @@ class Memory(ComputerPart):
             frequency_mhz = int(input('Enter the frequency in MHz: '))
             if not isinstance(frequency_mhz, int):
                 raise TypeError(
-                    f'Argument was {repr(frequency_mhz)}, '
+                    f'Argument was {frequency_mhz!r}, '
                     f'type {type(frequency_mhz)}. Must be an integer.'
                 )
             elif frequency_mhz <= 0:
@@ -666,7 +657,7 @@ class Memory(ComputerPart):
             ddr = input('Enter the DDR: ')
             if not isinstance(ddr, str):
                 raise TypeError(
-                    f'Argument was {repr(ddr)}, type {type(ddr)}. '
+                    f'Argument was {ddr!r}, type {type(ddr)}. '
                     f'Must be a string.'
                 )
             elif ddr == '':
@@ -698,12 +689,9 @@ class Memory(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        if super().equals(other):
-            if (self.frequency_mhz == other.frequency_mhz and
-                self.capacity_gb == other.capacity_gb and
-                    self.ddr == other.ddr):
-                return True
-        return False
+        return super().equals(other) and (self.frequency_mhz == other.frequency_mhz and
+                                          self.capacity_gb == other.capacity_gb and
+                                          self.ddr == other.ddr)
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -792,7 +780,7 @@ class Storage(ComputerPart):
             capacity_gb = int(input('Enter the capacity in GB: '))
             if not isinstance(capacity_gb, int):
                 raise TypeError(
-                    f'Argument was {repr(capacity_gb)}, '
+                    f'Argument was {capacity_gb!r}, '
                     f'type {type(capacity_gb)}. Must be an integer.'
                 )
             elif capacity_gb <= 0:
@@ -814,7 +802,7 @@ class Storage(ComputerPart):
             storage_type = input('Enter the storage type (HDD/SSD/SSHD): ')
             if not isinstance(storage_type, str):
                 raise TypeError(
-                    f'Argument was {repr(storage_type)}, '
+                    f'Argument was {storage_type!r}, '
                     f'type {type(storage_type)}. Must be a string.'
                 )
             elif storage_type not in {'HDD', 'SSD', 'SSHD'}:
@@ -842,11 +830,8 @@ class Storage(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        if super().equals(other):
-            if (self.capacity_gb == other.capacity_gb and
-                    self.storage_type == other.storage_type):
-                return True
-        return False
+        return super().equals(other) and (self.capacity_gb == other.capacity_gb and
+                                          self.storage_type == other.storage_type)
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -1351,7 +1336,7 @@ class CommandPrompt:
         try:
             option = int(option)
         except ValueError as e:
-            print(f'{type(e).__name__}: {repr(option)} is not a number.\n')
+            print(f'{type(e).__name__}: {option!r} is not a number.\n')
             option = None
         # Display ValueError if option is a number, but outside range.
         if option is not None and option not in range(1, limit):

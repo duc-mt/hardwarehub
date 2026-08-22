@@ -20,7 +20,6 @@
 import base64
 import csv
 import hashlib
-import random
 import re
 import secrets
 
@@ -282,14 +281,23 @@ class Authenticator:
             # That silently let all sorts of invalid local-parts through
             # (and rejected legitimate hyphenated ones). Escaping the
             # hyphen (or moving it to the end) makes it a literal set.
-            valid_form = re.compile(r'([A-Za-z0-9]+[.\-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')  # noqa: E501
+            valid_form = re.compile(r'([A-Za-z0-9]+[.\-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
             if not re.fullmatch(valid_form, email):
                 try:
                     raise InappropriateEmail(email)
                 except InappropriateEmail as e:
                     print(e)
-                    email = (username + str(random.randint(100, 999)) + '@gmail' + random.choice(tuple(TLDs)) + random.choice(tuple(COUNTRY_CODEs)))  # noqa: E501
-                    print(f'    {repr(email)}')
+                    # secrets (a CSPRNG), not random, even though this
+                    # value isn't security-sensitive - it's already
+                    # imported for password salts, and using it
+                    # consistently avoids relying on a non-cryptographic
+                    # PRNG anywhere in this module.
+                    fallback_number = secrets.randbelow(900) + 100
+                    fallback_tld = secrets.choice(tuple(TLDs))
+                    fallback_country_code = secrets.choice(tuple(COUNTRY_CODEs))
+                    email = (username + str(fallback_number) + '@gmail'
+                             + fallback_tld + fallback_country_code)
+                    print(f'    {email!r}')
             else:
                 for stored_email in self.__user_email.values():
                     if email == stored_email:
