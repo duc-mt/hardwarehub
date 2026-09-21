@@ -9,8 +9,6 @@
 #     CREATED:  2022-05-31
 # DESCRIPTION:  Stores every customer of the system, including the
 #               authentication of their identity.
-#   I hereby declare that I completed this work without any improper help
-#   from a third party and without using any aids other than those cited.
 #
 # =============================================================================
 
