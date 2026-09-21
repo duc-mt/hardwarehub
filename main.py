@@ -9,8 +9,6 @@
 #     CREATED:  2022-04-13
 # DESCRIPTION:  Creates a Computer shop which allows customers
 #               to select and purchase computer parts.
-#   I hereby declare that I completed this work without any improper help
-#   from a third party and without using any aids other than those cited.
 #
 # =============================================================================
 
