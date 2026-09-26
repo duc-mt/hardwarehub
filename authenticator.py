@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 # =============================================================================
 #
@@ -23,10 +22,15 @@ import secrets
 
 # Third party
 import icontract
-from exceptions import (EmailAlreadyExists, InappropriateEmail,
-                        InvalidPassword, InvalidUsername,
-                        PasswordTooShort, UsernameAlreadyExists)
 
+from exceptions import (
+    EmailAlreadyExists,
+    InappropriateEmail,
+    InvalidPassword,
+    InvalidUsername,
+    PasswordTooShort,
+    UsernameAlreadyExists,
+)
 
 # ------------------------------- Named Constant ------------------------------
 # Original top-level domains
