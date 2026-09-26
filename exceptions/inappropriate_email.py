@@ -10,11 +10,11 @@ from .auth_exception import AuthException
 
 # ------------------------------ Class Definition -----------------------------
 class InappropriateEmail(AuthException):
-
     @icontract.require(lambda email: isinstance(email, str))
     @icontract.ensure(lambda result: result is None)
     def __init__(self, email):
         super().__init__(
-            'Your email ' + repr(email) + ' is not of a valid format:\n'
+            "Your email " + repr(email) + " is not of a valid format:\n"
             "    '(string1)@(string2).(2+characters)'.\n"
-            'Therefore, we generate a random one for you,')
+            "Therefore, we generate a random one for you,"
+        )

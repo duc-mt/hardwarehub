@@ -42,18 +42,12 @@ class TestReturningUsersCanLogInAfterReload:
         """Mirrors main.py's Wishlist.__update_users: append the user's
         already-hashed password to users.csv."""
         with open(path / "database" / "users.csv", "a", newline="") as f:
-            csv.writer(f).writerow(
-                [user.username, user.email, user.password.password]
-            )
+            csv.writer(f).writerow([user.username, user.email, user.password.password])
 
-    def test_original_password_works_after_simulated_restart(
-        self, isolated_project
-    ):
+    def test_original_password_works_after_simulated_restart(self, isolated_project):
         first_run = Authenticator()
         first_run.add_user("newperson", "newperson@example.com", "correcthorse")
-        self._persist_like_the_app_does(
-            isolated_project, first_run.users["newperson"]
-        )
+        self._persist_like_the_app_does(isolated_project, first_run.users["newperson"])
 
         second_run = Authenticator()
         second_run.login("newperson", "correcthorse")  # must not raise
@@ -62,9 +56,7 @@ class TestReturningUsersCanLogInAfterReload:
     def test_wrong_password_still_rejected_after_reload(self, isolated_project):
         first_run = Authenticator()
         first_run.add_user("newperson", "newperson@example.com", "correcthorse")
-        self._persist_like_the_app_does(
-            isolated_project, first_run.users["newperson"]
-        )
+        self._persist_like_the_app_does(isolated_project, first_run.users["newperson"])
 
         second_run = Authenticator()
         with pytest.raises(InvalidPassword):
@@ -98,9 +90,7 @@ class TestLogoutValidatesCredentials:
             auth.logout("someone", "wrongpassword")
         assert auth.is_logged_in("someone") is True
 
-    def test_logout_unknown_username_raises_invalid_username(
-        self, isolated_project
-    ):
+    def test_logout_unknown_username_raises_invalid_username(self, isolated_project):
         auth = Authenticator()
         with pytest.raises(InvalidUsername):
             auth.logout("no-such-user", "whatever")
@@ -146,9 +136,7 @@ class TestPasswordHashingUpgrade:
 
     def _seed_legacy_user(self, isolated_project, username, email, password):
         legacy_hash = hashlib.sha256((username + password).encode()).hexdigest()
-        with open(
-            isolated_project / "database" / "users.csv", "a", newline=""
-        ) as f:
+        with open(isolated_project / "database" / "users.csv", "a", newline="") as f:
             csv.writer(f).writerow([username, email, legacy_hash])
         return legacy_hash
 
@@ -160,9 +148,7 @@ class TestPasswordHashingUpgrade:
         assert stored.startswith("scrypt$")
         assert not _is_legacy_sha256_hex(stored)
 
-    def test_legacy_hash_upgraded_in_memory_on_successful_login(
-        self, isolated_project
-    ):
+    def test_legacy_hash_upgraded_in_memory_on_successful_login(self, isolated_project):
         legacy_hash = self._seed_legacy_user(
             isolated_project, "oldschool", "oldschool@example.com", "legacypass"
         )
@@ -214,8 +200,6 @@ class TestPasswordHashingUpgrade:
 
         auth.login("oldschool", "legacypass")
 
-        with open(
-            isolated_project / "database" / "users.csv", newline=""
-        ) as f:
+        with open(isolated_project / "database" / "users.csv", newline="") as f:
             rows = {row[0]: row for row in csv.reader(f) if row}
         assert rows["henry"][2] == henry_hash_before

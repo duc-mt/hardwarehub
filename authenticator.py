@@ -35,12 +35,24 @@ from exceptions import (
 # ------------------------------- Named Constant ------------------------------
 # Original top-level domains
 TLDs = {
-    '.biz', '.com', '.edu', '.gov', '.info',
-    '.int', '.mil', '.net', '.org',
+    ".biz",
+    ".com",
+    ".edu",
+    ".gov",
+    ".info",
+    ".int",
+    ".mil",
+    ".net",
+    ".org",
 }
 
 COUNTRY_CODEs = {
-    '.au', '.ca', '.cn', '.jp', '.uk', '.vn',
+    ".au",
+    ".ca",
+    ".cn",
+    ".jp",
+    ".uk",
+    ".vn",
 }
 
 # scrypt parameters for the current password hashing scheme. Deliberately
@@ -48,17 +60,21 @@ COUNTRY_CODEs = {
 # pass only has to change them here; they're also embedded in every
 # stored hash, so changing them doesn't invalidate hashes already on
 # disk - see _verify_scrypt().
-_SCRYPT_N = 2 ** 14
+_SCRYPT_N = 2**14
 _SCRYPT_R = 8
 _SCRYPT_P = 1
 _SCRYPT_DKLEN = 32
-_SCRYPT_PREFIX = 'scrypt'
+_SCRYPT_PREFIX = "scrypt"
 _SCRYPT_SALT_BYTES = 16
 
 
 def _scrypt_digest(password, salt, *, n=_SCRYPT_N, r=_SCRYPT_R, p=_SCRYPT_P):
     return hashlib.scrypt(
-        password.encode('utf-8'), salt=salt, n=n, r=r, p=p,
+        password.encode("utf-8"),
+        salt=salt,
+        n=n,
+        r=r,
+        p=p,
         dklen=_SCRYPT_DKLEN,
     )
 
@@ -68,16 +84,21 @@ def _encode_scrypt(password):
     versioned string: 'scrypt$<n>$<r>$<p>$<salt_b64>$<digest_b64>'."""
     salt = secrets.token_bytes(_SCRYPT_SALT_BYTES)
     digest = _scrypt_digest(password, salt)
-    return '$'.join((
-        _SCRYPT_PREFIX, str(_SCRYPT_N), str(_SCRYPT_R), str(_SCRYPT_P),
-        base64.b64encode(salt).decode('ascii'),
-        base64.b64encode(digest).decode('ascii'),
-    ))
+    return "$".join(
+        (
+            _SCRYPT_PREFIX,
+            str(_SCRYPT_N),
+            str(_SCRYPT_R),
+            str(_SCRYPT_P),
+            base64.b64encode(salt).decode("ascii"),
+            base64.b64encode(digest).decode("ascii"),
+        )
+    )
 
 
 def _verify_scrypt(password, encoded):
     try:
-        prefix, n, r, p, salt_b64, digest_b64 = encoded.split('$')
+        prefix, n, r, p, salt_b64, digest_b64 = encoded.split("$")
         if prefix != _SCRYPT_PREFIX:
             return False
         salt = base64.b64decode(salt_b64)
@@ -91,23 +112,23 @@ def _verify_scrypt(password, encoded):
 def _is_legacy_sha256_hex(value):
     """True if `value` looks like the old sha256(username+password) hex
     digest format (64 lowercase hex characters, no '$' delimiters)."""
-    return len(value) == 64 and all(c in '0123456789abcdef' for c in value)
+    return len(value) == 64 and all(c in "0123456789abcdef" for c in value)
 
 
 def _legacy_hash(username, password):
     """The original hashing scheme: sha256(username + password). Kept
     only so an already-stored legacy digest can still be *verified* -
     new passwords are never hashed this way (see Password.__encrypt_pw)."""
-    hash_string = (username + password).encode('utf8')
+    hash_string = (username + password).encode("utf8")
     return hashlib.sha256(hash_string).hexdigest()
 
 
 # ------------------------------ Class Definitions ----------------------------
 class User:
-
     @icontract.require(
         lambda username, email, password: isinstance(username, str)
-        & isinstance(email, str) & isinstance(password, str)
+        & isinstance(email, str)
+        & isinstance(password, str)
     )
     @icontract.ensure(lambda result: result is None)
     def __init__(self, username, email, password):
@@ -234,7 +255,6 @@ class Password:
 
 
 class Authenticator:
-
     @icontract.ensure(lambda result: result is None)
     def __init__(self):
         """
@@ -255,7 +275,8 @@ class Authenticator:
 
     @icontract.require(
         lambda username, email, password: isinstance(username, str)
-        & isinstance(email, str) & isinstance(password, str)
+        & isinstance(email, str)
+        & isinstance(password, str)
     )
     @icontract.ensure(lambda result: result is None)
     def add_user(self, username, email, password):
@@ -283,7 +304,9 @@ class Authenticator:
             # That silently let all sorts of invalid local-parts through
             # (and rejected legitimate hyphenated ones). Escaping the
             # hyphen (or moving it to the end) makes it a literal set.
-            valid_form = re.compile(r'([A-Za-z0-9]+[.\-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+            valid_form = re.compile(
+                r"([A-Za-z0-9]+[.\-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+"
+            )
             if not re.fullmatch(valid_form, email):
                 try:
                     raise InappropriateEmail(email)
@@ -297,21 +320,24 @@ class Authenticator:
                     fallback_number = secrets.randbelow(900) + 100
                     fallback_tld = secrets.choice(tuple(TLDs))
                     fallback_country_code = secrets.choice(tuple(COUNTRY_CODEs))
-                    email = (username + str(fallback_number) + '@gmail'
-                             + fallback_tld + fallback_country_code)
-                    print(f'    {email!r}')
+                    email = (
+                        username
+                        + str(fallback_number)
+                        + "@gmail"
+                        + fallback_tld
+                        + fallback_country_code
+                    )
+                    print(f"    {email!r}")
             else:
                 for stored_email in self.__user_email.values():
                     if email == stored_email:
-                        raise EmailAlreadyExists(
-                                email, self.__users
-                        )
+                        raise EmailAlreadyExists(email, self.__users)
             self.__users[username] = User(username, email, password)
             self.__user_email[username] = email
 
     @icontract.require(
-        lambda username, password:
-            isinstance(username, str) & isinstance(password, str))
+        lambda username, password: isinstance(username, str) & isinstance(password, str)
+    )
     @icontract.ensure(lambda result: result is None)
     def login(self, username, password):
         """
@@ -339,8 +365,8 @@ class Authenticator:
             self.__persist_password(username)
 
     @icontract.require(
-        lambda username, password:
-            isinstance(username, str) & isinstance(password, str))
+        lambda username, password: isinstance(username, str) & isinstance(password, str)
+    )
     @icontract.ensure(lambda result: result is None)
     def logout(self, username, password):
         """Log user out of the system.
@@ -369,14 +395,14 @@ class Authenticator:
         digest with the freshly-upgraded one, leaving every other row
         (including the header) untouched. Used solely to migrate a
         legacy sha256 hash to the new scrypt-based format."""
-        path = 'database/users.csv'
-        with open(path, newline='') as infile:
+        path = "database/users.csv"
+        with open(path, newline="") as infile:
             rows = list(csv.reader(infile))
         for row in rows[1:]:
             if row and row[0] == username:
                 row[2] = self.__users[username].password.password
                 break
-        with open(path, 'w', newline='') as outfile:
+        with open(path, "w", newline="") as outfile:
             csv.writer(outfile).writerows(rows)
 
     @icontract.ensure(lambda result: result is None)
@@ -387,9 +413,9 @@ class Authenticator:
         construct a users and a user_email dictionaries and fill them with
         items that it reads from the CSV file named "users.csv".
         """
-        self.__users = {}       # A dictionary of users coming to the store.
+        self.__users = {}  # A dictionary of users coming to the store.
         self.__user_email = {}  # Each user is associated with only one email.
-        with open('database/users.csv') as infile:
+        with open("database/users.csv") as infile:
             # NOTE: the header row "Username,Email,Password (encoded)" has
             # exactly 3 comma-separated fields too, so the old version of
             # this loop (which had no header skip) matched it against the
@@ -398,10 +424,10 @@ class Authenticator:
             # email "Email" every single time the file was read.
             next(infile, None)  # skip the header row
             line = None
-            while line is None or line != '':
-                line = infile.readline().rstrip('\n')
-                if line != '' and len(line.split(',')) == 3:
-                    csv_list = line.split(',')
+            while line is None or line != "":
+                line = infile.readline().rstrip("\n")
+                if line != "" and len(line.split(",")) == 3:
+                    csv_list = line.split(",")
                     # csv_list[2] is already a sha256 digest (see the
                     # "Password (encoded)" column) - from_stored() wires
                     # it in as-is instead of hashing it again.
@@ -412,31 +438,33 @@ class Authenticator:
 
 
 # ---------------------------------- Program ----------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     auth = Authenticator()
 
     try:
-        auth.add_user('johnny', 'johnny121@gmail.com.au', 'johnnypassword')
-        print(auth.is_logged_in('johnny'))
-        auth.login('johnny', 'johnnypassword')
-        print(auth.is_logged_in('johnny'))
+        auth.add_user("johnny", "johnny121@gmail.com.au", "johnnypassword")
+        print(auth.is_logged_in("johnny"))
+        auth.login("johnny", "johnnypassword")
+        print(auth.is_logged_in("johnny"))
 
         """Raise InvalidPassword exception."""
-        auth.add_user('susan', 'susan123@gmail.net', 'susanpassword')
-        auth.login('susan', '5U54N')
+        auth.add_user("susan", "susan123@gmail.net", "susanpassword")
+        auth.login("susan", "5U54N")
 
         """Raise UsernameAlreadyExists exception."""
-        auth.add_user('johnny', 'johnny121@gmail.com.au', 'johnnypassword')
-        auth.login('johnny', 'johnnypassword')
-        print(auth.is_logged_in('johnny'))
+        auth.add_user("johnny", "johnny121@gmail.com.au", "johnnypassword")
+        auth.login("johnny", "johnnypassword")
+        print(auth.is_logged_in("johnny"))
 
         """Keep trying to add/validate new username/password."""
         valid = False
         while not valid:
             try:
-                auth.add_user(input('Enter new username: '),
-                              input('Enter new email: '),
-                              input('Enter new password: '))
+                auth.add_user(
+                    input("Enter new username: "),
+                    input("Enter new email: "),
+                    input("Enter new password: "),
+                )
             except Exception as e1:
                 print(e1)
             else:
