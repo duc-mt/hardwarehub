@@ -53,6 +53,10 @@ strict = false
 ignore_missing_imports = true
 warn_unused_ignores = true
 show_error_codes = true
+exclude = [
+    "^build/",
+    "^\\.venv/",
+]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
