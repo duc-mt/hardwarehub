@@ -1,5 +1,10 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+[![CI](https://github.com/duc-mt/hardwarehub/actions/workflows/ci.yml/badge.svg)](https://github.com/duc-mt/hardwarehub/actions/workflows/ci.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Table of Contents
 
 - [Aim](#aim)
@@ -18,7 +23,7 @@
 
 # Aim
 
-Management of a computer shop, with various stocks stored in the database which
+Management of hardwarehub, with various stocks stored in the database which
 allows users to create a Wishlist.
 
 # UML Design

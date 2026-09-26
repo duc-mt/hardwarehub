@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 # =============================================================================
 #
@@ -7,7 +6,7 @@
 #      AUTHOR:  Mai Tan Duc
 #       EMAIL:  ducmai.network@gmail.com
 #     CREATED:  2022-04-13
-# DESCRIPTION:  Creates a Computer shop which allows customers
+# DESCRIPTION:  Creates hardwarehub which allows customers
 #               to select and purchase computer parts.
 #
 # =============================================================================
@@ -25,12 +24,10 @@ import icontract
 from rich import print
 from rich.console import Console
 
+from authenticator import Authenticator, InvalidPassword, UsernameAlreadyExists
+
 # Local application/library specific imports
 from exceptions import InvalidEmail
-from authenticator import (Authenticator,
-                           InvalidPassword,
-                           UsernameAlreadyExists)
-
 
 # ------------------------------- Named Constant ------------------------------
 console = Console()
@@ -110,7 +107,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
         self.__price = price
         self.__stock = stock
 
-    @abc.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def parse(cls):
         """An abstract class method.
 
@@ -120,7 +118,8 @@ class ComputerPart(metaclass=abc.ABCMeta):
         """
         pass
 
-    @abc.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def input(cls):
         """An abstract class method.
 
@@ -844,7 +843,7 @@ class Storage(ComputerPart):
 
 
 # ------------------------------- Data Structure ------------------------------
-class Partlist():
+class Partlist:
     """
     A subclass of the Wishlist class.
     Stores the computer parts (instances of the ComputerPart class)
@@ -1351,7 +1350,7 @@ class CommandPrompt:
         CSV file named "database.csv".
         """
         self.__partlist = Partlist()
-        with open(file='database/database.csv', mode='r',
+        with open(file='database/database.csv',
                   encoding='UTF8', newline='') as infile:
             csv_lists = list(csv.reader(infile, delimiter=',', quotechar='|'))
 
@@ -1678,12 +1677,12 @@ if __name__ == '__main__':
     console.print(
         'Copyright (C) 2022 Mai Tan Duc '
         '(ducmai.network@gmail.com, @tanducmai on LinkedIn)',
-        'https://github.com/duc-mt/computer-shop-management/',
+        'https://github.com/duc-mt/hardwarehub/',
         sep='\n',
         end='\n\n' + '-'*30 + '\n\n',
         style='bold',
     )
-    console.print('~~ [italic]Welcome to the Computer Store[/] ~~')
+    console.print('~~ [italic]Welcome to hardwarehub[/] ~~')
     print()
     cmd = CommandPrompt()
 
