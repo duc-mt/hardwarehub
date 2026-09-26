@@ -10,8 +10,7 @@ from .auth_exception import AuthException
 
 # ------------------------------ Class Definition -----------------------------
 class PasswordTooShort(AuthException):
-
     @icontract.require(lambda password: isinstance(password, str))
     @icontract.ensure(lambda result: result is None)
     def __init__(self, password):
-        super().__init__(repr(password) + ' is too short' + '.\n')
+        super().__init__(repr(password) + " is too short" + ".\n")

@@ -10,14 +10,13 @@ from .auth_exception import AuthException
 
 # ------------------------------ Class Definition -----------------------------
 class EmailAlreadyExists(AuthException):
-
     @icontract.require(
-        lambda message, user:
-            isinstance(message, str) & isinstance(user, dict))
+        lambda message, user: isinstance(message, str) & isinstance(user, dict)
+    )
     @icontract.ensure(lambda result: result is None)
     def __init__(self, email, user):
         # NOTE: `user` (the full users dictionary) is accepted for context
         # and kept for backward compatibility with existing call sites, but
         # is intentionally NOT included in the message - see the identical
         # note in username_already_exists.py.
-        super().__init__(repr(email) + ' is already registered.\n')
+        super().__init__(repr(email) + " is already registered.\n")

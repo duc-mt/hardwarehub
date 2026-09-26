@@ -46,10 +46,10 @@ def validate_username(username):
     Pulled out of Wishlist.set_username()'s input loop so these two
     rules can be tested without going through input().
     """
-    if username == '':
-        raise ValueError('Cannot create a Wishlist with an empty name.')
-    if ' ' in username:
-        raise NameError('Username cannot contain any space character.')
+    if username == "":
+        raise ValueError("Cannot create a Wishlist with an empty name.")
+    if " " in username:
+        raise NameError("Username cannot contain any space character.")
 
 
 def has_available_stock(stock, part_name):
@@ -63,10 +63,10 @@ def has_available_stock(stock, part_name):
     try:
         value = stock[part_name]
     except KeyError:
-        console.print(f'Could not find {part_name}!', style='red')
+        console.print(f"Could not find {part_name}!", style="red")
         return False
     if value <= 0:
-        console.print(f'Not enough of {part_name} in stock!', style='red')
+        console.print(f"Not enough of {part_name} in stock!", style="red")
         return False
     return True
 
@@ -89,8 +89,9 @@ def parts_form_a_valid_computer(items):
     a complete build" rule can be tested against a plain list of parts.
     """
     required = {CPU, GraphicsCard, Memory, Storage}
-    present = {klass for klass in required
-              if any(isinstance(item, klass) for item in items)}
+    present = {
+        klass for klass in required if any(isinstance(item, klass) for item in items)
+    }
     return present == required
 
 
@@ -146,7 +147,7 @@ class ComputerPart(metaclass=abc.ABCMeta):
         pass
 
     @classmethod
-    @icontract.ensure(lambda result: isinstance(result, str) & (result != ''))
+    @icontract.ensure(lambda result: isinstance(result, str) & (result != ""))
     def input_name(cls):
         """A class method.
 
@@ -156,14 +157,13 @@ class ComputerPart(metaclass=abc.ABCMeta):
         name = None
         valid = False
         while name is None or not valid:
-            name = input('Enter the name: ')
+            name = input("Enter the name: ")
             if not isinstance(name, str):
                 raise TypeError(
-                    f'Argument was {name!r}, type {type(name)}. '
-                    f'Must be a string.'
+                    f"Argument was {name!r}, type {type(name)}. Must be a string."
                 )
-            elif name == '':
-                raise ValueError('Name must not be empty.')
+            elif name == "":
+                raise ValueError("Name must not be empty.")
             else:
                 valid = True
         return name
@@ -179,14 +179,13 @@ class ComputerPart(metaclass=abc.ABCMeta):
         price = None
         valid = False
         while price is None or not valid:
-            price = float(input('Enter the price: '))
+            price = float(input("Enter the price: "))
             if not isinstance(price, float):
                 raise TypeError(
-                    f'Argument was {price!r}, type {type(price)}. '
-                    f'Must be a float.'
+                    f"Argument was {price!r}, type {type(price)}. Must be a float."
                 )
             elif price <= 0:
-                raise ValueError('Price must not be negative.')
+                raise ValueError("Price must not be negative.")
             else:
                 valid = True
         return price
@@ -196,19 +195,19 @@ class ComputerPart(metaclass=abc.ABCMeta):
     @icontract.ensure(lambda result: isinstance(result, list))
     def csv_string_to_list(cls, csv_string):
         csv_list = []
-        value = ''
+        value = ""
         for index, letter in enumerate(csv_string):
-            if letter != ',':
+            if letter != ",":
                 value += letter
                 if index == (len(csv_string) - 1):
-                    if value == 'OUT OF STOCK':
-                        csv_list.append('0')
+                    if value == "OUT OF STOCK":
+                        csv_list.append("0")
                     else:
                         csv_list.append(value[1:])
-                        value = ''
+                        value = ""
             else:
                 csv_list.append(value)
-                value = ''
+                value = ""
         return csv_list
 
     @property
@@ -243,8 +242,9 @@ class ComputerPart(metaclass=abc.ABCMeta):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        return isinstance(other, type(self)) and (self.name == other.name and
-                                                  self.price == other.price)
+        return isinstance(other, type(self)) and (
+            self.name == other.name and self.price == other.price
+        )
 
 
 class CPU(ComputerPart):
@@ -263,8 +263,8 @@ class CPU(ComputerPart):
         For example "Intel i7: 4 cores @ 3.2GHz for $990.00".
         """
         return (
-            f'{self.name}: {self.cores} cores @ '
-            f'{self.frequency_ghz}GHz for ${self.price:.2f}'
+            f"{self.name}: {self.cores} cores @ "
+            f"{self.frequency_ghz}GHz for ${self.price:.2f}"
         )
 
     @classmethod
@@ -277,8 +277,8 @@ class CPU(ComputerPart):
         Parse all elements to the correct datatypes.
         Use these values to construct and return a new CPU.
         """
-        if csv_list[-1] == 'OUT OF STOCK':
-            csv_list[-1] = '0'
+        if csv_list[-1] == "OUT OF STOCK":
+            csv_list[-1] = "0"
         else:
             csv_list[-1] = str(csv_list[-1])[1:]
 
@@ -319,14 +319,13 @@ class CPU(ComputerPart):
         cores = None
         valid = False
         while cores is None or not valid:
-            cores = int(input('Enter the number of cores: '))
+            cores = int(input("Enter the number of cores: "))
             if not isinstance(cores, int):
                 raise TypeError(
-                    f'Argument was {cores!r}, type {type(cores)}. '
-                    f'Must be an integer.'
+                    f"Argument was {cores!r}, type {type(cores)}. Must be an integer."
                 )
             elif cores <= 0:
-                raise ValueError('Number of Cores must not be negative.')
+                raise ValueError("Number of Cores must not be negative.")
             else:
                 valid = True
         return cores
@@ -341,14 +340,14 @@ class CPU(ComputerPart):
         frequency_ghz = None
         valid = False
         while frequency_ghz is None or not valid:
-            frequency_ghz = float(input('Enter the frequency in GHz: '))
+            frequency_ghz = float(input("Enter the frequency in GHz: "))
             if not isinstance(frequency_ghz, float):
                 raise TypeError(
-                    f'Argument was {frequency_ghz!r}, type '
-                    f'{type(frequency_ghz)}. Must be a float.'
+                    f"Argument was {frequency_ghz!r}, type "
+                    f"{type(frequency_ghz)}. Must be a float."
                 )
             elif frequency_ghz <= 0:
-                raise ValueError('Frequency must not be negative.')
+                raise ValueError("Frequency must not be negative.")
             else:
                 valid = True
         return frequency_ghz
@@ -371,8 +370,9 @@ class CPU(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        return super().equals(other) and (self.cores == other.cores and
-                                          self.frequency_ghz == other.frequency_ghz)
+        return super().equals(other) and (
+            self.cores == other.cores and self.frequency_ghz == other.frequency_ghz
+        )
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -380,10 +380,7 @@ class CPU(ComputerPart):
 
         Format: "CPU,name,price,cores,frequency_ghz".
         """
-        return (
-            f'CPU,{self.name},{self.price},'
-            f'{self.cores},{self.frequency_ghz}'
-        )
+        return f"CPU,{self.name},{self.price},{self.cores},{self.frequency_ghz}"
 
 
 class GraphicsCard(ComputerPart):
@@ -405,8 +402,8 @@ class GraphicsCard(ComputerPart):
         For example "NVIDIA GeForce 1080: 8GB @ 1607MHz for $925.00".
         """
         return (
-            f'{self.name}: {self.memory_gb}GB @ '
-            f'{self.frequency_mhz}MHz for ${self.price:.2f}'
+            f"{self.name}: {self.memory_gb}GB @ "
+            f"{self.frequency_mhz}MHz for ${self.price:.2f}"
         )
 
     @classmethod
@@ -419,8 +416,8 @@ class GraphicsCard(ComputerPart):
         Parse all elements to the correct datatypes.
         Use these values to construct and return a new GraphicsCard.
         """
-        if csv_list[-1] == 'OUT OF STOCK':
-            csv_list[-1] = '0'
+        if csv_list[-1] == "OUT OF STOCK":
+            csv_list[-1] = "0"
         else:
             csv_list[-1] = str(csv_list[-1])[1:]
 
@@ -461,14 +458,14 @@ class GraphicsCard(ComputerPart):
         frequency_mhz = None
         valid = False
         while frequency_mhz is None or not valid:
-            frequency_mhz = int(input('Enter the frequency in MHz: '))
+            frequency_mhz = int(input("Enter the frequency in MHz: "))
             if not isinstance(frequency_mhz, int):
                 raise TypeError(
-                    f'Argument was {frequency_mhz!r}, type '
-                    f'{type(frequency_mhz)}. Must be an integer.'
+                    f"Argument was {frequency_mhz!r}, type "
+                    f"{type(frequency_mhz)}. Must be an integer."
                 )
             elif frequency_mhz <= 0:
-                raise ValueError('Frequency must not be negative.')
+                raise ValueError("Frequency must not be negative.")
             else:
                 valid = True
         return frequency_mhz
@@ -483,14 +480,14 @@ class GraphicsCard(ComputerPart):
         memory_gb = None
         valid = False
         while memory_gb is None or not valid:
-            memory_gb = int(input('Enter the memory in GB: '))
+            memory_gb = int(input("Enter the memory in GB: "))
             if not isinstance(memory_gb, int):
                 raise TypeError(
-                    f'Argument was {memory_gb!r}, type {type(memory_gb)}. '
-                    f'Must be an integer.'
+                    f"Argument was {memory_gb!r}, type {type(memory_gb)}. "
+                    f"Must be an integer."
                 )
             elif memory_gb <= 0:
-                raise ValueError('Memory must not be negative.')
+                raise ValueError("Memory must not be negative.")
             else:
                 valid = True
         return memory_gb
@@ -513,8 +510,10 @@ class GraphicsCard(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        return super().equals(other) and (self.memory_gb == other.memory_gb and
-                                          self.frequency_mhz == other.frequency_mhz)
+        return super().equals(other) and (
+            self.memory_gb == other.memory_gb
+            and self.frequency_mhz == other.frequency_mhz
+        )
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -523,8 +522,8 @@ class GraphicsCard(ComputerPart):
         Format: "GraphicsCard,name,price,frequency_mhz,memory_gb".
         """
         return (
-            f'GraphicsCard,{self.name},{self.price},'
-            f'{self.frequency_mhz},{self.memory_gb}'
+            f"GraphicsCard,{self.name},{self.price},"
+            f"{self.frequency_mhz},{self.memory_gb}"
         )
 
 
@@ -548,9 +547,9 @@ class Memory(ComputerPart):
         For example "Corsair Vengeance: 16GB, DDR4 @ 3000MHz for $239.00".
         """
         return (
-            f'{self.name}: {self.capacity_gb}GB, '
-            f'DDR{self.ddr} @ {self.frequency_mhz}MHZ '
-            f'for ${self.price:.2f}'
+            f"{self.name}: {self.capacity_gb}GB, "
+            f"DDR{self.ddr} @ {self.frequency_mhz}MHZ "
+            f"for ${self.price:.2f}"
         )
 
     @classmethod
@@ -563,8 +562,8 @@ class Memory(ComputerPart):
         Parse all elements to the correct datatypes.
         Use these values to construct and return a new Memory.
         """
-        if csv_list[-1] == 'OUT OF STOCK':
-            csv_list[-1] = '0'
+        if csv_list[-1] == "OUT OF STOCK":
+            csv_list[-1] = "0"
         else:
             csv_list[-1] = str(csv_list[-1])[1:]
 
@@ -607,14 +606,14 @@ class Memory(ComputerPart):
         capacity_gb = None
         valid = False
         while capacity_gb is None or not valid:
-            capacity_gb = int(input('Enter the capacity in GB: '))
+            capacity_gb = int(input("Enter the capacity in GB: "))
             if not isinstance(capacity_gb, int):
                 raise TypeError(
-                    f'Argument was {capacity_gb!r}, type '
-                    f'{type(capacity_gb)}. Must be an integer.'
+                    f"Argument was {capacity_gb!r}, type "
+                    f"{type(capacity_gb)}. Must be an integer."
                 )
             elif capacity_gb <= 0:
-                raise ValueError('Capacity must not be negative.')
+                raise ValueError("Capacity must not be negative.")
             else:
                 valid = True
         return capacity_gb
@@ -629,20 +628,20 @@ class Memory(ComputerPart):
         frequency_mhz = None
         valid = False
         while frequency_mhz is None or not valid:
-            frequency_mhz = int(input('Enter the frequency in MHz: '))
+            frequency_mhz = int(input("Enter the frequency in MHz: "))
             if not isinstance(frequency_mhz, int):
                 raise TypeError(
-                    f'Argument was {frequency_mhz!r}, '
-                    f'type {type(frequency_mhz)}. Must be an integer.'
+                    f"Argument was {frequency_mhz!r}, "
+                    f"type {type(frequency_mhz)}. Must be an integer."
                 )
             elif frequency_mhz <= 0:
-                raise ValueError('Frequency must not be negative.')
+                raise ValueError("Frequency must not be negative.")
             else:
                 valid = True
         return frequency_mhz
 
     @classmethod
-    @icontract.ensure(lambda result: isinstance(result, str) & (result != ''))
+    @icontract.ensure(lambda result: isinstance(result, str) & (result != ""))
     def input_ddr(cls):
         """
         Set the ddr attribute to the argument
@@ -651,14 +650,13 @@ class Memory(ComputerPart):
         ddr = None
         valid = False
         while ddr is None or not valid:
-            ddr = input('Enter the DDR: ')
+            ddr = input("Enter the DDR: ")
             if not isinstance(ddr, str):
                 raise TypeError(
-                    f'Argument was {ddr!r}, type {type(ddr)}. '
-                    f'Must be a string.'
+                    f"Argument was {ddr!r}, type {type(ddr)}. Must be a string."
                 )
-            elif ddr == '':
-                raise ValueError('DDR must not be empty.')
+            elif ddr == "":
+                raise ValueError("DDR must not be empty.")
             else:
                 valid = True
         return ddr
@@ -686,9 +684,11 @@ class Memory(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        return super().equals(other) and (self.frequency_mhz == other.frequency_mhz and
-                                          self.capacity_gb == other.capacity_gb and
-                                          self.ddr == other.ddr)
+        return super().equals(other) and (
+            self.frequency_mhz == other.frequency_mhz
+            and self.capacity_gb == other.capacity_gb
+            and self.ddr == other.ddr
+        )
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -697,9 +697,9 @@ class Memory(ComputerPart):
         Format: "Memory,name,price,capacity_gb,frequency_mhz,ddr".
         """
         return (
-            f'Memory,{self.name},{self.price},'
-            f'{self.capacity_gb},{self.frequency_mhz},'
-            f'{self.ddr}'
+            f"Memory,{self.name},{self.price},"
+            f"{self.capacity_gb},{self.frequency_mhz},"
+            f"{self.ddr}"
         )
 
 
@@ -719,8 +719,8 @@ class Storage(ComputerPart):
         For example "Seagate Barracuda: 1000GB HDD for $60.00".
         """
         return (
-            f'{self.name}: {self.capacity_gb}GB '
-            f'{self.storage_type} for ${self.price:.2f}'
+            f"{self.name}: {self.capacity_gb}GB "
+            f"{self.storage_type} for ${self.price:.2f}"
         )
 
     @classmethod
@@ -733,8 +733,8 @@ class Storage(ComputerPart):
         Parse all elements to the correct datatypes.
         Use these values to construct and return a new Storage.
         """
-        if csv_list[-1] == 'OUT OF STOCK':
-            csv_list[-1] = '0'
+        if csv_list[-1] == "OUT OF STOCK":
+            csv_list[-1] = "0"
         else:
             csv_list[-1] = str(csv_list[-1])[1:]
 
@@ -774,20 +774,20 @@ class Storage(ComputerPart):
         capacity_gb = None
         valid = False
         while capacity_gb is None or not valid:
-            capacity_gb = int(input('Enter the capacity in GB: '))
+            capacity_gb = int(input("Enter the capacity in GB: "))
             if not isinstance(capacity_gb, int):
                 raise TypeError(
-                    f'Argument was {capacity_gb!r}, '
-                    f'type {type(capacity_gb)}. Must be an integer.'
+                    f"Argument was {capacity_gb!r}, "
+                    f"type {type(capacity_gb)}. Must be an integer."
                 )
             elif capacity_gb <= 0:
-                raise ValueError('Capacity must not be negative.')
+                raise ValueError("Capacity must not be negative.")
             else:
                 valid = True
         return capacity_gb
 
     @classmethod
-    @icontract.ensure(lambda result: result in {'HDD', 'SSD', 'SSHD'})
+    @icontract.ensure(lambda result: result in {"HDD", "SSD", "SSHD"})
     def input_storage_type(cls):
         """
         Set the storage_type attribute to the argument.
@@ -796,15 +796,14 @@ class Storage(ComputerPart):
         storage_type = None
         valid = False
         while storage_type is None or not valid:
-            storage_type = input('Enter the storage type (HDD/SSD/SSHD): ')
+            storage_type = input("Enter the storage type (HDD/SSD/SSHD): ")
             if not isinstance(storage_type, str):
                 raise TypeError(
-                    f'Argument was {storage_type!r}, '
-                    f'type {type(storage_type)}. Must be a string.'
+                    f"Argument was {storage_type!r}, "
+                    f"type {type(storage_type)}. Must be a string."
                 )
-            elif storage_type not in {'HDD', 'SSD', 'SSHD'}:
-                raise ValueError('Storage type must be one of '
-                                 'HDD, SSD, or SSHD.')
+            elif storage_type not in {"HDD", "SSD", "SSHD"}:
+                raise ValueError("Storage type must be one of HDD, SSD, or SSHD.")
             else:
                 valid = True
         return storage_type
@@ -827,8 +826,10 @@ class Storage(ComputerPart):
            Memory and the values of their variables are the same.
         2. False otherwise.
         """
-        return super().equals(other) and (self.capacity_gb == other.capacity_gb and
-                                          self.storage_type == other.storage_type)
+        return super().equals(other) and (
+            self.capacity_gb == other.capacity_gb
+            and self.storage_type == other.storage_type
+        )
 
     @icontract.ensure(lambda result: isinstance(result, str))
     def to_csv_string(self):
@@ -837,8 +838,7 @@ class Storage(ComputerPart):
         Format: "Storage,name,price,capacity_gb,storage_type".
         """
         return (
-            f'Storage,{self.name},{self.price},'
-            f'{self.capacity_gb},{self.storage_type}'
+            f"Storage,{self.name},{self.price},{self.capacity_gb},{self.storage_type}"
         )
 
 
@@ -872,19 +872,19 @@ class Partlist:
         Seagate FireCuda: 1000GB SSHD for $105.00 (x45)
         --------------------"
         """
-        result = '---- Partlist ----\n'
+        result = "---- Partlist ----\n"
         for item in self.items:
             result += item.__str__()
             # Check how many stock left.
             stock = self.stock[item.name]
             if stock:
                 # Print that number if it is greater than 0.
-                result += ' (x' + str(stock) + ')'
+                result += " (x" + str(stock) + ")"
             else:
                 # Otherwise, write out of stock.
-                result += ' (OUT OF STOCK)'
-            result += '\n'
-        result += '--------------------'
+                result += " (OUT OF STOCK)"
+            result += "\n"
+        result += "--------------------"
         return result
 
     @icontract.ensure(lambda self, result: result == len(self.items))
@@ -918,9 +918,9 @@ class Partlist:
         self.__stock.clear()
 
     @icontract.require(
-        lambda new_part, print_status:
-            isinstance(new_part, ComputerPart)
-            & isinstance(print_status, bool))
+        lambda new_part, print_status: isinstance(new_part, ComputerPart)
+        & isinstance(print_status, bool)
+    )
     @icontract.ensure(lambda result: result is None)
     def add_to_partlist(self, new_part, print_status=False):
         """
@@ -946,11 +946,9 @@ class Partlist:
         stock = self.__stock[name_of_new_part]
 
         if print_status:
-            console.print(f'Added {new_part.__str__()} (x{stock})',
-                          style='green')
+            console.print(f"Added {new_part.__str__()} (x{stock})", style="green")
 
-    @icontract.require(
-        lambda part_name: isinstance(part_name, str) & (part_name != ''))
+    @icontract.require(lambda part_name: isinstance(part_name, str) & (part_name != ""))
     def get_part_using_name(self, part_name):
         """Return a ComputerPart object or an error string.
 
@@ -972,7 +970,7 @@ class Partlist:
             i += 1
         if found:
             return result
-        return f'Could not find {part_name}!'
+        return f"Could not find {part_name}!"
 
     @icontract.require(lambda part_position: isinstance(part_position, int))
     def get_part_using_position(self, part_position):
@@ -983,10 +981,9 @@ class Partlist:
         """
         if part_position < len(self):
             return self.__items[part_position]
-        return f'{part_position} out of range 1 - {len(self)}'
+        return f"{part_position} out of range 1 - {len(self)}"
 
-    @icontract.require(
-        lambda part_name: isinstance(part_name, str) & (part_name != ''))
+    @icontract.require(lambda part_name: isinstance(part_name, str) & (part_name != ""))
     def remove_part_using_name(self, part_name):
         """Return nothing.
 
@@ -1002,9 +999,9 @@ class Partlist:
                 stock = self.stock.pop(part_name)
                 done = True
         if not done:
-            console.print(f'Could not find {part_name}!', style='red')
+            console.print(f"Could not find {part_name}!", style="red")
         else:
-            console.print(f'Removed {part_name} (x{stock})', style='green')
+            console.print(f"Removed {part_name} (x{stock})", style="green")
 
     @icontract.require(lambda part_position: isinstance(part_position, int))
     def remove_part_using_position(self, part_position):
@@ -1017,21 +1014,20 @@ class Partlist:
         if part_position < len(self):
             removed_part = self.items.pop(part_position)
             stock = self.stock.pop(removed_part.name)
-            console.print(f'Removed {removed_part.__str__()} (x{stock})',
-                          style='green')
+            console.print(f"Removed {removed_part.__str__()} (x{stock})", style="green")
         else:
-            print(f'{part_position} out of range 1 - {len(self)}')
+            print(f"{part_position} out of range 1 - {len(self)}")
 
-    @icontract.require(
-        lambda filename: isinstance(filename, str) & (filename != ''))
+    @icontract.require(lambda filename: isinstance(filename, str) & (filename != ""))
     @icontract.ensure(lambda result: result is None)
-    def save_to_csv(self, filename='database'):
+    def save_to_csv(self, filename="database"):
         """
         Save all parts to a csv file with an argument file name.
         Default to the file name database.csv
         """
-        with open(file=f'database/{filename}.csv', mode='w',
-                  encoding='UTF8', newline='') as outfile:
+        with open(
+            file=f"database/{filename}.csv", mode="w", encoding="UTF8", newline=""
+        ) as outfile:
             for item in self.items:
                 outfile.write(item.to_csv_string())
                 # Check how many stock left.
@@ -1039,10 +1035,10 @@ class Partlist:
                 # Write that number to file if it is greater than 0.
                 # Otherwise, write out of stock.
                 if stock:
-                    outfile.write(',x' + str(stock))
+                    outfile.write(",x" + str(stock))
                 else:
-                    outfile.write(',OUT OF STOCK')
-                outfile.write('\n')
+                    outfile.write(",OUT OF STOCK")
+                outfile.write("\n")
 
 
 class Wishlist(Partlist):
@@ -1076,13 +1072,13 @@ class Wishlist(Partlist):
         if len(self):
             result += super().__str__()[20:-20]
 
-        result += '--------------------\n'
-        result += f'${self.__get_total_cost():.2f}\n'
+        result += "--------------------\n"
+        result += f"${self.__get_total_cost():.2f}\n"
 
         if self.__is_valid_computer():
-            result += 'Valid computer'
+            result += "Valid computer"
         else:
-            result += 'Not a valid computer'
+            result += "Not a valid computer"
 
         return result
 
@@ -1096,9 +1092,9 @@ class Wishlist(Partlist):
         return self.__username
 
     @icontract.ensure(
-        lambda self, result:
-            isinstance(self.__username, str)
-            & (result is None) & (self.__username != '')
+        lambda self, result: isinstance(self.__username, str)
+        & (result is None)
+        & (self.__username != "")
     )
     def set_username(self):
         """Set the username attribute by keeping prompting the user."""
@@ -1106,7 +1102,7 @@ class Wishlist(Partlist):
         valid = False
         while username is None or not valid:
             try:
-                username = input('Enter your username: ')
+                username = input("Enter your username: ")
                 validate_username(username)
             except Exception as e:
                 print(e)
@@ -1115,16 +1111,16 @@ class Wishlist(Partlist):
         self.__username = username
 
     @icontract.require(
-        lambda username, email, password:
-            isinstance(username, str) & isinstance(email, str)
-            & isinstance(password, str))
+        lambda username, email, password: isinstance(username, str)
+        & isinstance(email, str)
+        & isinstance(password, str)
+    )
     @icontract.ensure(lambda result: result is None)
     def __update_users(self, username, email, password):
-        with open(file='database/users.csv', mode='a',
-                  encoding='UTF8', newline='') as outfile:
-            csv.writer(outfile).writerow(
-                [self.username, email, password]
-            )
+        with open(
+            file="database/users.csv", mode="a", encoding="UTF8", newline=""
+        ) as outfile:
+            csv.writer(outfile).writerow([self.username, email, password])
 
     @icontract.ensure(lambda result: result is None)
     def __create_user(self):
@@ -1132,17 +1128,13 @@ class Wishlist(Partlist):
         valid = False
         while not valid:
             self.set_username()
-            email = input('Enter your email: ')
+            email = input("Enter your email: ")
 
             password = None
             verified = False
             while password is None or not verified:
-                password = getpass.getpass(
-                    prompt='Enter your password: '
-                )
-                password_verify = getpass.getpass(
-                    prompt='Verify your password: '
-                )
+                password = getpass.getpass(prompt="Enter your password: ")
+                password_verify = getpass.getpass(prompt="Verify your password: ")
                 try:
                     if password != password_verify:
                         raise InvalidPassword(password_verify)
@@ -1152,19 +1144,17 @@ class Wishlist(Partlist):
                     verified = True
 
             try:
-                Wishlist.__authenticator.add_user(self.__username,
-                                                  email,
-                                                  password)
+                Wishlist.__authenticator.add_user(self.__username, email, password)
             except UsernameAlreadyExists as e2:
-                is_returned = input('Are you a returned customer? [Y/n] ')
-                if is_returned in ('y'.lower(), ''):
+                is_returned = input("Are you a returned customer? [Y/n] ")
+                if is_returned in ("y".lower(), ""):
                     try:
-                        if email != self.get_authenticator().user_email[
-                            self.__username
-                        ]:
+                        if (
+                            email
+                            != self.get_authenticator().user_email[self.__username]
+                        ):
                             raise InvalidEmail(email)
-                        self.get_authenticator().login(self.__username,
-                                                       password)
+                        self.get_authenticator().login(self.__username, password)
                     except (InvalidPassword, InvalidEmail) as e3:
                         print(e3)
                     else:
@@ -1180,9 +1170,7 @@ class Wishlist(Partlist):
                 self.__update_users(
                     self.__username,
                     Wishlist.__authenticator.users[self.username].email,
-                    Wishlist.__authenticator.users[
-                        self.username
-                    ].password.password,
+                    Wishlist.__authenticator.users[self.username].password.password,
                 )
 
     @icontract.ensure(lambda result: isinstance(result, float) or result >= 0)
@@ -1206,12 +1194,8 @@ class Wishlist(Partlist):
 
 # ------------------------------- User Interface ------------------------------
 @icontract.invariant(
-    lambda self:
-        (isinstance(self.partlist, Partlist))
-        & (
-            (self.wishlist is None)
-            | (isinstance(self.wishlist, Wishlist))
-        )
+    lambda self: (isinstance(self.partlist, Partlist))
+    & ((self.wishlist is None) | (isinstance(self.wishlist, Wishlist)))
 )
 class CommandPrompt:
     """The user interface of the system."""
@@ -1227,10 +1211,9 @@ class CommandPrompt:
 
     @classmethod
     @icontract.require(
-        lambda menu_type:
-            (menu_type == 'Main Menu')
-            | (menu_type == 'Wishlist')
-            | (menu_type == 'Part Types')
+        lambda menu_type: (menu_type == "Main Menu")
+        | (menu_type == "Wishlist")
+        | (menu_type == "Part Types")
     )
     @icontract.ensure(lambda result: result is None)
     def display_menu(cls, menu_type):
@@ -1240,13 +1223,14 @@ class CommandPrompt:
         outputs the appropriate menu.
         """
         # Print Menu
-        print(f'---- {menu_type} ----')
+        print(f"---- {menu_type} ----")
         for i, question in enumerate(cls.__menu[menu_type]):
-            print(f'{i+1}. {question}')
+            print(f"{i + 1}. {question}")
 
     @classmethod
     def __set_menu(cls):
         """Set the menu class attribute."""
+
         @icontract.require(lambda klass: issubclass(klass, Question))
         @icontract.ensure(lambda result: isinstance(result, str))
         def convert_class_name(klass):
@@ -1266,38 +1250,38 @@ class CommandPrompt:
             and no CommandPrompt - at all.
             """
             obj_name = klass.__name__
-            result = ''
+            result = ""
             result += obj_name[0]
             for index, letter in enumerate(obj_name):
                 if letter.islower():
                     result += letter
                 else:
                     if index != 0:
-                        result += ' ' + letter
+                        result += " " + letter
             return result
 
         # A defaultdict type variable to store three types of menus.
         cls.__menu = collections.defaultdict(list)
 
         # Add four options for Main Menu.
-        cls.__menu['Main Menu'].append(convert_class_name(NewWishlist))
-        cls.__menu['Main Menu'].append(convert_class_name(ListDatabase))
-        cls.__menu['Main Menu'].append(convert_class_name(AddPartToDatabase))
-        cls.__menu['Main Menu'].append(convert_class_name(Close))
+        cls.__menu["Main Menu"].append(convert_class_name(NewWishlist))
+        cls.__menu["Main Menu"].append(convert_class_name(ListDatabase))
+        cls.__menu["Main Menu"].append(convert_class_name(AddPartToDatabase))
+        cls.__menu["Main Menu"].append(convert_class_name(Close))
 
         # Add five options for Wishlist Menu.
-        cls.__menu['Wishlist'].append(convert_class_name(AddFromDatabase))
-        cls.__menu['Wishlist'].append(convert_class_name(RemoveFromWishlist))
-        cls.__menu['Wishlist'].append(convert_class_name(ShowWishlist))
-        cls.__menu['Wishlist'].append(convert_class_name(PurchaseAndClose))
-        cls.__menu['Wishlist'].append(convert_class_name(Close))
+        cls.__menu["Wishlist"].append(convert_class_name(AddFromDatabase))
+        cls.__menu["Wishlist"].append(convert_class_name(RemoveFromWishlist))
+        cls.__menu["Wishlist"].append(convert_class_name(ShowWishlist))
+        cls.__menu["Wishlist"].append(convert_class_name(PurchaseAndClose))
+        cls.__menu["Wishlist"].append(convert_class_name(Close))
 
         # Add five options for Parts Types Menu.
-        cls.__menu['Part Types'].append('CPU')
-        cls.__menu['Part Types'].append('Graphics Card')
-        cls.__menu['Part Types'].append('Memory')
-        cls.__menu['Part Types'].append('Storage')
-        cls.__menu['Part Types'].append('Back')
+        cls.__menu["Part Types"].append("CPU")
+        cls.__menu["Part Types"].append("Graphics Card")
+        cls.__menu["Part Types"].append("Memory")
+        cls.__menu["Part Types"].append("Storage")
+        cls.__menu["Part Types"].append("Back")
 
     @property
     def partlist(self):
@@ -1328,17 +1312,16 @@ class CommandPrompt:
         Prompt the user for a number as an option for the displayed menu.
         Option must be an integer number in range 1 - limit.
         """
-        option = input(f'Enter an option (1-{limit-1}): ')
+        option = input(f"Enter an option (1-{limit - 1}): ")
         # Handle the error if option is not a number.
         try:
             option = int(option)
         except ValueError as e:
-            print(f'{type(e).__name__}: {option!r} is not a number.\n')
+            print(f"{type(e).__name__}: {option!r} is not a number.\n")
             option = None
         # Display ValueError if option is a number, but outside range.
         if option is not None and option not in range(1, limit):
-            print(f'ValueError: {option} is outside range '
-                  f'1 - {limit}.\n')
+            print(f"ValueError: {option} is outside range 1 - {limit}.\n")
         return option
 
     @icontract.ensure(lambda result: result is None)
@@ -1350,31 +1333,22 @@ class CommandPrompt:
         CSV file named "database.csv".
         """
         self.__partlist = Partlist()
-        with open(file='database/database.csv',
-                  encoding='UTF8', newline='') as infile:
-            csv_lists = list(csv.reader(infile, delimiter=',', quotechar='|'))
+        with open(file="database/database.csv", encoding="UTF8", newline="") as infile:
+            csv_lists = list(csv.reader(infile, delimiter=",", quotechar="|"))
 
             for csv_list in csv_lists:
-                if csv_list[0] == ('CPU'):
+                if csv_list[0] == ("CPU"):
                     # Construct a CPU object.
-                    self.partlist.add_to_partlist(
-                        CPU.parse(csv_list)
-                    )
-                elif csv_list[0] == ('GraphicsCard'):
+                    self.partlist.add_to_partlist(CPU.parse(csv_list))
+                elif csv_list[0] == ("GraphicsCard"):
                     # Construct a GraphicsCard object.
-                    self.partlist.add_to_partlist(
-                        GraphicsCard.parse(csv_list)
-                    )
-                elif csv_list[0] == ('Memory'):
+                    self.partlist.add_to_partlist(GraphicsCard.parse(csv_list))
+                elif csv_list[0] == ("Memory"):
                     # Construct a Memory object.
-                    self.partlist.add_to_partlist(
-                        Memory.parse(csv_list)
-                    )
-                elif csv_list[0] == ('Storage'):
+                    self.partlist.add_to_partlist(Memory.parse(csv_list))
+                elif csv_list[0] == ("Storage"):
                     # Construct a Storage object.
-                    self.partlist.add_to_partlist(
-                        Storage.parse(csv_list)
-                    )
+                    self.partlist.add_to_partlist(Storage.parse(csv_list))
 
 
 @icontract.invariant(lambda self: isinstance(self.cmd, CommandPrompt))
@@ -1426,7 +1400,7 @@ class AddPartToDatabase(Question):
                 # The Part Types menu is kept repeating until 5 is entered.
                 option = None
                 while option is None or option not in range(1, 6):
-                    CommandPrompt.display_menu('Part Types')
+                    CommandPrompt.display_menu("Part Types")
                     option = self.cmd.prompt_for_option(limit=6)
 
                 # Now we have a valid option between 1 and 5.
@@ -1453,17 +1427,18 @@ class AddPartToDatabase(Question):
                         added = False
                         partlist = self.cmd.partlist
                         parts_of_new_part_type = (
-                            item for item in partlist.items
+                            item
+                            for item in partlist.items
                             if type(new_part).__name__ == type(item).__name__
                         )
                         for item in parts_of_new_part_type:
                             if item.name == new_part.name:
                                 if not new_part.equals(item):
                                     console.print(
-                                        'Invalid ' + type(item).__name__ + '!',
-                                        'Try again with different arguments.',
-                                        end='\n\n',
-                                        style='red',
+                                        "Invalid " + type(item).__name__ + "!",
+                                        "Try again with different arguments.",
+                                        end="\n\n",
+                                        style="red",
                                     )
                                 else:
                                     partlist.add_to_partlist(
@@ -1472,12 +1447,11 @@ class AddPartToDatabase(Question):
                                 added = True
 
                         if not added:
-                            partlist.add_to_partlist(
-                                new_part, print_status=True
-                            )
+                            partlist.add_to_partlist(new_part, print_status=True)
                     except Exception as e:
-                        console.print(type(e).__name__ + ':', e, end='\n\n',
-                                      style='red')
+                        console.print(
+                            type(e).__name__ + ":", e, end="\n\n", style="red"
+                        )
 
 
 class Close(Question):
@@ -1490,16 +1464,16 @@ class Close(Question):
     the Partlist.
     """
 
-    def __init__(self, cmd, current_menu='Main Menu', execute=True):
+    def __init__(self, cmd, current_menu="Main Menu", execute=True):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
             partlist = self.cmd.partlist
             wishlist = self.cmd.wishlist
-            if current_menu == 'Main Menu':
+            if current_menu == "Main Menu":
                 # Save Partlist to a csv file.
                 partlist.save_to_csv()
-                print('\nSee you again soon.')
+                print("\nSee you again soon.")
             else:
                 # Add stock back into Partlist.
                 for item in wishlist.items:
@@ -1526,13 +1500,13 @@ class NewWishlist(Question):
                     # The menu is kept repeating until the user enters 5.
                     option = None
                     while option is None or option not in range(1, 6):
-                        CommandPrompt.display_menu('Wishlist')
+                        CommandPrompt.display_menu("Wishlist")
                         option = cmd.prompt_for_option(limit=6)
 
                     # Now we have a valid option between 1 and 5.
                     if option in range(1, 6):
                         password = getpass.getpass(
-                            prompt='Please enter your password: '
+                            prompt="Please enter your password: "
                         )
                         try:
                             self.cmd.wishlist.get_authenticator().login(
@@ -1552,7 +1526,7 @@ class NewWishlist(Question):
                                 PurchaseAndClose(cmd)
                                 done = True
                             else:
-                                Close(cmd, 'Wishlist')
+                                Close(cmd, "Wishlist")
                                 done = True
                             print()
                             self.cmd.wishlist.get_authenticator().logout(
@@ -1595,7 +1569,7 @@ class AddFromDatabase(NewWishlist):
         if execute:
             super().__init__(cmd)
             ListDatabase(cmd)
-            part_name = input('Enter the name of the part to add: ')
+            part_name = input("Enter the name of the part to add: ")
             if self.look_up_partlist(part_name):
                 partlist = self.cmd.partlist
                 wishlist = self.cmd.wishlist
@@ -1618,8 +1592,8 @@ class AddFromDatabase(NewWishlist):
                         # Display result.
                         stock = wishlist.stock[part_name]
                         console.print(
-                            f'Added {partlist_item.__str__()} (x{stock})',
-                            style='green',
+                            f"Added {partlist_item.__str__()} (x{stock})",
+                            style="green",
                         )
 
 
@@ -1634,11 +1608,9 @@ class RemoveFromWishlist(NewWishlist):
         """Only execute __init__ method when the 'execute' argument is True."""
         if execute:
             super().__init__(cmd)
-            part_name = input('Enter the name of the part to remove: ')
+            part_name = input("Enter the name of the part to remove: ")
             if self.look_up_wishlist(part_name):
-                self.cmd.wishlist.remove_part_using_name(
-                    part_name
-                )
+                self.cmd.wishlist.remove_part_using_name(part_name)
                 self.cmd.partlist.stock[part_name] += 1
 
 
@@ -1665,24 +1637,26 @@ class PurchaseAndClose(NewWishlist):
         if execute:
             super().__init__(cmd)
             username = self.cmd.wishlist.username
-            self.cmd.wishlist.save_to_csv(filename='receipts/'+username)
-            console.print('Successful purchase!\n',
-                          'Receipt in database/receipts/' + username + '.csv',
-                          sep='',
-                          style='green')
+            self.cmd.wishlist.save_to_csv(filename="receipts/" + username)
+            console.print(
+                "Successful purchase!\n",
+                "Receipt in database/receipts/" + username + ".csv",
+                sep="",
+                style="green",
+            )
 
 
 # ---------------------------------- Program ----------------------------------
-if __name__ == '__main__':
+if __name__ == "__main__":
     console.print(
-        'Copyright (C) 2022 Mai Tan Duc '
-        '(ducmai.network@gmail.com, @tanducmai on LinkedIn)',
-        'https://github.com/duc-mt/hardwarehub/',
-        sep='\n',
-        end='\n\n' + '-'*30 + '\n\n',
-        style='bold',
+        "Copyright (C) 2022 Mai Tan Duc "
+        "(ducmai.network@gmail.com, @tanducmai on LinkedIn)",
+        "https://github.com/duc-mt/hardwarehub/",
+        sep="\n",
+        end="\n\n" + "-" * 30 + "\n\n",
+        style="bold",
     )
-    console.print('~~ [italic]Welcome to hardwarehub[/] ~~')
+    console.print("~~ [italic]Welcome to hardwarehub[/] ~~")
     print()
     cmd = CommandPrompt()
 
@@ -1691,7 +1665,7 @@ if __name__ == '__main__':
         # Keep displaying Main Menu until the user enters 4.
         option = None
         while option is None or option not in range(1, 5):
-            CommandPrompt.display_menu('Main Menu')
+            CommandPrompt.display_menu("Main Menu")
             option = cmd.prompt_for_option(limit=5)
 
         # Now we have a valid option between 1 and 4.
@@ -1706,5 +1680,5 @@ if __name__ == '__main__':
                 print()
                 AddPartToDatabase(cmd)
         else:
-            Close(cmd, 'Main Menu')
+            Close(cmd, "Main Menu")
             done = True

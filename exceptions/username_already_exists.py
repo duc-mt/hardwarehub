@@ -10,10 +10,9 @@ from .auth_exception import AuthException
 
 # ------------------------------ Class Definition -----------------------------
 class UsernameAlreadyExists(AuthException):
-
     @icontract.require(
-        lambda username, user:
-            isinstance(username, str) & isinstance(user, dict))
+        lambda username, user: isinstance(username, str) & isinstance(user, dict)
+    )
     @icontract.ensure(lambda result: result is None)
     def __init__(self, username, user):
         # NOTE: `user` (the full users dictionary) is accepted for context
@@ -23,4 +22,4 @@ class UsernameAlreadyExists(AuthException):
         # (and to anyone watching output/logs) any time someone tried to
         # sign up with a taken username - a real information-disclosure
         # bug, not just a cosmetic one.
-        super().__init__(repr(username) + ' is already taken.\n')
+        super().__init__(repr(username) + " is already taken.\n")
