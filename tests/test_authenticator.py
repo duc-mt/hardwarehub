@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_authenticator.py
@@ -18,7 +19,6 @@ All tests use the `isolated_project` fixture so they run against a throw-
 away copy of database/users.csv rather than the real one.
 """
 
-from __future__ import annotations
 
 import csv
 import hashlib

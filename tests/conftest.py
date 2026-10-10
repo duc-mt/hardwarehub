@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   conftest.py
@@ -20,7 +21,6 @@ duration of the test, so nothing here ever mutates the real files under
 version control.
 """
 
-from __future__ import annotations
 
 import shutil
 from pathlib import Path

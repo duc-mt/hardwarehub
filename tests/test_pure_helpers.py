@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_pure_helpers.py
@@ -19,7 +20,6 @@ untestable without mocking stdin. Each function here takes plain data in
 and returns a plain value out.
 """
 
-from __future__ import annotations
 
 import pytest
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_partlist.py
@@ -17,7 +18,6 @@ These construct ComputerPart objects directly in memory, so they don't
 touch any CSV files and don't need the `isolated_project` fixture.
 """
 
-from __future__ import annotations
 
 import main
 
