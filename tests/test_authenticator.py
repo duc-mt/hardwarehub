@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_authenticator.py
-Description:   Implementation and logic for test_authenticator.
+Description:   Regression tests for authenticator.py.  Each test class is named after (and documents) the bug it guards against. All tests use the `isolated_project` fixture so they run against a throw- away copy of database/users.csv rather than the real one.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,12 +12,6 @@ License:       MIT
 Usage:         python3 test_authenticator.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Regression tests for authenticator.py.
-
-Each test class is named after (and documents) the bug it guards against.
-All tests use the `isolated_project` fixture so they run against a throw-
-away copy of database/users.csv rather than the real one.
 """
 
 

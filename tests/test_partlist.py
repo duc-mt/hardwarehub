@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_partlist.py
-Description:   Implementation and logic for test_partlist.
+Description:   Regression tests for the Partlist class in main.py.  These construct ComputerPart objects directly in memory, so they don't touch any CSV files and don't need the `isolated_project` fixture.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,11 +12,6 @@ License:       MIT
 Usage:         python3 test_partlist.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Regression tests for the Partlist class in main.py.
-
-These construct ComputerPart objects directly in memory, so they don't
-touch any CSV files and don't need the `isolated_project` fixture.
 """
 
 

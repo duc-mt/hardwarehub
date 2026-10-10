@@ -3,7 +3,7 @@ from __future__ import annotations
 """
 ==============================================================================
 Module Name:   test_pure_helpers.py
-Description:   Implementation and logic for test_pure_helpers.
+Description:   Unit tests for the pure helper functions in main.py.  These were extracted from methods that used to mix decision logic with input()/getpass()/console.print() calls, which made the logic itself untestable without mocking stdin. Each function here takes plain data in and returns a plain value out.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -12,13 +12,6 @@ License:       MIT
 Usage:         python3 test_pure_helpers.py [options]
 Notes:         Requires Python 3.8+
 ==============================================================================
-"""
-"""Unit tests for the pure helper functions in main.py.
-
-These were extracted from methods that used to mix decision logic with
-input()/getpass()/console.print() calls, which made the logic itself
-untestable without mocking stdin. Each function here takes plain data in
-and returns a plain value out.
 """
 
 
