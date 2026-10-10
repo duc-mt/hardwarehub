@@ -918,8 +918,9 @@ class Partlist:
         self.__stock.clear()
 
     @icontract.require(
-        lambda new_part, print_status: isinstance(new_part, ComputerPart)
-        & isinstance(print_status, bool)
+        lambda new_part, print_status: (
+            isinstance(new_part, ComputerPart) & isinstance(print_status, bool)
+        )
     )
     @icontract.ensure(lambda result: result is None)
     def add_to_partlist(self, new_part, print_status=False):
@@ -1092,9 +1093,11 @@ class Wishlist(Partlist):
         return self.__username
 
     @icontract.ensure(
-        lambda self, result: isinstance(self.__username, str)
-        & (result is None)
-        & (self.__username != "")
+        lambda self, result: (
+            isinstance(self.__username, str)
+            & (result is None)
+            & (self.__username != "")
+        )
     )
     def set_username(self):
         """Set the username attribute by keeping prompting the user."""
@@ -1111,9 +1114,11 @@ class Wishlist(Partlist):
         self.__username = username
 
     @icontract.require(
-        lambda username, email, password: isinstance(username, str)
-        & isinstance(email, str)
-        & isinstance(password, str)
+        lambda username, email, password: (
+            isinstance(username, str)
+            & isinstance(email, str)
+            & isinstance(password, str)
+        )
     )
     @icontract.ensure(lambda result: result is None)
     def __update_users(self, username, email, password):
@@ -1194,8 +1199,10 @@ class Wishlist(Partlist):
 
 # ------------------------------- User Interface ------------------------------
 @icontract.invariant(
-    lambda self: (isinstance(self.partlist, Partlist))
-    & ((self.wishlist is None) | (isinstance(self.wishlist, Wishlist)))
+    lambda self: (
+        (isinstance(self.partlist, Partlist))
+        & ((self.wishlist is None) | (isinstance(self.wishlist, Wishlist)))
+    )
 )
 class CommandPrompt:
     """The user interface of the system."""
@@ -1211,9 +1218,11 @@ class CommandPrompt:
 
     @classmethod
     @icontract.require(
-        lambda menu_type: (menu_type == "Main Menu")
-        | (menu_type == "Wishlist")
-        | (menu_type == "Part Types")
+        lambda menu_type: (
+            (menu_type == "Main Menu")
+            | (menu_type == "Wishlist")
+            | (menu_type == "Part Types")
+        )
     )
     @icontract.ensure(lambda result: result is None)
     def display_menu(cls, menu_type):

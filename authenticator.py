@@ -126,9 +126,11 @@ def _legacy_hash(username, password):
 # ------------------------------ Class Definitions ----------------------------
 class User:
     @icontract.require(
-        lambda username, email, password: isinstance(username, str)
-        & isinstance(email, str)
-        & isinstance(password, str)
+        lambda username, email, password: (
+            isinstance(username, str)
+            & isinstance(email, str)
+            & isinstance(password, str)
+        )
     )
     @icontract.ensure(lambda result: result is None)
     def __init__(self, username, email, password):
@@ -274,9 +276,11 @@ class Authenticator:
         return self.__user_email
 
     @icontract.require(
-        lambda username, email, password: isinstance(username, str)
-        & isinstance(email, str)
-        & isinstance(password, str)
+        lambda username, email, password: (
+            isinstance(username, str)
+            & isinstance(email, str)
+            & isinstance(password, str)
+        )
     )
     @icontract.ensure(lambda result: result is None)
     def add_user(self, username, email, password):
