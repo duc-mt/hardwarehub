@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_partlist.py
-Description:   Regression tests for the Partlist class in main.py.  These construct ComputerPart objects directly in memory, so they don't touch any CSV files and don't need the `isolated_project` fixture.
+Description:   Source module test_partlist.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

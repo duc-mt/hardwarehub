@@ -1,8 +1,7 @@
-#!/usr/bin/python3
 """
 ==============================================================================
 Module Name:   username_already_exists.py
-Description:   Implementation and logic for username_already_exists.
+Description:   Source module username_already_exists.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -13,8 +12,7 @@ Notes:         Requires Python 3.8+
 ==============================================================================
 """
 
-# ------------------------------- Module Imports ------------------------------
-# Third party
+#!/usr/bin/python3
 import icontract
 
 # Local application/library specific import

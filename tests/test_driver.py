@@ -1,17 +1,18 @@
+"""
+==============================================================================
+Module Name:   test_driver.py
+Description:   Source module test_driver.py.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 test_driver.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
+
 #!/usr/bin/python3
-
-# =============================================================================
-#
-#        FILE:  test_driver.py
-#      AUTHOR:  Mai Tan Duc
-#       EMAIL:  ducmai.network@gmail.com
-#     CREATED:  2022-04-13
-# DESCRIPTION:  A pytest for the Partlist class.
-#
-# =============================================================================
-
-# ------------------------------- Module Imports ------------------------------
-# Third party
 import pytest
 
 # Local application/library specific imports

@@ -1,8 +1,7 @@
-#!/usr/bin/python3
 """
 ==============================================================================
 Module Name:   __init__.py
-Description:   Implementation and logic for __init__.
+Description:   Source module __init__.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
@@ -13,6 +12,7 @@ Notes:         Requires Python 3.8+
 ==============================================================================
 """
 
+#!/usr/bin/python3
 from .auth_exception import AuthException  # noqa: F401
 from .email_already_exists import EmailAlreadyExists  # noqa: F401
 from .inappropriate_email import InappropriateEmail  # noqa: F401

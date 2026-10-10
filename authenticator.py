@@ -1,19 +1,18 @@
+"""
+==============================================================================
+Module Name:   authenticator.py
+Description:   Source module authenticator.py.
+Author:        Mai Tan Duc <ducmai.network@gmail.com>
+Created:       2026-10-10
+Version:       1.0.0
+License:       MIT
+==============================================================================
+Usage:         python3 authenticator.py [options]
+Notes:         Requires Python 3.8+
+==============================================================================
+"""
+
 #!/usr/bin/python3
-
-# =============================================================================
-#
-#        FILE:  authenticator.py
-#      AUTHOR:  Mai Tan Duc
-#       EMAIL:  ducmai.network@gmail.com
-#     CREATED:  2022-05-31
-# DESCRIPTION:  Stores every customer of the system, including the
-#               authentication of their identity.
-#
-# =============================================================================
-
-
-# ------------------------------- Module Import -------------------------------
-# Stdlib
 import base64
 import csv
 import hashlib

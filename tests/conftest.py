@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   conftest.py
-Description:   Shared pytest fixtures.  Several tests exercise code that reads/writes database/users.csv and database/database.csv using hardcoded relative paths. `isolated_project` copies those files into a temp directory and chdirs into it for the duration of the test, so nothing here ever mutates the real files under version control.
+Description:   Source module conftest.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0

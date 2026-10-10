@@ -1,8 +1,7 @@
-
 """
 ==============================================================================
 Module Name:   test_authenticator.py
-Description:   Regression tests for authenticator.py.  Each test class is named after (and documents) the bug it guards against. All tests use the `isolated_project` fixture so they run against a throw- away copy of database/users.csv rather than the real one.
+Description:   Source module test_authenticator.py.
 Author:        Mai Tan Duc <ducmai.network@gmail.com>
 Created:       2026-10-10
 Version:       1.0.0
